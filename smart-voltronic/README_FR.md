@@ -1,168 +1,236 @@
-# 🔋 Smart Voltronic – Add-on Home Assistant
+# 🔋 Smart Voltronic – Module complémentaire Home Assistant
 
 ➡️ **Read this README in English :**
-[https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README.md](https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README.md)
+https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README.md
 
-☕ **Soutenir le développement :**
-Si vous aimez ce projet, vous pouvez soutenir son évolution ici :
+☕ **Soutenir le projet**
 
 <a href="https://ko-fi.com/tapion69">
-  <img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
+<img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
 </a>
+
+![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Addon-blue)
+![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-orange)
+![MQTT](https://img.shields.io/badge/MQTT-Auto%20Discovery-green)
+
+Module complémentaire Home Assistant permettant de **surveiller et contrôler jusqu’à 3 onduleurs Voltronic / Axpert**.
+
+Compatible avec la majorité des modèles utilisant le **protocole Voltronic** :
+
+* Axpert
+* VM
+* MKS
+* MAX
+* MAX II
+* MAX IV
+* et clones compatibles
 
 ---
 
-## 📸 Captures d’écran
+# 📑 Table des matières
 
-### 🔎 Informations & état de l’onduleur
+* Captures d’écran
+* Méthodes de connexion
+* Installation série
+* Installation via passerelle
+* Configuration
+* Fonctionnalités
+* Intégration Home Assistant
+* Télémétrie
+* Support
 
-Surveillez l’état de l’onduleur, les firmwares, les avertissements et les défauts directement dans Home Assistant.
+---
 
-![Device info](docs/images/dashboard-overview.png)
+# 📸 Captures d’écran
+
+### 🔎 Informations et état de l’onduleur
+
+Surveillez l’état de l’onduleur, le firmware, les avertissements et les défauts directement dans Home Assistant.
+
+![Device info](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/dashboard-overview.png)
 
 ---
 
 ### ⚙️ Paramètres de l’onduleur depuis Home Assistant
 
-Modifiez les paramètres principaux directement depuis l’interface Home Assistant :
-type de batterie, priorité de charge, tensions, paramètres réseau et bien plus.
+Modifiez les principaux paramètres de l’onduleur directement depuis l’interface Home Assistant :
 
-![Settings](docs/images/inverter-settings.png)
+* type de batterie
+* priorité de charge
+* tensions
+* paramètres réseau
+
+![Settings](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-settings.png)
 
 ---
 
-### ⚡ Suivi de puissance en temps réel
+### ⚡ Surveillance de la puissance en temps réel
 
-Suivez toutes les valeurs électriques importantes en temps réel :
-puissance AC, charge/décharge batterie, utilisation réseau et statistiques de charge.
+Suivez toutes les valeurs électriques en temps réel :
 
-![Power](docs/images/inverter-power.png)
+* sortie AC
+* charge/décharge batterie
+* utilisation du réseau
+* statistiques de charge
+
+![Power](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-power.png)
 
 ---
 
 ### ☀️ Suivi de la production solaire
 
-Surveillez la production photovoltaïque, les entrées MPPT et les statistiques solaires journalières, mensuelles et annuelles.
+Surveillez la production PV et les entrées MPPT.
 
-![PV](docs/images/inverter-pv.png)
-
-
-Add-on Home Assistant permettant de **surveiller et piloter jusqu’à 3 onduleurs Voltronic / Axpert**.
-
-Compatible avec la majorité des modèles utilisant le protocole Voltronic (Axpert, VM, MKS, MAX, MAX II, MAX IV…).
+![PV](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-pv.png)
 
 ---
 
-# 🔧 Installation – Câble RS232 & Adaptateur USB
+# 🔌 Méthodes de connexion
 
-Cet add-on communique avec l’onduleur via le **port RS232 Voltronic (connecteur RJ45)**.
+L’onduleur peut être connecté à Home Assistant de **deux façons** :
 
-Pour connecter votre onduleur à Home Assistant, vous devez :
+1️⃣ **Connexion série (USB / RS232)**
+2️⃣ **Connexion via passerelle réseau (Ethernet / Wi-Fi)**
 
-1️⃣ Fabriquer un **câble RJ45 → DB9**
-2️⃣ Utiliser un **adaptateur USB → RS232**
-
----
-
-## 🧰 Matériel nécessaire
-
-Vous aurez besoin de :
-
-* Connecteur RJ45 (prise Ethernet)
-* Connecteur DB9 femelle
-* Petit câble (**3 fils seulement nécessaires**)
-* Adaptateur USB → RS232 (**FTDI recommandé**)
+Jusqu’à **3 onduleurs peuvent être gérés simultanément**.
 
 ---
 
-## 🔌 Câblage RJ45 → DB9
+# 🔧 Installation série (RS232)
 
-Les onduleurs Voltronic exposent le port RS232 sur un **connecteur RJ45**.
-Seuls **TX / RX / GND** sont nécessaires.
+L’onduleur communique via **RS232 à travers un connecteur RJ45**.
 
-### Schéma de câblage
+Chaîne de connexion :
 
-![RJ45 to DB9 pinout](docs/images/cable-rj45-db9-pinout.jpg)
+```
+Onduleur RJ45
+     ↓
+Câble RJ45 → DB9
+     ↓
+Adaptateur USB → RS232
+     ↓
+Home Assistant
+```
+
+---
+
+## Câblage RJ45 → DB9
+
+![RJ45 to DB9 pinout](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-db9-pinout.jpg)
 
 ### Tableau de câblage
 
-| Pin RJ45 | Pin DB9 | Signal |
-| -------- | ------- | ------ |
-| 1        | 2       | TX     |
-| 2        | 3       | RX     |
-| 8        | 5       | GND    |
+| RJ45 | DB9 | Signal |
+| ---- | --- | ------ |
+| 1    | 2   | TX     |
+| 2    | 3   | RX     |
+| 8    | 5   | GND    |
 
-⚠️ Important :
+⚠️ Important
 
-* Dessin RJ45 = **vue de dessus**
-* Dessin DB9 = **vue de face (femelle)**
-
----
-
-## 🪛 Exemple de câble terminé
-
-![RJ45 DB9 cable](docs/images/cable-rj45-db9.jpg)
-
-À l’intérieur du RJ45, seulement **3 fils sont connectés** :
-
-![RJ45 wiring close-up](docs/images/cable-rj45-inside.jpg)
+* Schéma RJ45 = **vue de dessus**
+* Schéma DB9 = **vue de face**
 
 ---
 
-## 🔌 Adaptateur USB → RS232
+## Exemple de câble terminé
 
-Le câble DB9 doit être connecté à Home Assistant via un adaptateur USB.
+![RJ45 DB9 cable](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-db9.jpg)
+
+À l’intérieur du connecteur RJ45 seuls **3 fils sont utilisés**.
+
+![RJ45 wiring](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-inside.jpg)
+
+---
+
+## Adaptateur USB → RS232
 
 Chipsets recommandés :
 
-* ⭐ FTDI (meilleure compatibilité)
-* ✔️ Prolific PL2303 (fonctionne bien)
+* ⭐ **FTDI**
+* ✔ **Prolific PL2303**
+
+![USB RS232 adapter](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/usb-rs232-adapter.png)
+
+---
+
+# 🌐 Installation via passerelle (Ethernet / Wi-Fi)
+
+Le module complémentaire prend également en charge les **passerelles série**, permettant de communiquer avec l’onduleur **via le réseau au lieu de l’USB**.
+
+Utile lorsque :
+
+* Home Assistant est éloigné de l’onduleur
+* vous préférez une **connexion réseau**
+* l’USB n’est pas disponible
+
+---
+
+## Passerelles recommandées
+
+Les passerelles **Elfin suivantes sont recommandées et testées** :
+
+* **Elfin EE10A** – version Ethernet
+* **Elfin EW10A** – version Wi-Fi
+
+![Elfin Gateway](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/gateway.jpg)
+
+Ces modules convertissent **RS232 → TCP/IP**.
+
+---
+
+## Schéma de connexion via passerelle
+
+```
+Onduleur RJ45
+      ↓
+Câble RJ45 → RS232
+      ↓
+Passerelle Elfin
+      ↓
+Réseau Ethernet / Wi-Fi
+      ↓
+Home Assistant
+```
+
+---
+
+## Configuration de la passerelle
+
+Paramètres série :
+
+```
+Baudrate : 2400
+Data bits : 8
+Stop bits : 1
+Parity : None
+```
+
+Paramètres réseau :
+
+```
+Mode : TCP Server
+Port : 8899
+```
+
+---
+
+# ⚙️ Configuration du module
+
+Chaque onduleur peut être configuré indépendamment.
 
 Exemple :
 
-![USB RS232 adapter](docs/images/usb-rs232-adapter.png)
+```yaml
+inv1_link: serial
+inv1_serial_port: /dev/serial/by-id/...
 
----
-
-## 🖥️ Connexion finale
-
-```
-Port RJ45 onduleur
-      ↓
-Câble RJ45 → DB9 (DIY)
-      ↓
-Adaptateur USB → RS232
-      ↓
-Home Assistant / Raspberry Pi / Serveur
+inv2_link: gateway
+inv2_gateway_host: 192.168.1.40
+inv2_gateway_port: 8899
 ```
 
-Une fois branché, le port série apparaîtra sous :
-
-```
-/dev/serial/by-id/...
-```
-
-Vous pouvez maintenant configurer le port dans l’add-on 🎉
-
----
-
-# ⚙️ Configuration (Important)
-
-## 🔌 Nombre d’onduleurs supportés
-
-L’add-on peut gérer **jusqu’à 3 onduleurs simultanément** :
-
-* Série 1 → Onduleur 1
-* Série 2 → Onduleur 2
-* Série 3 → Onduleur 3
-
-Chaque onduleur possède :
-
-* Son propre port série
-* Son propre namespace MQTT
-* Ses propres entités Home Assistant
-
-### Topics MQTT
+Les topics MQTT sont séparés pour chaque onduleur :
 
 ```
 voltronic/1/...
@@ -170,170 +238,111 @@ voltronic/2/...
 voltronic/3/...
 ```
 
-Chaque onduleur est totalement isolé des autres.
-
----
-
-## 🧠 Compatibilité multi-modèles
-
-Les différences de firmware sont gérées automatiquement :
-
-* Détection des commandes supportées
-* Gestion automatique des NAK
-* Adaptation automatique du format
-* Fallback intelligent si nécessaire
-
-Vous pouvez mélanger différents modèles **sans modifier le code**.
-
 ---
 
 # ✨ Fonctionnalités principales
 
-## 🟢 Supervision complète
+### 🟢 Surveillance complète
 
-Intégration automatique dans Home Assistant :
+Capteurs automatiques :
 
-* Statut onduleur en temps réel
-* Puissance PV / Batterie / Charge
-* Énergie journalière / mensuelle / annuelle
-* Températures, tensions, courants
-* Alarmes et avertissements
-* Statut MPPT
-* État de charge batterie
-* Statut charge solaire et secteur
+* puissance PV
+* puissance batterie
+* consommation réseau
+* puissance de charge
+* tensions
+* courants
+* températures
+* alarmes
 
-Rafraîchissement ≈ **4 secondes**.
-
----
-
-## 🎛️ Contrôle depuis Home Assistant
-
-Modification des paramètres directement depuis HA :
-
-### Priorités sortie & charge
-
-* Priorité sortie (Utility / Solar / SBU)
-* Priorité charge (Solar First / Solar + Utility / Solar Only)
-* Type de batterie
-
-### Tensions batterie
-
-* Bulk (CV)
-* Float
-* Recharge
-* Re-discharge
-* Cut-off
-
-### Courants
-
-* Courant de charge max
-* Courant de charge secteur max
-* Courant de décharge max
-
-Chaque modification :
-
-1. Est envoyée à l’onduleur
-2. Est relue automatiquement
-3. Est synchronisée avec Home Assistant
-
-Aucune désynchronisation possible.
+Fréquence de rafraîchissement ≈ **4 secondes**
 
 ---
 
-# 🌐 Support futur – Modules Gateway / Ethernet
+### 🎛️ Contrôle depuis Home Assistant
 
-Une future version ajoutera le support des **modules gateway** (Wi-Fi / Ethernet) pour des installations sans USB.
+Modification des paramètres de l’onduleur :
+
+* priorité de sortie
+* priorité de charge
+* type de batterie
+* tensions
+* limites de courant
+
+Chaque modification est :
+
+1️⃣ envoyée à l’onduleur
+2️⃣ relue automatiquement
+3️⃣ synchronisée avec Home Assistant
 
 ---
 
 # 🏠 Intégration Home Assistant
 
-Création automatique via **MQTT Auto-Discovery** :
+Les entités sont créées automatiquement via **MQTT Auto-Discovery**.
 
-* Sensors
-* Numbers
-* Selects
-* Switches
-* Binary sensors
+Types d’entités créées :
+
+* capteurs
+* nombres
+* sélecteurs
+* interrupteurs
+* capteurs binaires
 
 Aucune configuration YAML requise.
 
 ---
 
-# 🔄 Synchronisation automatique
+# 🔐 Robuste et fiable
 
-Après chaque modification :
+Fonctionnalités incluses :
 
-* Lecture complète des paramètres
-* Vérification automatique
-* Home Assistant reflète toujours l’état réel
-
----
-
-# 🔐 Robuste & Fiable
-
-* Gestion automatique des erreurs série
-* Protection commandes invalides
-* File d’attente série (anti-collision)
-* Redémarrage automatique
-* Compatible systèmes parallèles
+* système de file d’attente des commandes
+* gestion automatique des NAK
+* récupération après erreur de communication
+* détection de compatibilité des onduleurs
 
 ---
 
 # 📊 Télémétrie anonyme (optionnelle)
 
-Pour savoir combien d’installations utilisent l’add-on, une **télémétrie anonyme optionnelle** est disponible.
+Afin d’estimer le nombre d’installations utilisant le module, une télémétrie optionnelle est disponible.
 
-Lorsqu’elle est activée, l’add-on envoie un petit **ping quotidien (“bip”)** qui incrémente simplement un compteur global.
+Le module envoie une petite requête **“bip” quotidienne**.
 
-### Respect de la vie privée
+Respect de la vie privée :
 
-Aucune donnée personnelle n’est envoyée :
+* aucune adresse IP enregistrée
+* aucune donnée onduleur
+* aucune donnée Home Assistant
 
-* ❌ Aucune IP stockée
-* ❌ Aucune donnée Home Assistant
-* ❌ Aucune donnée MQTT
-* ❌ Aucune donnée onduleur
-* ❌ Aucun numéro de série
-
-Seul le **nombre d’installations** est compté.
-
-### Activer / désactiver
-
-Activé par défaut :
-
-```yaml
-send_bip: true
-```
-
-Désactiver :
+Désactiver la télémétrie :
 
 ```yaml
 send_bip: false
 ```
 
-L’add-on fonctionne exactement pareil lorsqu’il est désactivé.
+---
+
+# 📄 Liste complète des paramètres
+
+https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/PARAMETERS.md
 
 ---
 
-## 📄 Liste complète des paramètres
+# 🛠 Support
 
-[https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/PARAMETERS.md](https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/PARAMETERS.md)
-
----
-
-# 🛠️ Support & Suggestions
-
-Ouvrez une **issue GitHub** pour signaler un bug ou proposer une fonctionnalité.
+Ouvrez une **issue sur GitHub** pour signaler un bug ou proposer une amélioration.
 
 ---
 
 # ❤️ Contribution
 
-Projet open-source en évolution.
-Contributions et retours bienvenus.
--
+Projet open-source.
+
+Les contributions et retours sont les bienvenus.
+
 ---
 
-**Pilotage intelligent des onduleurs dans Home Assistant 🚀**
+**Contrôle intelligent des onduleurs entièrement intégré à Home Assistant 🚀**
 
