@@ -24,6 +24,18 @@
   "options": {
     "serial_ports": ["", "", ""],
 
+    "inverter_1_transport": "serial",
+    "inverter_1_host": "",
+    "inverter_1_port": 8899,
+
+    "inverter_2_transport": "serial",
+    "inverter_2_host": "",
+    "inverter_2_port": 8899,
+
+    "inverter_3_transport": "serial",
+    "inverter_3_host": "",
+    "inverter_3_port": 8899,
+
     "mqtt_host": "",
     "mqtt_port": 1883,
     "mqtt_user": "",
@@ -33,6 +45,18 @@
 
   "schema": {
     "serial_ports": ["str?", "str?", "str?"],
+
+    "inverter_1_transport": "list(serial|tcp)",
+    "inverter_1_host": "str?",
+    "inverter_1_port": "int(1,65535)?",
+
+    "inverter_2_transport": "list(serial|tcp)",
+    "inverter_2_host": "str?",
+    "inverter_2_port": "int(1,65535)?",
+
+    "inverter_3_transport": "list(serial|tcp)",
+    "inverter_3_host": "str?",
+    "inverter_3_port": "int(1,65535)?",
 
     "mqtt_host": "str",
     "mqtt_port": "int(1,65535)",
