@@ -63,7 +63,6 @@ else
   ADDON_TIMEZONE="$TZ_MODE"
 fi
 
-# sécurité si champ vide
 if [ -z "${ADDON_TIMEZONE:-}" ] || [ "$ADDON_TIMEZONE" = "null" ]; then
   ADDON_TIMEZONE="UTC"
 fi
@@ -72,20 +71,15 @@ export ADDON_TIMEZONE
 logi "Timezone (options.json): $ADDON_TIMEZONE"
 
 # ---------- Serial ports ----------
-SERIAL_1="$(jq -r '.serial_ports[0] // ""' "$OPTS")"
-SERIAL_2="$(jq -r '.serial_ports[1] // ""' "$OPTS")"
-SERIAL_3="$(jq -r '.serial_ports[2] // ""' "$OPTS")"
+SERIAL_1="$(jq -r '.inv1_serial_port // ""' "$OPTS")"
+SERIAL_2="$(jq -r '.inv2_serial_port // ""' "$OPTS")"
+SERIAL_3="$(jq -r '.inv3_serial_port // ""' "$OPTS")"
 
 logi "Serial1: ${SERIAL_1:-<empty>}"
 logi "Serial2: ${SERIAL_2:-<empty>}"
 logi "Serial3: ${SERIAL_3:-<empty>}"
 
 # ---------- Gestion du flows.json ----------
-# Logique de versioning :
-#   - Première installation                   -> copie du flows depuis l'addon
-#   - Version flows addon > version installée -> mise à jour du flows
-#   - Version identique                       -> flows utilisateur conservé
-
 ADDON_FLOWS_VERSION="$(cat /addon/flows_version.txt 2>/dev/null || echo '0.0.0')"
 INSTALLED_VERSION="$(cat /data/flows_version.txt 2>/dev/null || echo '')"
 
@@ -101,11 +95,6 @@ fi
 tmp="/data/flows.tmp.json"
 
 # ---------- Injection des ports serial configurés ----------
-# IDs fixes des noeuds serial-port dans flows.json :
-#   SERIAL_1 -> c546b54ae425b9d2
-#   SERIAL_2 -> 55a40ce3e960db15
-#   SERIAL_3 -> 39e06a015d18096d
-
 logi "Mise à jour des ports serial dans flows.json..."
 
 update_serial_port() {
@@ -142,6 +131,99 @@ update_serial_port "c546b54ae425b9d2" "$SERIAL_1" "SERIAL_1"
 update_serial_port "55a40ce3e960db15" "$SERIAL_2" "SERIAL_2"
 update_serial_port "39e06a015d18096d" "$SERIAL_3" "SERIAL_3"
 
+# =====================================================================
+# GATEWAY / SERIAL : lecture depuis config add-on
+# =====================================================================
+
+sanitize_transport() {
+  local v="$1"
+  case "$v" in
+    serial)       echo "serial" ;;
+    gateway|tcp)  echo "tcp" ;;
+    *)            echo "serial" ;;
+  esac
+}
+
+INV1_LINK="$(jq -r '.inv1_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
+INV2_LINK="$(jq -r '.inv2_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
+INV3_LINK="$(jq -r '.inv3_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
+
+INV1_TRANSPORT="$(sanitize_transport "$INV1_LINK")"
+INV2_TRANSPORT="$(sanitize_transport "$INV2_LINK")"
+INV3_TRANSPORT="$(sanitize_transport "$INV3_LINK")"
+
+INV1_HOST="$(jq -r '.inv1_gateway_host // ""' "$OPTS")"
+INV2_HOST="$(jq -r '.inv2_gateway_host // ""' "$OPTS")"
+INV3_HOST="$(jq -r '.inv3_gateway_host // ""' "$OPTS")"
+
+INV1_PORT="$(jq_int_or '.inv1_gateway_port' 8899)"
+INV2_PORT="$(jq_int_or '.inv2_gateway_port' 8899)"
+INV3_PORT="$(jq_int_or '.inv3_gateway_port' 8899)"
+
+logi "Inv1 -> link: $INV1_LINK | transport: $INV1_TRANSPORT | host: ${INV1_HOST:-<empty>} | port: ${INV1_PORT}"
+logi "Inv2 -> link: $INV2_LINK | transport: $INV2_TRANSPORT | host: ${INV2_HOST:-<empty>} | port: ${INV2_PORT}"
+logi "Inv3 -> link: $INV3_LINK | transport: $INV3_TRANSPORT | host: ${INV3_HOST:-<empty>} | port: ${INV3_PORT}"
+
+# Validation : si gateway, host obligatoire
+if [ "$INV1_TRANSPORT" = "tcp" ] && [ -z "${INV1_HOST}" ]; then
+  loge "Inv1: inv1_link=gateway mais inv1_gateway_host est vide dans la config."
+  exit 1
+fi
+if [ "$INV2_TRANSPORT" = "tcp" ] && [ -z "${INV2_HOST}" ]; then
+  loge "Inv2: inv2_link=gateway mais inv2_gateway_host est vide dans la config."
+  exit 1
+fi
+if [ "$INV3_TRANSPORT" = "tcp" ] && [ -z "${INV3_HOST}" ]; then
+  loge "Inv3: inv3_link=gateway mais inv3_gateway_host est vide dans la config."
+  exit 1
+fi
+
+# Export pour Node-RED (env.get())
+export INV1_TRANSPORT INV2_TRANSPORT INV3_TRANSPORT
+export INV1_HOST INV2_HOST INV3_HOST
+export INV1_PORT INV2_PORT INV3_PORT
+
+# =====================================================================
+# PATCH TCP IN/OUT host/port dans flows.json (via jq + IDs fixes)
+# =====================================================================
+
+update_tcp_host_port() {
+  local node_id="$1"
+  local host="$2"
+  local port="$3"
+  local label="$4"
+
+  jq --arg id "$node_id" --arg host "$host" --arg port "$port" '
+    map(
+      if .id == $id then
+        .host = $host | .port = $port
+      else .
+      end
+    )
+  ' /data/flows.json > "$tmp" && mv "$tmp" /data/flows.json
+
+  logi "TCP ${label} -> host=${host} port=${port}"
+}
+
+# Pour éviter que les nodes TCP essaient de se connecter en mode serial :
+TCP1_HOST="$INV1_HOST"; TCP1_PORT="$INV1_PORT"
+TCP2_HOST="$INV2_HOST"; TCP2_PORT="$INV2_PORT"
+TCP3_HOST="$INV3_HOST"; TCP3_PORT="$INV3_PORT"
+
+if [ "$INV1_TRANSPORT" = "serial" ]; then TCP1_HOST="127.0.0.1"; TCP1_PORT="1"; fi
+if [ "$INV2_TRANSPORT" = "serial" ]; then TCP2_HOST="127.0.0.1"; TCP2_PORT="1"; fi
+if [ "$INV3_TRANSPORT" = "serial" ]; then TCP3_HOST="127.0.0.1"; TCP3_PORT="1"; fi
+
+# IDs fournis
+update_tcp_host_port "affc083c1b7614e8" "$TCP1_HOST" "$TCP1_PORT" "OUT1"
+update_tcp_host_port "860cc648606abc47" "$TCP1_HOST" "$TCP1_PORT" "IN1"
+
+update_tcp_host_port "faacf46b9ccb1349" "$TCP2_HOST" "$TCP2_PORT" "OUT2"
+update_tcp_host_port "676593474485375b" "$TCP2_HOST" "$TCP2_PORT" "IN2"
+
+update_tcp_host_port "edb28c0311499138" "$TCP3_HOST" "$TCP3_PORT" "OUT3"
+update_tcp_host_port "6178939eaeb81b59" "$TCP3_HOST" "$TCP3_PORT" "IN3"
+
 # ---------- Injection MQTT dans le node mqtt-broker ----------
 if ! jq -e '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker")' /data/flows.json >/dev/null 2>&1; then
   loge 'Aucun mqtt-broker nommé "HA MQTT Broker" trouvé dans flows.json'
@@ -161,8 +243,7 @@ jq \
       .broker=$host
       | .port=$port
       | .user=$user
-    else .
-    end
+    else . end
   )
   ' /data/flows.json > "$tmp" && mv "$tmp" /data/flows.json
 
