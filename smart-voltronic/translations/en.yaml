@@ -1,32 +1,93 @@
 configuration:
-  serial_ports:
-    name: Serial ports
-    description: "Serial USB ports connected to the inverters."
+
+  inv1_link:
+    name: Inverter 1 connection type
+    description: Select how inverter 1 is connected.
+
+  inv1_serial_port:
+    name: Inverter 1 serial port
+    description: Serial device used to communicate with inverter 1.
+
+  inv1_gateway_host:
+    name: Inverter 1 gateway host
+    description: IP address of the Elfin / TCP gateway.
+
+  inv1_gateway_port:
+    name: Inverter 1 gateway port
+    description: TCP port of the gateway.
+
+  inv2_link:
+    name: Inverter 2 connection type
+    description: Select how inverter 2 is connected.
+
+  inv2_serial_port:
+    name: Inverter 2 serial port
+    description: Serial device used to communicate with inverter 2.
+
+  inv2_gateway_host:
+    name: Inverter 2 gateway host
+    description: IP address of the Elfin / TCP gateway.
+
+  inv2_gateway_port:
+    name: Inverter 2 gateway port
+    description: TCP port of the gateway.
+
+  inv3_link:
+    name: Inverter 3 connection type
+    description: Select how inverter 3 is connected.
+
+  inv3_serial_port:
+    name: Inverter 3 serial port
+    description: Serial device used to communicate with inverter 3.
+
+  inv3_gateway_host:
+    name: Inverter 3 gateway host
+    description: IP address of the Elfin / TCP gateway.
+
+  inv3_gateway_port:
+    name: Inverter 3 gateway port
+    description: TCP port of the gateway.
+
+  battery_section:
+    name: Battery configuration
+    description: Battery system settings.
+
+  battery_system_voltage:
+    name: Battery system voltage
+    description: Select the DC voltage of your battery system.
+
+  mqtt_section:
+    name: MQTT configuration
+    description: MQTT broker connection settings.
 
   mqtt_host:
     name: MQTT host
-    description: "MQTT broker address."
+    description: Address of the MQTT broker.
 
   mqtt_port:
     name: MQTT port
-    description: "MQTT broker port."
+    description: Port used by the MQTT broker.
 
   mqtt_user:
     name: MQTT username
-    description: "MQTT username (leave empty if not required)."
+    description: Username used to authenticate with the MQTT broker.
 
   mqtt_pass:
     name: MQTT password
-    description: "MQTT password."
+    description: Password used to authenticate with the MQTT broker.
 
   send_bip:
-    name: Send inverter beep
-    description: "Play a beep on the inverter when sending commands."
+    name: Enable inverter beep
+    description: Enable or disable inverter beep when settings change.
+
+  timezone_section:
+    name: Timezone
+    description: Configure the timezone used for daily statistics.
 
   timezone_mode:
-    name: Timezone
-    description: "Select your timezone (used for daily reset)."
+    name: Timezone selection
+    description: Select the timezone used by the add-on.
 
   timezone_custom:
     name: Custom timezone
-    description: "Only used if CUSTOM is selected. Example: Europe/Athens"
+    description: Used when timezone mode is set to CUSTOM.
