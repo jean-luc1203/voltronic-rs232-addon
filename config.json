@@ -1,5 +1,5 @@
 {
-  "name": "Smart Voltronic Node-RED",
+  "name": "voltronic rs232 wired management,
   "version": "1.4.9",
   "slug": "smart_voltronic",
   "description": "Node-RED Voltronic inverter bridge to MQTT",
