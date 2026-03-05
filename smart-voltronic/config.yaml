@@ -46,6 +46,12 @@ options:
   inv3_gateway_port: 8899
 
   # ============================================================
+  # 🔋 BATTERY SYSTEM VOLTAGE
+  # ============================================================
+  battery_section: "────────── BATTERY ──────────"
+  battery_system_voltage: "48V"
+
+  # ============================================================
   # 📡 MQTT CONFIGURATION
   # ============================================================
   mqtt_section: "────────── MQTT CONFIGURATION ──────────"
@@ -66,7 +72,6 @@ options:
   timezone_mode: "Europe/Paris"
   timezone_custom: "UTC"
 
-
 schema:
   # Onduleur 1
   inv1_link: list(serial|gateway)
@@ -86,6 +91,12 @@ schema:
   inv3_gateway_host: str?
   inv3_gateway_port: int?
 
+  # Séparateur Battery
+  battery_section: str?
+
+  # Battery system voltage
+  battery_system_voltage: list(24V|48V)
+
   # Séparateur MQTT
   mqtt_section: str?
 
@@ -104,3 +115,4 @@ schema:
   # Timezone
   timezone_mode: list(Europe/Paris|Europe/Berlin|Europe/Brussels|Europe/Madrid|Europe/Rome|Europe/London|America/New_York|America/Chicago|America/Los_Angeles|America/Montreal|Asia/Dubai|Asia/Tokyo|Australia/Sydney|CUSTOM)
   timezone_custom: str?
+
