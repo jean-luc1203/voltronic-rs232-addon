@@ -55,8 +55,8 @@ sanitize_transport() {
 # ============================================================
 MQTT_HOST="$(jq_str_or '.mqtt_host' '')"
 MQTT_PORT="$(jq_int_or '.mqtt_port' 1883)"
-MQTT_USER="$(jq -r '.mqtt_user // .mqtt_username // ""' "$OPTS")"
-MQTT_PASS="$(jq -r '.mqtt_pass // .mqtt_password // ""' "$OPTS")"
+MQTT_USER="$(jq -r '.mqtt_user // ""' "$OPTS")"
+MQTT_PASS="$(jq -r '.mqtt_pass // ""' "$OPTS")"
 
 logi "MQTT (options.json): ${MQTT_HOST:-<empty>}:${MQTT_PORT} (user: ${MQTT_USER:-<none>})"
 
@@ -71,7 +71,7 @@ if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASS}" ]; then
 fi
 
 # ============================================================
-# Timezone (options.json)
+# Timezone
 # ============================================================
 TZ_MODE="$(jq -r '.timezone_mode // "UTC"' "$OPTS")"
 TZ_CUSTOM="$(jq -r '.timezone_custom // "UTC"' "$OPTS")"
@@ -90,7 +90,7 @@ export ADDON_TIMEZONE
 logi "Timezone (options.json): $ADDON_TIMEZONE"
 
 # ============================================================
-# Battery system voltage (options.json)
+# Battery system voltage
 # ============================================================
 BATTERY_SYSTEM_VOLTAGE_RAW="$(jq -r '.battery_system_voltage // "48V"' "$OPTS" | tr '[:lower:]' '[:upper:]' | tr -d ' ')"
 
@@ -104,52 +104,46 @@ export BATTERY_SYSTEM_VOLTAGE
 logi "Battery system voltage (options.json): ${BATTERY_SYSTEM_VOLTAGE}V"
 
 # ============================================================
-# Serial ports
-# config.json -> serial_ports[0..2]
+# Inverter config
 # ============================================================
-SERIAL_1="$(jq -r '.serial_ports[0] // ""' "$OPTS")"
-SERIAL_2="$(jq -r '.serial_ports[1] // ""' "$OPTS")"
-SERIAL_3="$(jq -r '.serial_ports[2] // ""' "$OPTS")"
-
-logi "Serial1: ${SERIAL_1:-<empty>}"
-logi "Serial2: ${SERIAL_2:-<empty>}"
-logi "Serial3: ${SERIAL_3:-<empty>}"
-
-# ============================================================
-# Transport / host / port par onduleur
-# config.json ->
-#   inverter_1_transport / inverter_1_host / inverter_1_port
-# ============================================================
-INV1_LINK="$(jq -r '.inverter_1_transport // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
-INV2_LINK="$(jq -r '.inverter_2_transport // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
-INV3_LINK="$(jq -r '.inverter_3_transport // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
+INV1_LINK="$(jq -r '.inv1_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
+INV2_LINK="$(jq -r '.inv2_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
+INV3_LINK="$(jq -r '.inv3_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
 
 INV1_TRANSPORT="$(sanitize_transport "$INV1_LINK")"
 INV2_TRANSPORT="$(sanitize_transport "$INV2_LINK")"
 INV3_TRANSPORT="$(sanitize_transport "$INV3_LINK")"
 
-INV1_HOST="$(jq -r '.inverter_1_host // ""' "$OPTS")"
-INV2_HOST="$(jq -r '.inverter_2_host // ""' "$OPTS")"
-INV3_HOST="$(jq -r '.inverter_3_host // ""' "$OPTS")"
+SERIAL_1="$(jq -r '.inv1_serial_port // ""' "$OPTS")"
+SERIAL_2="$(jq -r '.inv2_serial_port // ""' "$OPTS")"
+SERIAL_3="$(jq -r '.inv3_serial_port // ""' "$OPTS")"
 
-INV1_PORT="$(jq_int_or '.inverter_1_port' 8899)"
-INV2_PORT="$(jq_int_or '.inverter_2_port' 8899)"
-INV3_PORT="$(jq_int_or '.inverter_3_port' 8899)"
+INV1_HOST="$(jq -r '.inv1_gateway_host // ""' "$OPTS")"
+INV2_HOST="$(jq -r '.inv2_gateway_host // ""' "$OPTS")"
+INV3_HOST="$(jq -r '.inv3_gateway_host // ""' "$OPTS")"
+
+INV1_PORT="$(jq_int_or '.inv1_gateway_port' 8899)"
+INV2_PORT="$(jq_int_or '.inv2_gateway_port' 8899)"
+INV3_PORT="$(jq_int_or '.inv3_gateway_port' 8899)"
+
+logi "Serial1: ${SERIAL_1:-<empty>}"
+logi "Serial2: ${SERIAL_2:-<empty>}"
+logi "Serial3: ${SERIAL_3:-<empty>}"
 
 logi "Inv1 -> link: $INV1_LINK | transport: $INV1_TRANSPORT | host: ${INV1_HOST:-<empty>} | port: ${INV1_PORT}"
 logi "Inv2 -> link: $INV2_LINK | transport: $INV2_TRANSPORT | host: ${INV2_HOST:-<empty>} | port: ${INV2_PORT}"
 logi "Inv3 -> link: $INV3_LINK | transport: $INV3_TRANSPORT | host: ${INV3_HOST:-<empty>} | port: ${INV3_PORT}"
 
 if [ "$INV1_TRANSPORT" = "tcp" ] && [ -z "${INV1_HOST}" ]; then
-  loge "Inv1: inverter_1_transport=tcp mais inverter_1_host est vide dans la config."
+  loge "Inv1: inv1_link=gateway mais inv1_gateway_host est vide dans la config."
   exit 1
 fi
 if [ "$INV2_TRANSPORT" = "tcp" ] && [ -z "${INV2_HOST}" ]; then
-  loge "Inv2: inverter_2_transport=tcp mais inverter_2_host est vide dans la config."
+  loge "Inv2: inv2_link=gateway mais inv2_gateway_host est vide dans la config."
   exit 1
 fi
 if [ "$INV3_TRANSPORT" = "tcp" ] && [ -z "${INV3_HOST}" ]; then
-  loge "Inv3: inverter_3_transport=tcp mais inverter_3_host est vide dans la config."
+  loge "Inv3: inv3_link=gateway mais inv3_gateway_host est vide dans la config."
   exit 1
 fi
 
@@ -157,6 +151,7 @@ fi
 export INV1_TRANSPORT INV2_TRANSPORT INV3_TRANSPORT
 export INV1_HOST INV2_HOST INV3_HOST
 export INV1_PORT INV2_PORT INV3_PORT
+export SERIAL_1 SERIAL_2 SERIAL_3
 
 # ============================================================
 # Gestion du flows.json
@@ -174,7 +169,7 @@ else
 fi
 
 # ============================================================
-# Injection des ports serial configurés
+# Patch serial ports
 # ============================================================
 logi "Mise à jour des ports serial dans flows.json..."
 
@@ -213,7 +208,7 @@ update_serial_port "55a40ce3e960db15" "$SERIAL_2" "SERIAL_2"
 update_serial_port "39e06a015d18096d" "$SERIAL_3" "SERIAL_3"
 
 # ============================================================
-# Patch TCP IN/OUT host/port dans flows.json
+# Patch TCP IN/OUT host/port
 # ============================================================
 update_tcp_host_port() {
   local node_id="$1"
@@ -241,7 +236,7 @@ update_tcp_host_port() {
   logi "TCP ${label} -> host=${host} port=${port}"
 }
 
-# En mode serial, on met une valeur neutre pour éviter NaN au boot
+# Eviter NaN au boot si transport serial
 TCP1_HOST="$INV1_HOST"; TCP1_PORT="$INV1_PORT"
 TCP2_HOST="$INV2_HOST"; TCP2_PORT="$INV2_PORT"
 TCP3_HOST="$INV3_HOST"; TCP3_PORT="$INV3_PORT"
@@ -250,7 +245,6 @@ if [ "$INV1_TRANSPORT" = "serial" ]; then TCP1_HOST="127.0.0.1"; TCP1_PORT="1"; 
 if [ "$INV2_TRANSPORT" = "serial" ]; then TCP2_HOST="127.0.0.1"; TCP2_PORT="1"; fi
 if [ "$INV3_TRANSPORT" = "serial" ]; then TCP3_HOST="127.0.0.1"; TCP3_PORT="1"; fi
 
-# IDs TCP à adapter à tes noeuds réels
 update_tcp_host_port "affc083c1b7614e8" "$TCP1_HOST" "$TCP1_PORT" "OUT1"
 update_tcp_host_port "860cc648606abc47" "$TCP1_HOST" "$TCP1_PORT" "IN1"
 
@@ -261,7 +255,7 @@ update_tcp_host_port "edb28c0311499138" "$TCP3_HOST" "$TCP3_PORT" "OUT3"
 update_tcp_host_port "6178939eaeb81b59" "$TCP3_HOST" "$TCP3_PORT" "IN3"
 
 # ============================================================
-# Injection MQTT dans le node mqtt-broker
+# Injection MQTT dans le broker
 # ============================================================
 if ! jq -e '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker")' /data/flows.json >/dev/null 2>&1; then
   loge 'Aucun mqtt-broker nommé "HA MQTT Broker" trouvé dans flows.json'
@@ -287,7 +281,7 @@ jq \
   ' /data/flows.json > "$tmp" && mv "$tmp" /data/flows.json
 
 # ============================================================
-# Injection credentials dans flows_cred.json
+# flows_cred.json
 # ============================================================
 if [ -f /data/flows_cred.json ]; then
   rm -f /data/flows_cred.json
