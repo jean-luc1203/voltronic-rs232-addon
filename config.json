@@ -6,21 +6,15 @@
   "startup": "services",
   "boot": "auto",
   "arch": ["amd64", "aarch64", "armv7"],
-
   "init": false,
-
   "hassio_api": true,
   "homeassistant_api": true,
   "hassio_role": "default",
-
   "host_network": false,
-
   "devices": [
     "/dev/serial/by-id:/dev/serial/by-id:rwm"
   ],
-
   "map": ["data:rw"],
-
   "options": {
     "serial_ports": ["", "", ""],
 
@@ -36,13 +30,16 @@
     "inverter_3_host": "",
     "inverter_3_port": 8899,
 
+    "timezone_mode": "UTC",
+    "timezone_custom": "Europe/Paris",
+    "battery_system_voltage": "48V",
+
     "mqtt_host": "",
     "mqtt_port": 1883,
     "mqtt_user": "",
     "mqtt_pass": "",
     "mqtt_prefix": "voltronic"
   },
-
   "schema": {
     "serial_ports": ["str?", "str?", "str?"],
 
@@ -57,6 +54,10 @@
     "inverter_3_transport": "list(serial|tcp)",
     "inverter_3_host": "str?",
     "inverter_3_port": "int(1,65535)?",
+
+    "timezone_mode": "list(UTC|Europe/Paris|CUSTOM)",
+    "timezone_custom": "str?",
+    "battery_system_voltage": "list(24V|48V)",
 
     "mqtt_host": "str",
     "mqtt_port": "int(1,65535)",
