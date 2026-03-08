@@ -6,15 +6,19 @@ configuration:
 
   inv1_serial_port:
     name: Port série onduleur 1
-    description: Port série utilisé pour communiquer avec l'onduleur 1.
+    description: Périphérique série utilisé pour communiquer avec l'onduleur 1.
 
   inv1_gateway_host:
-    name: Adresse gateway onduleur 1
-    description: Adresse IP de la passerelle Elfin / TCP.
+    name: Adresse passerelle onduleur 1
+    description: Adresse IP de la passerelle TCP / Elfin.
 
   inv1_gateway_port:
-    name: Port gateway onduleur 1
+    name: Port passerelle onduleur 1
     description: Port TCP de la passerelle.
+
+  inv1_display_mode:
+    name: Mode d'affichage onduleur 1
+    description: Choisissez comment les priorités de l'onduleur sont affichées (mode moderne ou ancien affichage de l'onduleur).
 
   inv2_link:
     name: Type de connexion onduleur 2
@@ -22,15 +26,19 @@ configuration:
 
   inv2_serial_port:
     name: Port série onduleur 2
-    description: Port série utilisé pour communiquer avec l'onduleur 2.
+    description: Périphérique série utilisé pour communiquer avec l'onduleur 2.
 
   inv2_gateway_host:
-    name: Adresse gateway onduleur 2
-    description: Adresse IP de la passerelle Elfin / TCP.
+    name: Adresse passerelle onduleur 2
+    description: Adresse IP de la passerelle TCP / Elfin.
 
   inv2_gateway_port:
-    name: Port gateway onduleur 2
+    name: Port passerelle onduleur 2
     description: Port TCP de la passerelle.
+
+  inv2_display_mode:
+    name: Mode d'affichage onduleur 2
+    description: Choisissez comment les priorités de l'onduleur sont affichées (mode moderne ou ancien affichage de l'onduleur).
 
   inv3_link:
     name: Type de connexion onduleur 3
@@ -38,15 +46,19 @@ configuration:
 
   inv3_serial_port:
     name: Port série onduleur 3
-    description: Port série utilisé pour communiquer avec l'onduleur 3.
+    description: Périphérique série utilisé pour communiquer avec l'onduleur 3.
 
   inv3_gateway_host:
-    name: Adresse gateway onduleur 3
-    description: Adresse IP de la passerelle Elfin / TCP.
+    name: Adresse passerelle onduleur 3
+    description: Adresse IP de la passerelle TCP / Elfin.
 
   inv3_gateway_port:
-    name: Port gateway onduleur 3
+    name: Port passerelle onduleur 3
     description: Port TCP de la passerelle.
+
+  inv3_display_mode:
+    name: Mode d'affichage onduleur 3
+    description: Choisissez comment les priorités de l'onduleur sont affichées (mode moderne ou ancien affichage de l'onduleur).
 
   battery_section:
     name: Configuration batterie
@@ -54,7 +66,7 @@ configuration:
 
   battery_system_voltage:
     name: Tension du système batterie
-    description: Sélectionnez la tension du système batterie.
+    description: Sélectionnez la tension DC de votre système batterie.
 
   mqtt_section:
     name: Configuration MQTT
@@ -70,19 +82,19 @@ configuration:
 
   mqtt_user:
     name: Utilisateur MQTT
-    description: Nom d'utilisateur pour se connecter au broker MQTT.
+    description: Nom d'utilisateur pour l'authentification MQTT.
 
   mqtt_pass:
     name: Mot de passe MQTT
-    description: Mot de passe pour se connecter au broker MQTT.
+    description: Mot de passe pour l'authentification MQTT.
 
   send_bip:
-    name: Activer le bip onduleur
-    description: Active ou désactive le bip de l'onduleur lors d'un changement de paramètre.
+    name: Bip de l'onduleur
+    description: Activer ou désactiver le bip de l'onduleur lors des changements de paramètres.
 
   timezone_section:
     name: Fuseau horaire
-    description: Configuration du fuseau horaire pour les statistiques journalières.
+    description: Configure le fuseau horaire utilisé pour les statistiques journalières.
 
   timezone_mode:
     name: Sélection du fuseau horaire
@@ -90,4 +102,4 @@ configuration:
 
   timezone_custom:
     name: Fuseau horaire personnalisé
-    description: Utilisé lorsque le mode CUSTOM est sélectionné.
+    description: Utilisé lorsque le mode de fuseau horaire est défini sur CUSTOM.
