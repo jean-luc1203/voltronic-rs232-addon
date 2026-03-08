@@ -1,5 +1,25 @@
 # Changelog – Smart Voltronic Add-on
 
+## 1.5.1
+
+### Improvements
+
+* Added **display mode selection (Modern / Legacy)** in the add-on configuration.
+* **Modern mode** keeps the standard Home Assistant naming for inverter priorities.
+* **Legacy mode** restores the classic inverter terminology (USB / SUB / SBU and CSO / SNU / OSO) for users familiar with the original inverter display.
+* Improved compatibility with different Voltronic inverter firmware versions.
+
+### Enhancements
+
+* The add-on now **automatically detects unsupported inverter commands**.
+* Commands that are not supported by the inverter will **automatically disable themselves** to prevent repeated errors and unnecessary polling.
+
+### Fixes
+
+* Minor stability improvements.
+* Various small fixes and internal optimizations.
+
+
 ## 1.4.9
 
 ### Added
