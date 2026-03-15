@@ -29,6 +29,7 @@ options:
   inv1_gateway_host: ""
   inv1_gateway_port: 8899
   inv1_display_mode: "modern"
+  inv1_output_priority_2choices: false
 
   # ============================================================
   # ⚡ ONDULEUR 2
@@ -38,6 +39,7 @@ options:
   inv2_gateway_host: ""
   inv2_gateway_port: 8899
   inv2_display_mode: "modern"
+  inv2_output_priority_2choices: false
 
   # ============================================================
   # ⚡ ONDULEUR 3
@@ -47,6 +49,7 @@ options:
   inv3_gateway_host: ""
   inv3_gateway_port: 8899
   inv3_display_mode: "modern"
+  inv3_output_priority_2choices: false
 
   # ============================================================
   # 🔋 BATTERY SYSTEM VOLTAGE
@@ -82,6 +85,7 @@ schema:
   inv1_gateway_host: str?
   inv1_gateway_port: int?
   inv1_display_mode: list(modern|legacy_usb_sub_sbu)
+  inv1_output_priority_2choices: bool
 
   # Onduleur 2
   inv2_link: list(serial|gateway)
@@ -89,6 +93,7 @@ schema:
   inv2_gateway_host: str?
   inv2_gateway_port: int?
   inv2_display_mode: list(modern|legacy_usb_sub_sbu)
+  inv2_output_priority_2choices: bool
 
   # Onduleur 3
   inv3_link: list(serial|gateway)
@@ -96,6 +101,7 @@ schema:
   inv3_gateway_host: str?
   inv3_gateway_port: int?
   inv3_display_mode: list(modern|legacy_usb_sub_sbu)
+  inv3_output_priority_2choices: bool
 
   # Séparateur Battery
   battery_section: str?
