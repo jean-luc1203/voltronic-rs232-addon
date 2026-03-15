@@ -5,8 +5,15 @@ Pilotez et surveillez vos onduleurs **Voltronic / Axpert** directement depuis Ho
 ➡️ Documentation française :  
 https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README_FR.md
 
-☕ Supporter le projet :  
-https://ko-fi.com/tapion69
+## ☕ Soutenir le développement
+
+Smart Voltronic est un projet open-source développé sur le temps libre.
+
+Si ce projet vous est utile, vous pouvez soutenir son développement :
+
+<a href="https://ko-fi.com/tapion69">
+<img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
+</a>
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Addon-blue)
 ![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-compatible-orange)
