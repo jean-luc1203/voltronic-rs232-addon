@@ -1,105 +1,71 @@
-configuration:
+{
+  "configuration": {
+    "inv1_link": "Inverter 1 connection type",
+    "inv1_serial_port": "Inverter 1 serial port",
+    "inv1_gateway_host": "Inverter 1 gateway IP",
+    "inv1_gateway_port": "Inverter 1 gateway port",
+    "inv1_display_mode": "Inverter 1 display mode",
+    "inv1_output_priority_2choices": "Limit output priority to 2 choices",
 
-  inv1_link:
-    name: Inverter 1 connection type
-    description: Select how inverter 1 is connected.
+    "inv2_link": "Inverter 2 connection type",
+    "inv2_serial_port": "Inverter 2 serial port",
+    "inv2_gateway_host": "Inverter 2 gateway IP",
+    "inv2_gateway_port": "Inverter 2 gateway port",
+    "inv2_display_mode": "Inverter 2 display mode",
+    "inv2_output_priority_2choices": "Limit output priority to 2 choices",
 
-  inv1_serial_port:
-    name: Inverter 1 serial port
-    description: Serial device used to communicate with inverter 1.
+    "inv3_link": "Inverter 3 connection type",
+    "inv3_serial_port": "Inverter 3 serial port",
+    "inv3_gateway_host": "Inverter 3 gateway IP",
+    "inv3_gateway_port": "Inverter 3 gateway port",
+    "inv3_display_mode": "Inverter 3 display mode",
+    "inv3_output_priority_2choices": "Limit output priority to 2 choices",
 
-  inv1_gateway_host:
-    name: Inverter 1 gateway host
-    description: IP address of the TCP / Elfin gateway.
+    "battery_section": "Battery settings",
+    "battery_system_voltage": "Battery system voltage",
 
-  inv1_gateway_port:
-    name: Inverter 1 gateway port
-    description: TCP port of the gateway.
+    "mqtt_section": "MQTT configuration",
+    "mqtt_host": "MQTT server",
+    "mqtt_port": "MQTT port",
+    "mqtt_user": "MQTT username",
+    "mqtt_pass": "MQTT password",
 
-  inv1_display_mode:
-    name: Inverter 1 display mode
-    description: Select how inverter priority names are displayed (Modern or Legacy inverter style).
+    "send_bip": "Enable confirmation beep",
 
-  inv2_link:
-    name: Inverter 2 connection type
-    description: Select how inverter 2 is connected.
+    "timezone_section": "Timezone",
+    "timezone_mode": "Timezone",
+    "timezone_custom": "Custom timezone"
+  },
 
-  inv2_serial_port:
-    name: Inverter 2 serial port
-    description: Serial device used to communicate with inverter 2.
+  "options": {
+    "inv1_link": {
+      "serial": "Serial connection",
+      "gateway": "TCP/IP gateway"
+    },
 
-  inv2_gateway_host:
-    name: Inverter 2 gateway host
-    description: IP address of the TCP / Elfin gateway.
+    "inv2_link": {
+      "serial": "Serial connection",
+      "gateway": "TCP/IP gateway"
+    },
 
-  inv2_gateway_port:
-    name: Inverter 2 gateway port
-    description: TCP port of the gateway.
+    "inv3_link": {
+      "serial": "Serial connection",
+      "gateway": "TCP/IP gateway"
+    },
 
-  inv2_display_mode:
-    name: Inverter 2 display mode
-    description: Select how inverter priority names are displayed (Modern or Legacy inverter style).
+    "inv1_display_mode": {
+      "modern": "Modern mode",
+      "legacy_usb_sub_sbu": "Legacy USB/SUB/SBU mode"
+    },
 
-  inv3_link:
-    name: Inverter 3 connection type
-    description: Select how inverter 3 is connected.
+    "inv2_display_mode": {
+      "modern": "Modern mode",
+      "legacy_usb_sub_sbu": "Legacy USB/SUB/SBU mode"
+    },
 
-  inv3_serial_port:
-    name: Inverter 3 serial port
-    description: Serial device used to communicate with inverter 3.
-
-  inv3_gateway_host:
-    name: Inverter 3 gateway host
-    description: IP address of the TCP / Elfin gateway.
-
-  inv3_gateway_port:
-    name: Inverter 3 gateway port
-    description: TCP port of the gateway.
-
-  inv3_display_mode:
-    name: Inverter 3 display mode
-    description: Select how inverter priority names are displayed (Modern or Legacy inverter style).
-
-  battery_section:
-    name: Battery configuration
-    description: Battery system settings.
-
-  battery_system_voltage:
-    name: Battery system voltage
-    description: Select the DC voltage of your battery system.
-
-  mqtt_section:
-    name: MQTT configuration
-    description: MQTT broker connection settings.
-
-  mqtt_host:
-    name: MQTT host
-    description: Address of the MQTT broker.
-
-  mqtt_port:
-    name: MQTT port
-    description: Port used by the MQTT broker.
-
-  mqtt_user:
-    name: MQTT username
-    description: Username used to authenticate with the MQTT broker.
-
-  mqtt_pass:
-    name: MQTT password
-    description: Password used to authenticate with the MQTT broker.
-
-  send_bip:
-    name: Enable inverter beep
-    description: Enable or disable inverter beep when settings change.
-
-  timezone_section:
-    name: Timezone
-    description: Configure the timezone used for daily statistics.
-
-  timezone_mode:
-    name: Timezone selection
-    description: Select the timezone used by the add-on.
-
-  timezone_custom:
-    name: Custom timezone
-    description: Used when timezone mode is set to CUSTOM.
+    "inv3_display_mode": {
+      "modern": "Modern mode",
+      "legacy_usb_sub_sbu": "Legacy USB/SUB/SBU mode"
+    }
+  }
+}
