@@ -5,8 +5,15 @@ Control and monitor your **Voltronic / Axpert inverters** directly from Home Ass
 ➡️ French documentation:  
 https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README_FR.md
 
-☕ Support the project:  
-https://ko-fi.com/tapion69
+## ☕ Support development
+
+Smart Voltronic is an open-source project developed in free time.
+
+If you find it useful you can support development:
+
+<a href="https://ko-fi.com/tapion69">
+<img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
+</a>
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Addon-blue)
 ![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-compatible-orange)
