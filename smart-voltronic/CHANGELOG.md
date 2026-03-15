@@ -1,5 +1,8 @@
 # Changelog – Smart Voltronic Add-on
 
+## 🔄 v1.5.3
+* Bug fixe
+
 ## 1.5.2
 
 ### Added
