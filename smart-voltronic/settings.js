@@ -3,12 +3,9 @@ module.exports = {
   userDir: "/data",
   flowFile: "/data/flows.json",
 
-  // ✅ false = Node-RED lit flows_cred.json en JSON clair (pas de chiffrement)
+  // false = Node-RED lit flows_cred.json en JSON clair
   credentialSecret: false,
 
-  // 🔐 Authentification obligatoire pour accéder à l'éditeur Node-RED
-  // Seul l'administrateur connaît le mot de passe (jamais visible dans HA)
-  // Le hash bcrypt ci-dessous ne permet pas de retrouver le mot de passe en clair
   adminAuth: {
     type: "credentials",
     users: [{
@@ -19,6 +16,19 @@ module.exports = {
   },
 
   nodesDir: ["/opt/node_modules"],
+
+  // Context storage :
+  // - default = mémoire rapide
+  // - persistent = sauvegarde disque
+  contextStorage: {
+    default: {
+      module: "memory"
+    },
+    persistent: {
+      module: "localfilesystem"
+    }
+  },
+
   editorTheme: {
     projects: { enabled: false }
   },
