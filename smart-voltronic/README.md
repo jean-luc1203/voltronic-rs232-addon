@@ -1,224 +1,202 @@
 # 🔋 Smart Voltronic – Home Assistant Add-on
 
-➡️ **Lire ce README en français :**
+Control and monitor your **Voltronic / Axpert inverters** directly from Home Assistant with an advanced command learning system and configurable compatibility modes.
+
+➡️ French documentation:  
 https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README_FR.md
 
-☕ **Support the project**
-
-<a href="https://ko-fi.com/tapion69">
-<img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
-</a>
-
+☕ Support the project:  
+https://ko-fi.com/tapion69
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Addon-blue)
-![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-orange)
+![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-compatible-orange)
 ![MQTT](https://img.shields.io/badge/MQTT-Auto%20Discovery-green)
-
-Home Assistant add-on designed to **monitor and control up to 3 Voltronic / Axpert inverters**.
-
-Compatible with most models using the **Voltronic protocol**:
-
-* Axpert
-* VM
-* MKS
-* MAX
-* MAX II
-* MAX IV
-* and compatible clones
 
 ---
 
-# 📑 Table of Contents
+# 🚀 What's new
 
-* Screenshots
-* Connection Methods
-* Serial Installation
-* Gateway Installation
-* Configuration
-* Features
-* Home Assistant Integration
-* Telemetry
-* Support
+## 🧠 Automatic inverter command learning
+
+Smart Voltronic includes an intelligent learning engine that automatically identifies which commands are actually supported by your inverter.
+
+This allows:
+
+* Better compatibility across Voltronic firmware variants
+* Prevention of unsupported commands
+* Automatic adaptation of available settings
+* Creation of an inverter compatibility profile
+* Safer parameter changes
+
+No user action required.
+
+---
+
+## 🧩 Configurable compatibility modes
+
+Different Voltronic models and firmware versions may behave differently.
+
+Smart Voltronic provides compatibility modes to adapt the internal behavior depending on your inverter.
+
+These modes are configurable in the add-on settings.
+
+---
+
+### Modern mode
+
+Recommended for recent models and newer firmware.
+
+Features:
+
+* Uses the automatic command learning system
+* Behavior adapted for modern inverter firmware
+* Improved compatibility with newer models
+* Protection against invalid commands
+
+---
+
+### Legacy mode
+
+Recommended for older firmware or legacy inverter models.
+
+Features:
+
+* Also uses the automatic command learning system
+* Behavior adapted for older inverter logic
+* Improved compatibility with legacy devices
+* Protection against invalid commands
+
+---
+
+### 2-choice source priority mode
+
+Some inverters support only 2 power priority modes instead of 3.
+
+This mode allows:
+
+* Adapting Home Assistant available options
+* Avoiding unsupported settings
+* Keeping UI consistent with inverter behavior
+
+Enable only if your inverter requires it.
+
+---
+
+# ⭐ Why Smart Voltronic is different
+
+Smart Voltronic does more than just sending commands.
+
+It adapts to your inverter.
+
+Advantages:
+
+* Better compatibility
+* Fewer configuration errors
+* Less manual setup
+* Support for many firmware variants
+* More reliable installation
+
+Goal:
+
+**Make the integration as plug and play as possible.**
 
 ---
 
 # 📸 Screenshots
 
-### 🔎 Device information & status
+## Device information
 
-Monitor inverter status, firmware, warnings and fault details directly in Home Assistant.
-
-![Device info](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/dashboard-overview.png)
+![Device](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/dashboard-overview.png)
 
 ---
 
-### ⚙️ Inverter settings from Home Assistant
-
-Change key inverter parameters directly from Home Assistant UI:
-
-* battery type
-* charging priority
-* voltages
-* grid settings
+## Settings
 
 ![Settings](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-settings.png)
 
 ---
 
-### ⚡ Real-time power monitoring
-
-Track all electrical values in real time:
-
-* AC output
-* battery charge/discharge
-* grid usage
-* load statistics
+## Power monitoring
 
 ![Power](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-power.png)
 
 ---
 
-### ☀️ Solar production tracking
-
-Monitor PV production and MPPT inputs.
+## Solar production
 
 ![PV](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-pv.png)
 
 ---
 
-# 🔌 Connection Methods
+# 🔌 Connection methods
 
-The inverter can be connected to Home Assistant in **two ways**:
+Two connection types supported.
 
-1️⃣ **Serial (USB / RS232)**
-2️⃣ **Gateway (Ethernet / Wi-Fi)**
+## Serial connection
 
-Up to **3 inverters can be managed simultaneously**.
-
----
-
-# 🔧 Serial Installation (RS232)
-
-The inverter communicates via **RS232 through an RJ45 connector**.
-
-Connection chain:
+Direct RS232 connection.
 
 ```
 Inverter RJ45
-     ↓
+↓
 RJ45 → DB9 cable
-     ↓
-USB → RS232 adapter
-     ↓
+↓
+USB RS232 adapter
+↓
 Home Assistant
 ```
-
----
-
-## RJ45 → DB9 wiring
-
-![RJ45 to DB9 pinout](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-db9-pinout.jpg)
-
-### Wiring table
-
-| RJ45 | DB9 | Signal |
-| ---- | --- | ------ |
-| 1    | 2   | TX     |
-| 2    | 3   | RX     |
-| 8    | 5   | GND    |
-
-⚠️ Important
-
-* RJ45 diagram = **Top view**
-* DB9 diagram = **Front view**
-
----
-
-## Example finished cable
-
-![RJ45 DB9 cable](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-db9.jpg)
-
-Inside the RJ45 connector only **3 wires are used**.
-
-![RJ45 wiring](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-inside.jpg)
-
----
-
-## USB → RS232 adapter
 
 Recommended chipsets:
 
-* ⭐ **FTDI**
-* ✔ **Prolific PL2303**
-
-![USB RS232 adapter](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/usb-rs232-adapter.png)
+* FTDI
+* Prolific PL2303
 
 ---
 
-# 🌐 Gateway Installation (Ethernet / Wi-Fi)
+## Network gateway connection
 
-The add-on also supports **serial gateway modules**, allowing communication over the network instead of USB.
+Allows remote communication over network.
 
-Useful when:
+Supported modules:
 
-* Home Assistant is far from the inverter
-* You prefer **network communication**
-* USB is not available
+* Elfin EE10A
+* Elfin EW10A
 
----
-
-## Recommended gateway modules
-
-The following **Elfin gateways are recommended and fully tested**:
-
-* **Elfin EE10A** – Ethernet version
-* **Elfin EW10A** – Wi-Fi version
-
-![Elfin Gateway](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/gateway.jpg)
-
-These modules convert **RS232 → TCP/IP**.
-
----
-
-## Gateway connection diagram
+Connection:
 
 ```
-Inverter RJ45
-      ↓
-RJ45 → RS232 cable
-      ↓
-Elfin gateway
-      ↓
-Ethernet / WiFi network
-      ↓
+Inverter
+↓
+RS232
+↓
+Gateway
+↓
+Network
+↓
 Home Assistant
 ```
 
----
+Gateway configuration:
 
-## Gateway configuration
-
-Serial settings:
+Serial:
 
 ```
-Baudrate : 2400
-Data bits : 8
-Stop bits : 1
-Parity : None
+2400 baud
+8 data bits
+1 stop bit
+No parity
 ```
 
-Network settings:
+Network:
 
 ```
-Mode : TCP Server
-Port : 8899
+TCP Server
+Port 8899
 ```
 
 ---
 
-# ⚙️ Add-on Configuration
-
-Each inverter can be configured independently.
+# ⚙️ Configuration
 
 Example:
 
@@ -229,91 +207,100 @@ inv1_serial_port: /dev/serial/by-id/...
 inv2_link: gateway
 inv2_gateway_host: 192.168.1.40
 inv2_gateway_port: 8899
+
+# Compatibility modes
+inverter_mode: modern
+
+# modern or legacy
+
+source_priority_mode: 3
+
+# 3 = USB / SUB / SBU
+# 2 = SUB / SBU only
 ```
 
-MQTT topics are separated per inverter:
+MQTT topics:
 
 ```
-voltronic/1/...
-voltronic/2/...
-voltronic/3/...
+voltronic/1/
+voltronic/2/
+voltronic/3/
 ```
 
 ---
 
-# ✨ Main Features
+# ✨ Features
 
-### 🟢 Full monitoring
+## Full monitoring
 
 Automatic sensors:
 
-* PV power
-* battery power
-* grid consumption
-* load power
-* voltages
-* currents
-* temperatures
-* alarms
+* PV production
+* Battery power
+* Grid consumption
+* Load power
+* Voltages
+* Currents
+* Battery SOC
+* Temperature
+* Warnings
+* Status
 
-Refresh rate ≈ **4 seconds**
+Refresh rate:
+
+≈ 4 seconds
 
 ---
 
-### 🎛️ Control from Home Assistant
+## Inverter control
 
-Modify inverter parameters:
+Configurable parameters:
 
 * Output priority
 * Charging priority
 * Battery type
-* Voltage settings
+* Charging voltages
 * Current limits
+* Grid parameters
 
-Changes are automatically verified and synchronized.
+Every change is:
 
----
-
-# 🏠 Home Assistant Integration
-
-Entities are automatically created using **MQTT Auto-Discovery**.
-
-Types created:
-
-* sensors
-* numbers
-* selects
-* switches
-* binary sensors
-
-No YAML required.
+* Verified
+* Confirmed
+* Synchronized
 
 ---
 
-# 🔐 Robust & Reliable
+# 🏠 Home Assistant integration
 
-Features include:
+Automatic creation via MQTT discovery:
 
-* command queue system
-* automatic NAK handling
-* communication error recovery
-* inverter compatibility detection
+* Sensors
+* Numbers
+* Select entities
+* Switches
+* Binary sensors
+
+No manual YAML required.
 
 ---
 
-# 📊 Anonymous telemetry (optional)
+# 📊 Optional telemetry
 
-To help understand how many installations run the add-on, an optional telemetry ping is available.
+Allows estimating number of installations.
 
-The add-on sends a small daily **“bip”** request.
+Sends:
 
-Privacy guaranteed:
+One minimal daily request.
 
-* No IP stored
-* No inverter data
-* No Home Assistant data
+Never collects:
 
-Disable telemetry:
+* Personal data
+* IP addresses
+* Inverter data
+* Home Assistant data
+
+Disable:
 
 ```yaml
 send_bip: false
@@ -321,23 +308,65 @@ send_bip: false
 
 ---
 
-# 📄 Full parameter list
+# 🔧 Compatibility
 
-https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/PARAMETERS.md
+Compatible with most Voltronic protocol inverters:
+
+* Axpert
+* VM
+* MKS
+* MAX
+* MAX II
+* MAX IV
+* Compatible clones
+
+Thanks to the automatic command learning system and configurable compatibility modes.
 
 ---
 
 # 🛠 Support
 
-Open an **issue on GitHub** for bug reports or feature requests.
+Open a GitHub issue for:
+
+* Bugs
+* Compatibility reports
+* Feature requests
 
 ---
 
-# ❤️ Contribution
+# ❤️ Contributing
 
-Open-source project.
-Contributions and feedback are welcome.
+Open source project.
+
+Contributions welcome:
+
+* Testing
+* Feedback
+* Documentation
+* Improvements
 
 ---
 
-**Smart inverter control fully integrated into Home Assistant 🚀**
+# 🚀 Roadmap
+
+Planned improvements:
+
+* Support for additional models
+* Compatibility improvements
+* Windows standalone version
+* Advanced diagnostics
+* Standalone GUI
+
+---
+
+# ⭐ If this project helps you
+
+You can:
+
+* Star the repository
+* Share feedback
+* Support development
+
+---
+
+# 🔋 Smart inverter control fully integrated into Home Assistant
