@@ -1,5 +1,28 @@
 # Changelog – Smart Voltronic Add-on
 
+## 1.5.2
+
+### Added
+
+* Automatic inverter command learning system to improve compatibility across different Voltronic firmware versions
+* New compatibility modes (Modern / Legacy) to adapt behavior depending on inverter model
+* Optional 2-choice source priority mode for inverters supporting only two priority options
+* Automatic daily energy sensors when the inverter does not provide daily statistics
+
+### Improved
+
+* Better inverter compatibility handling
+* Improved parameter synchronization reliability
+* More consistent Home Assistant entity behavior
+* Improved protection against unsupported settings
+
+### Fixed
+
+* Various compatibility issues with some inverter models
+* Minor stability improvements
+
+---
+
 ## 1.5.1
 
 ### Improvements
