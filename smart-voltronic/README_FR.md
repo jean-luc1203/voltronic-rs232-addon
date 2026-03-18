@@ -3,7 +3,7 @@
 Pilotez et surveillez vos onduleurs **Voltronic / Axpert** directement depuis Home Assistant avec un système avancé d’apprentissage des commandes et des modes de compatibilité configurables.
 
 ➡️ Documentation française :  
-https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README_FR.md
+https://github.com/jean-luc1203/voltronic-rs232-addon/blob/main/smart-voltronic/README_FR.md
 
 ## ☕ Soutenir le développement
 
