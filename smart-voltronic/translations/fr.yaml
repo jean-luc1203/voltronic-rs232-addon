@@ -5,21 +5,21 @@
     "inv1_gateway_host": "IP gateway onduleur 1",
     "inv1_gateway_port": "Port gateway onduleur 1",
     "inv1_display_mode": "Mode d'affichage onduleur 1",
-    "inv1_output_priority_2choices": "Priorité sortie limitée à 2 choix",
+    "inv1_output_priority_2choices": "Priorité sortie limitée à 2 choix onduleur 1",
 
     "inv2_link": "Type de connexion onduleur 2",
     "inv2_serial_port": "Port série onduleur 2",
     "inv2_gateway_host": "IP gateway onduleur 2",
     "inv2_gateway_port": "Port gateway onduleur 2",
     "inv2_display_mode": "Mode d'affichage onduleur 2",
-    "inv2_output_priority_2choices": "Priorité sortie limitée à 2 choix",
+    "inv2_output_priority_2choices": "Priorité sortie limitée à 2 choix onduleur 2",
 
     "inv3_link": "Type de connexion onduleur 3",
     "inv3_serial_port": "Port série onduleur 3",
     "inv3_gateway_host": "IP gateway onduleur 3",
     "inv3_gateway_port": "Port gateway onduleur 3",
     "inv3_display_mode": "Mode d'affichage onduleur 3",
-    "inv3_output_priority_2choices": "Priorité sortie limitée à 2 choix",
+    "inv3_output_priority_2choices": "Priorité sortie limitée à 2 choix onduleur 3",
 
     "battery_section": "Paramètres batterie",
     "battery_system_voltage": "Tension système batterie",
@@ -66,6 +66,28 @@
     "inv3_display_mode": {
       "modern": "Mode moderne",
       "legacy_usb_sub_sbu": "Mode legacy USB/SUB/SBU"
+    },
+
+    "battery_system_voltage": {
+      "24V": "24 V",
+      "48V": "48 V"
+    },
+
+    "timezone_mode": {
+      "Europe/Paris": "Europe/Paris",
+      "Europe/Berlin": "Europe/Berlin",
+      "Europe/Brussels": "Europe/Brussels",
+      "Europe/Madrid": "Europe/Madrid",
+      "Europe/Rome": "Europe/Rome",
+      "Europe/London": "Europe/London",
+      "America/New_York": "America/New_York",
+      "America/Chicago": "America/Chicago",
+      "America/Los_Angeles": "America/Los_Angeles",
+      "America/Montreal": "America/Montreal",
+      "Asia/Dubai": "Asia/Dubai",
+      "Asia/Tokyo": "Asia/Tokyo",
+      "Australia/Sydney": "Australia/Sydney",
+      "CUSTOM": "Personnalisé"
     }
   }
 }
