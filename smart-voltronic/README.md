@@ -3,7 +3,7 @@
 Control and monitor your **Voltronic / Axpert inverters** directly from Home Assistant with an advanced command learning system and configurable compatibility modes.
 
 ➡️ French documentation:  
-https://github.com/tapion69/smart-voltronic/blob/main/smart-voltronic/README_FR.md
+https://github.com/jean-luc1203/voltronic-rs232-addon/blob/main/smart-voltronic/README_FR.md
 
 ## ☕ Support development
 
