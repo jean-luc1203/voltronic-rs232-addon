@@ -1,5 +1,5 @@
 name: "Voltronic / Axpert rs232 wired management"
-version: "1.5.3"
+version: "1.5.4"
 slug: smart_voltronic
 description: "Management via RS232 TCP/IP Gateway"
 
