@@ -1,5 +1,20 @@
 # Changelog – Smart Voltronic Add-on
 
+## Changelog v1.5.4
+
+* Added new inverter control switches in Home Assistant:
+
+  * Overload bypass
+  * Fault auto restart
+  * Over temperature restart
+
+* Improved fault reporting for faster and more reliable status updates in Home Assistant
+
+* Better synchronization between inverter settings and Home Assistant after configuration changes
+
+* Enhanced diagnostic integration for advanced inverter protection settings
+
+
 ## 🔄 v1.5.3
 * Bug fixe
 
