@@ -1,0 +1,65 @@
+configuration:
+  inv1_link:
+    name: Inverter 1 connection type
+  inv1_serial_port:
+    name: Inverter 1 serial port
+  inv1_gateway_host:
+    name: Inverter 1 gateway IP
+  inv1_gateway_port:
+    name: Inverter 1 gateway port
+  inv1_display_mode:
+    name: Inverter 1 display mode
+  inv1_output_priority_2choices:
+    name: Inverter 1 limited 2-choice output priority
+
+  inv2_link:
+    name: Inverter 2 connection type
+  inv2_serial_port:
+    name: Inverter 2 serial port
+  inv2_gateway_host:
+    name: Inverter 2 gateway IP
+  inv2_gateway_port:
+    name: Inverter 2 gateway port
+  inv2_display_mode:
+    name: Inverter 2 display mode
+  inv2_output_priority_2choices:
+    name: Inverter 2 limited 2-choice output priority
+
+  inv3_link:
+    name: Inverter 3 connection type
+  inv3_serial_port:
+    name: Inverter 3 serial port
+  inv3_gateway_host:
+    name: Inverter 3 gateway IP
+  inv3_gateway_port:
+    name: Inverter 3 gateway port
+  inv3_display_mode:
+    name: Inverter 3 display mode
+  inv3_output_priority_2choices:
+    name: Inverter 3 limited 2-choice output priority
+
+  battery_section:
+    name: Battery settings
+  battery_system_voltage:
+    name: Battery system voltage
+
+  mqtt_section:
+    name: MQTT configuration
+  mqtt_host:
+    name: MQTT server
+  mqtt_port:
+    name: MQTT port
+  mqtt_user:
+    name: MQTT username
+  mqtt_pass:
+    name: MQTT password
+
+  send_bip:
+    name: Enable confirmation beep
+
+  timezone_section:
+    name: Timezone
+  timezone_mode:
+    name: Timezone
+  timezone_custom:
+    name: Custom timezone
