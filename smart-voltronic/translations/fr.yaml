@@ -1,0 +1,65 @@
+configuration:
+  inv1_link:
+    name: Type de connexion onduleur 1
+  inv1_serial_port:
+    name: Port série onduleur 1
+  inv1_gateway_host:
+    name: IP gateway onduleur 1
+  inv1_gateway_port:
+    name: Port gateway onduleur 1
+  inv1_display_mode:
+    name: Mode d'affichage onduleur 1
+  inv1_output_priority_2choices:
+    name: Priorité sortie limitée à 2 choix onduleur 1
+
+  inv2_link:
+    name: Type de connexion onduleur 2
+  inv2_serial_port:
+    name: Port série onduleur 2
+  inv2_gateway_host:
+    name: IP gateway onduleur 2
+  inv2_gateway_port:
+    name: Port gateway onduleur 2
+  inv2_display_mode:
+    name: Mode d'affichage onduleur 2
+  inv2_output_priority_2choices:
+    name: Priorité sortie limitée à 2 choix onduleur 2
+
+  inv3_link:
+    name: Type de connexion onduleur 3
+  inv3_serial_port:
+    name: Port série onduleur 3
+  inv3_gateway_host:
+    name: IP gateway onduleur 3
+  inv3_gateway_port:
+    name: Port gateway onduleur 3
+  inv3_display_mode:
+    name: Mode d'affichage onduleur 3
+  inv3_output_priority_2choices:
+    name: Priorité sortie limitée à 2 choix onduleur 3
+
+  battery_section:
+    name: Paramètres batterie
+  battery_system_voltage:
+    name: Tension système batterie
+
+  mqtt_section:
+    name: Configuration MQTT
+  mqtt_host:
+    name: Serveur MQTT
+  mqtt_port:
+    name: Port MQTT
+  mqtt_user:
+    name: Utilisateur MQTT
+  mqtt_pass:
+    name: Mot de passe MQTT
+
+  send_bip:
+    name: Activer le bip de confirmation
+
+  timezone_section:
+    name: Fuseau horaire
+  timezone_mode:
+    name: Fuseau horaire
+  timezone_custom:
+    name: Fuseau horaire personnalisé
