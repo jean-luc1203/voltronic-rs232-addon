@@ -1,5 +1,8 @@
 # Changelog – Smart Voltronic Add-on
 
+## 🔄 v1.5.7
+* Bug fixe
+
 ## Changelog v1.5.4
 
 * Added new inverter control switches in Home Assistant:
