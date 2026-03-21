@@ -1,5 +1,17 @@
 # Changelog – Smart Voltronic Add-on
 
+## Version 1.5.8
+
+### Improvements
+- Improved command compatibility across different inverter models
+- Better handling of communication differences between inverter generations
+- Increased reliability when sending control commands
+- General communication stability improvements
+
+### Fixes
+- Fixed some commands not being accepted on certain older inverters
+- Improved overall command execution consistency
+
 ## 🔄 v1.5.7
 * Bug fixe
 
