@@ -1,4 +1,88 @@
 # Changelog – Smart Voltronic Add-on
+---
+
+## Version 1.5.9
+
+## ⭐ Premium features introduction
+
+Version 1.5.9 introduces the **Premium system**, unlocking advanced monitoring features and additional calculated sensors for supported inverters.
+
+Premium enables advanced analytics and automatic fallback calculations when the inverter does not provide some energy values.
+
+---
+
+## 🔋 New Premium energy sensors (fallback calculations)
+
+For inverters that do not expose these values, Smart Voltronic can now calculate:
+
+### Monthly energy:
+
+* PV energy month
+* Load energy month
+* Grid energy month
+* Battery charge energy month
+* Battery discharge energy month
+
+### Yearly energy:
+
+* PV energy year
+* Load energy year
+* Grid energy year
+* Battery charge energy year
+* Battery discharge energy year
+
+If the inverter already provides these values, native inverter values are always used instead of calculated ones.
+
+---
+
+## ❤️ Battery health indicator
+
+A new **Battery Health** indicator has been added.
+
+This value is estimated based on inverter data and daily operating behaviour.
+
+⚠️ This value is provided for **informational purposes only** and should not be considered as an exact battery diagnostic.
+
+---
+
+## 🩺 Inverter health indicator
+
+A new **Inverter Health** indicator is now available.
+
+This score reflects general inverter operating conditions and behaviour.
+
+⚠️ This value is also provided for **informational purposes only**.
+
+---
+
+## 📊 Daily energy distribution sensors
+
+New daily distribution sensors:
+
+* Solar contribution %
+* Battery contribution %
+* Grid contribution %
+
+These sensors show how the load was supplied during the day.
+
+---
+
+## 🎨 Premium dashboard
+
+Premium enables an advanced dashboard including:
+
+* Visual energy distribution
+* Power history graphs
+* Battery and inverter health indicators
+* Advanced diagnostics view
+
+---
+
+## ⚙️ Improvements
+
+* Improved fallback energy calculations
+* Better calculation stability
+* Improved compatibility across inverter models
 
 ## Version 1.5.8
 
