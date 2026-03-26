@@ -1,379 +1,330 @@
-# 🔋 Smart Voltronic – Home Assistant Add-on
+# Changelog – Smart Voltronic Add-on
+---
 
-Control and monitor your **Voltronic / Axpert inverters** directly from Home Assistant with an advanced command learning system and configurable compatibility modes.
+## Version 1.5.9
 
-➡️ French documentation:  
-https://github.com/jean-luc1203/voltronic-rs232-addon/blob/main/smart-voltronic/README_FR.md
+## ⭐ Premium features introduction
 
-## ☕ Support development
+Version 1.5.9 introduces the **Premium system**, unlocking advanced monitoring features and additional calculated sensors for supported inverters.
 
-Smart Voltronic is an open-source project developed in free time.
-
-If you find it useful you can support development:
-
-<a href="https://ko-fi.com/tapion69">
-<img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
-</a>
-
-![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Addon-blue)
-![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-compatible-orange)
-![MQTT](https://img.shields.io/badge/MQTT-Auto%20Discovery-green)
+Premium enables advanced analytics and automatic fallback calculations when the inverter does not provide some energy values.
 
 ---
 
-# 🚀 What's new
+## 🔋 New Premium energy sensors (fallback calculations)
 
-## 🧠 Automatic inverter command learning
+For inverters that do not expose these values, Smart Voltronic can now calculate:
 
-Smart Voltronic includes an intelligent learning engine that automatically identifies which commands are actually supported by your inverter.
+### Monthly energy:
 
-This allows:
+* PV energy month
+* Load energy month
+* Grid energy month
+* Battery charge energy month
+* Battery discharge energy month
 
-* Better compatibility across Voltronic firmware variants
-* Prevention of unsupported commands
-* Automatic adaptation of available settings
-* Creation of an inverter compatibility profile
-* Safer parameter changes
+### Yearly energy:
 
-No user action required.
+* PV energy year
+* Load energy year
+* Grid energy year
+* Battery charge energy year
+* Battery discharge energy year
 
----
-
-## 🧩 Configurable compatibility modes
-
-Different Voltronic models and firmware versions may behave differently.
-
-Smart Voltronic provides compatibility modes to adapt the internal behavior depending on your inverter.
-
-These modes are configurable in the add-on settings.
+If the inverter already provides these values, native inverter values are always used instead of calculated ones.
 
 ---
 
-### Modern mode
+## ❤️ Battery health indicator
 
-Recommended for recent models and newer firmware.
+A new **Battery Health** indicator has been added.
 
-Features:
+This value is estimated based on inverter data and daily operating behaviour.
 
-* Uses the automatic command learning system
-* Behavior adapted for modern inverter firmware
-* Improved compatibility with newer models
-* Protection against invalid commands
+⚠️ This value is provided for **informational purposes only** and should not be considered as an exact battery diagnostic.
 
 ---
 
-### Legacy mode
+## 🩺 Inverter health indicator
 
-Recommended for older firmware or legacy inverter models.
+A new **Inverter Health** indicator is now available.
 
-Features:
+This score reflects general inverter operating conditions and behaviour.
 
-* Also uses the automatic command learning system
-* Behavior adapted for older inverter logic
-* Improved compatibility with legacy devices
-* Protection against invalid commands
+⚠️ This value is also provided for **informational purposes only**.
 
 ---
 
-### 2-choice source priority mode
+## 📊 Daily energy distribution sensors
 
-Some inverters support only 2 power priority modes instead of 3.
+New daily distribution sensors:
 
-This mode allows:
+* Solar contribution %
+* Battery contribution %
+* Grid contribution %
 
-* Adapting Home Assistant available options
-* Avoiding unsupported settings
-* Keeping UI consistent with inverter behavior
-
-Enable only if your inverter requires it.
+These sensors show how the load was supplied during the day.
 
 ---
 
-# ⭐ Why Smart Voltronic is different
+## 🎨 Premium dashboard
 
-Smart Voltronic does more than just sending commands.
+Premium enables an advanced dashboard including:
 
-It adapts to your inverter.
-
-Advantages:
-
-* Better compatibility
-* Fewer configuration errors
-* Less manual setup
-* Support for many firmware variants
-* More reliable installation
-
-Goal:
-
-**Make the integration as plug and play as possible.**
+* Visual energy distribution
+* Power history graphs
+* Battery and inverter health indicators
+* Advanced diagnostics view
 
 ---
 
-# 📸 Screenshots
+## ⚙️ Improvements
 
-## Device information
+* Improved fallback energy calculations
+* Better calculation stability
+* Improved compatibility across inverter models
 
-![Device](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/dashboard-overview.png)
+## Version 1.5.8
 
----
+### Improvements
+- Improved command compatibility across different inverter models
+- Better handling of communication differences between inverter generations
+- Increased reliability when sending control commands
+- General communication stability improvements
 
-## Settings
+### Fixes
+- Fixed some commands not being accepted on certain older inverters
+- Improved overall command execution consistency
 
-![Settings](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-settings.png)
+## 🔄 v1.5.7
+* Bug fixe
 
----
+## Changelog v1.5.4
 
-## Power monitoring
+* Added new inverter control switches in Home Assistant:
 
-![Power](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-power.png)
+  * Overload bypass
+  * Fault auto restart
+  * Over temperature restart
 
----
+* Improved fault reporting for faster and more reliable status updates in Home Assistant
 
-## Solar production
+* Better synchronization between inverter settings and Home Assistant after configuration changes
 
-![PV](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/inverter-pv.png)
+* Enhanced diagnostic integration for advanced inverter protection settings
 
----
 
-# 🔌 Connection methods
+## 🔄 v1.5.3
+* Bug fixe
 
-Two connection types supported.
+## 1.5.2
 
-## Serial connection
+### Added
 
-Direct RS232 connection.
+* Automatic inverter command learning system to improve compatibility across different Voltronic firmware versions
+* New compatibility modes (Modern / Legacy) to adapt behavior depending on inverter model
+* Optional 2-choice source priority mode for inverters supporting only two priority options
+* Automatic daily energy sensors when the inverter does not provide daily statistics
 
-```
-Inverter RJ45
-↓
-RJ45 → DB9 cable
-↓
-USB RS232 adapter
-↓
-Home Assistant
-```
+### Improved
 
-Recommended chipsets:
+* Better inverter compatibility handling
+* Improved parameter synchronization reliability
+* More consistent Home Assistant entity behavior
+* Improved protection against unsupported settings
 
-* FTDI
-* Prolific PL2303
+### Fixed
 
----
-
-## Network gateway connection
-
-Allows remote communication over network.
-
-Supported modules:
-
-* Elfin EE10A
-* Elfin EW10A
-
-Connection:
-
-```
-Inverter
-↓
-RS232
-↓
-Gateway
-↓
-Network
-↓
-Home Assistant
-```
-
-Gateway configuration:
-
-Serial:
-
-```
-2400 baud
-8 data bits
-1 stop bit
-No parity
-```
-
-Network:
-
-```
-TCP Server
-Port 8899
-```
+* Various compatibility issues with some inverter models
+* Minor stability improvements
 
 ---
 
-# ⚙️ Configuration
+## 1.5.1
 
-Example:
+### Improvements
 
-```yaml
-inv1_link: serial
-inv1_serial_port: /dev/serial/by-id/...
+* Added **display mode selection (Modern / Legacy)** in the add-on configuration.
+* **Modern mode** keeps the standard Home Assistant naming for inverter priorities.
+* **Legacy mode** restores the classic inverter terminology (USB / SUB / SBU and CSO / SNU / OSO) for users familiar with the original inverter display.
+* Improved compatibility with different Voltronic inverter firmware versions.
 
-inv2_link: gateway
-inv2_gateway_host: 192.168.1.40
-inv2_gateway_port: 8899
+### Enhancements
 
-# Compatibility modes
-inverter_mode: modern
+* The add-on now **automatically detects unsupported inverter commands**.
+* Commands that are not supported by the inverter will **automatically disable themselves** to prevent repeated errors and unnecessary polling.
 
-# modern or legacy
+### Fixes
 
-source_priority_mode: 3
+* Minor stability improvements.
+* Various small fixes and internal optimizations.
 
-# 3 = USB / SUB / SBU
-# 2 = SUB / SBU only
-```
 
-MQTT topics:
+## 1.4.9
 
-```
-voltronic/1/
-voltronic/2/
-voltronic/3/
-```
+### Added
+- Added support for **24V battery systems**
+- New add-on configuration option to select **battery system voltage (24V / 48V)**
 
----
+### Improved
+- Home Assistant voltage parameter ranges now automatically adapt to the selected battery system
+  - **24V systems**
+    - Bulk: 24–30V
+    - Float: 24–30V
+    - Return grid voltage: 22–25.5V
+    - Re-discharge voltage: 24–29V
+    - Under voltage: 20–27V
+  - **48V systems**
+    - Existing ranges remain unchanged
 
-# ✨ Features
+### Technical
+- MQTT Discovery updated to dynamically adjust voltage parameter limits based on battery system voltage
+- Added internal configuration handling for battery system detection
 
-## Full monitoring
+## 🔄 v1.4.8
+* Bug fixe
 
-Automatic sensors:
+## 🔄 v1.4.7
 
-* PV production
-* Battery power
-* Grid consumption
-* Load power
-* Voltages
-* Currents
-* Battery SOC
-* Temperature
-* Warnings
-* Status
+### ✨ New
 
-Refresh rate:
+* Added support for **Elfin Ethernet/WiFi gateways**
+* Inverters can now be connected using either **Serial (USB/RS232)** or **Gateway (TCP/IP)**
+* New configuration options for each inverter:
 
-≈ 4 seconds
+  * `serial` connection
+  * `gateway` connection (IP + port)
 
----
+### ⚙️ Improvements
 
-## Inverter control
+* Automatic TCP configuration for Elfin gateways
+* Dynamic transport selection (Serial or TCP) directly from add-on configuration
+* Improved startup script to apply network settings automatically
+* Better connection handling when switching between Serial and Gateway modes
 
-Configurable parameters:
+### 🛠 Internal
 
-* Output priority
-* Charging priority
-* Battery type
-* Charging voltages
-* Current limits
-* Grid parameters
+* Refactored startup script to dynamically patch TCP nodes
+* Improved connection logic to prevent conflicts between Serial and TCP transports
 
-Every change is:
 
-* Verified
-* Confirmed
-* Synchronized
+## 🔄 Version 1.4.6
+* Bug fixe
 
----
+## 🔄 Version 1.4.5
 
-# 🏠 Home Assistant integration
+### 🌍 Added Timezone Support
 
-Automatic creation via MQTT discovery:
+* New configurable timezone option in add-on settings
+* Dropdown selection for common timezones
+* Custom timezone support (IANA format, e.g. `Europe/Athens`)
+* Used for accurate daily energy reset calculations
+* Fully handled inside the add-on (no Home Assistant configuration required)
 
-* Sensors
-* Numbers
-* Select entities
-* Switches
-* Binary sensors
+### ⚡ New Sensor: Grid Energy Today
 
-No manual YAML required.
+* Added `grid_today` energy sensor
+* Automatically calculated from `grid_power`
+* Daily reset based on configured timezone
+* Exposed via MQTT discovery
+* Works on all supported inverter models
 
----
+### 🌐 Translations
 
-# 📊 Optional telemetry
+* Added English and French translations
+* Improved configuration UI labels
 
-Allows estimating number of installations.
+### 🛠 Improvements
 
-Sends:
-
-One minimal daily request.
-
-Never collects:
-
-* Personal data
-* IP addresses
-* Inverter data
-* Home Assistant data
-
-Disable:
-
-```yaml
-send_bip: false
-```
+* Safe timezone handling in run.sh
+* Robust daily energy reset logic
+* No breaking changes
 
 ---
 
-# 🔧 Compatibility
+## v1.4.3
 
-Compatible with most Voltronic protocol inverters:
+### ✨ New features
+- MQTT Discovery is now **dynamic based on configured inverters**.
+- Entities are created **only for configured serial ports**.
+- Prevents Home Assistant from creating unused inverter devices.
 
-* Axpert
-* VM
-* MKS
-* MAX
-* MAX II
-* MAX IV
-* Compatible clones
+### ⚙️ Improvements
+- Refactored MQTT Discovery code to a **generic multi-inverter architecture**.
+- Removed duplicated discovery logic for inverter 1/2/3.
+- Easier maintenance and future feature additions.
 
-Thanks to the automatic command learning system and configurable compatibility modes.
+### 🚀 Reliability
+- Prevents ghost devices and unused entities when only one inverter is connected.
+- Ensures Home Assistant device list always matches the real hardware configuration.
 
----
+## v1.4.2
 
-# 🛠 Support
+### ✨ New features
+- Added new **Inverter Output Current** sensor (A).
+- This sensor estimates the AC output current using inverter power and voltage.
 
-Open a GitHub issue for:
+### ℹ️ Notes
+- The inverter does **not provide this value directly**.
+- The current is **calculated by the add-on** using real-time measurements (Power ÷ Voltage).
 
-* Bugs
-* Compatibility reports
-* Feature requests
+## v1.4.1
 
----
+### 🐞 Fixes
+- Fixed sensors resetting to `0` or `unknown` after Home Assistant or add-on restart.
+- MQTT state topic is now published with **retain enabled**.
 
-# ❤️ Contributing
+### 🚀 Improvements
+- Home Assistant now restores the **last known inverter values instantly** after restart.
+- Improved overall reliability and startup behavior.
 
-Open source project.
+## v1.4.0
 
-Contributions welcome:
+### ✨ New features
+- Added new **Global Battery Current** sensor (A).
+- The sensor provides a **signed current value**:
+  - Positive → battery charging  
+  - Negative → battery discharging
+- Automatically created via MQTT Discovery (no Home Assistant setup required).
 
-* Testing
-* Feedback
-* Documentation
-* Improvements
+### ⚙️ Improvements
+- Improved battery monitoring with clearer charge/discharge visibility.
 
----
+## v1.3.9
 
-# 🚀 Roadmap
+### ✨ New features
+- Added **daily battery energy sensors**:
+  - Battery charge today (kWh)
+  - Battery discharge today (kWh)
+- These sensors are now **automatically created** by the add-on (no Home Assistant configuration required).
 
-Planned improvements:
+### ℹ️ Notes
+- Daily battery energy values are **calculated by the add-on** from real-time power measurements.
+- These values are **not provided directly by the inverter**.
+- Automatic reset at midnight (local time).
 
-* Support for additional models
-* Compatibility improvements
-* Windows standalone version
-* Advanced diagnostics
-* Standalone GUI
+## v1.3.8
 
----
+### 🐞 Fixes
+- Fixed incorrect handling of **Max Discharging Current** parameter.
 
-# ⭐ If this project helps you
+### ⚙️ Improvements
+- Added **better error handling and logging** to reduce Home Assistant log spam.
+- Improved MQTT payload sanitization and command normalization.
+- Ensured **inverter parameters (QPIRI / QDOP / diagnostics)** are fetched immediately at startup.
 
-You can:
+### 🚀 Reliability
+- More robust startup sequence to guarantee parameters and diagnostics are available right after boot.
 
-* Star the repository
-* Share feedback
-* Support development
+## v1.3.7 – Initial release
 
----
+🎉 First functional release of the add-on.
 
-# 🔋 Smart inverter control fully integrated into Home Assistant
+### Added
+
+* Add-on is now **operational**
+* Serial communication with Voltronic inverters
+* MQTT data publishing
+* Home Assistant integration (auto-discovery)
+* Foundation for multi-inverter support
+
