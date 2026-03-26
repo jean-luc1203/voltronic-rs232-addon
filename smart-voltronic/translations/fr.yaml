@@ -1,65 +1,53 @@
 configuration:
-  inv1_link:
-    name: Type de connexion onduleur 1
-  inv1_serial_port:
-    name: Port série onduleur 1
-  inv1_gateway_host:
-    name: IP gateway onduleur 1
-  inv1_gateway_port:
-    name: Port gateway onduleur 1
-  inv1_display_mode:
-    name: Mode d'affichage onduleur 1
-  inv1_output_priority_2choices:
-    name: Priorité sortie limitée à 2 choix onduleur 1
 
-  inv2_link:
-    name: Type de connexion onduleur 2
-  inv2_serial_port:
-    name: Port série onduleur 2
-  inv2_gateway_host:
-    name: IP gateway onduleur 2
-  inv2_gateway_port:
-    name: Port gateway onduleur 2
-  inv2_display_mode:
-    name: Mode d'affichage onduleur 2
-  inv2_output_priority_2choices:
-    name: Priorité sortie limitée à 2 choix onduleur 2
+  inv1_link: "Type de connexion onduleur 1"
+  inv1_serial_port: "Port série onduleur 1"
+  inv1_gateway_host: "IP gateway onduleur 1"
+  inv1_gateway_port: "Port gateway onduleur 1"
+  inv1_display_mode: "Mode d'affichage onduleur 1"
+  inv1_output_priority_2choices: "Limiter la priorité sortie à 2 choix"
 
-  inv3_link:
-    name: Type de connexion onduleur 3
-  inv3_serial_port:
-    name: Port série onduleur 3
-  inv3_gateway_host:
-    name: IP gateway onduleur 3
-  inv3_gateway_port:
-    name: Port gateway onduleur 3
-  inv3_display_mode:
-    name: Mode d'affichage onduleur 3
-  inv3_output_priority_2choices:
-    name: Priorité sortie limitée à 2 choix onduleur 3
+  inv2_link: "Type de connexion onduleur 2"
+  inv2_serial_port: "Port série onduleur 2"
+  inv2_gateway_host: "IP gateway onduleur 2"
+  inv2_gateway_port: "Port gateway onduleur 2"
+  inv2_display_mode: "Mode d'affichage onduleur 2"
+  inv2_output_priority_2choices: "Limiter la priorité sortie à 2 choix"
 
-  battery_section:
-    name: Paramètres batterie
-  battery_system_voltage:
-    name: Tension système batterie
+  inv3_link: "Type de connexion onduleur 3"
+  inv3_serial_port: "Port série onduleur 3"
+  inv3_gateway_host: "IP gateway onduleur 3"
+  inv3_gateway_port: "Port gateway onduleur 3"
+  inv3_display_mode: "Mode d'affichage onduleur 3"
+  inv3_output_priority_2choices: "Limiter la priorité sortie à 2 choix"
 
-  mqtt_section:
-    name: Configuration MQTT
-  mqtt_host:
-    name: Serveur MQTT
-  mqtt_port:
-    name: Port MQTT
-  mqtt_user:
-    name: Utilisateur MQTT
-  mqtt_pass:
-    name: Mot de passe MQTT
+  battery_section: "Configuration batterie"
 
-  send_bip:
-    name: Activer le bip de confirmation
+  battery_system_voltage: "Tension système batterie"
 
-  timezone_section:
-    name: Fuseau horaire
-  timezone_mode:
-    name: Fuseau horaire
-  timezone_custom:
-    name: Fuseau horaire personnalisé
+  mqtt_section: "Configuration MQTT"
+
+  mqtt_host: "Adresse broker MQTT"
+  mqtt_port: "Port broker MQTT"
+  mqtt_user: "Utilisateur MQTT"
+  mqtt_pass: "Mot de passe MQTT"
+
+  premium_section: "Configuration Premium"
+
+  premium_key: "Clé licence Premium"
+
+  inv1_battery_capacity_ah: "Capacité batterie onduleur 1 (Ah)"
+  inv1_battery_total_capacity_kwh: "Capacité totale batterie onduleur 1 (kWh)"
+
+  inv2_battery_capacity_ah: "Capacité batterie onduleur 2 (Ah)"
+  inv2_battery_total_capacity_kwh: "Capacité totale batterie onduleur 2 (kWh)"
+
+  inv3_battery_capacity_ah: "Capacité batterie onduleur 3 (Ah)"
+  inv3_battery_total_capacity_kwh: "Capacité totale batterie onduleur 3 (kWh)"
+
+  send_bip: "Activer le bip onduleur"
+
+  timezone_section: "Configuration fuseau horaire"
+
+  timezone_mode: "Fuseau horaire"
+  timezone_custom: "Fuseau horaire personnalisé"
