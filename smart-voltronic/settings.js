@@ -17,9 +17,12 @@ module.exports = {
 
   nodesDir: ["/opt/node_modules"],
 
-  // Context storage :
-  // - default = mémoire rapide
-  // - persistent = sauvegarde disque
+  functionGlobalContext: {
+    crypto: require("crypto"),
+    fs: require("fs"),
+    path: require("path")
+  },
+
   contextStorage: {
     default: {
       module: "memory"
