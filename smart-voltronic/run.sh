@@ -47,6 +47,29 @@ sanitize_transport() {
 }
 
 # ============================================================
+# PREMIUM
+# ============================================================
+INSTANCE_FILE="/data/smart_voltronic_instance_id"
+
+if [ ! -f "$INSTANCE_FILE" ]; then
+  cat /proc/sys/kernel/random/uuid > "$INSTANCE_FILE"
+  logi "Premium: nouvel instance_id généré"
+fi
+
+SMART_VOLTRONIC_INSTANCE_ID="$(tr -d '\n\r' < "$INSTANCE_FILE")"
+SMART_VOLTRONIC_PREMIUM_KEY="$(jq -r '.premium_key // ""' "$OPTS")"
+
+export SMART_VOLTRONIC_INSTANCE_ID
+export SMART_VOLTRONIC_PREMIUM_KEY
+
+logi "Premium instance_id: $SMART_VOLTRONIC_INSTANCE_ID"
+if [ -n "$SMART_VOLTRONIC_PREMIUM_KEY" ]; then
+  logi "Premium key: configured"
+else
+  logi "Premium key: not configured"
+fi
+
+# ============================================================
 # MQTT
 # ============================================================
 MQTT_HOST="$(jq_str_or '.mqtt_host' '')"
@@ -149,6 +172,13 @@ export INV1_PORT INV2_PORT INV3_PORT
 export SERIAL_1 SERIAL_2 SERIAL_3
 
 # ============================================================
+# Dashboard storage dirs
+# ============================================================
+mkdir -p /config/dashboards
+mkdir -p /data/smart-voltronic
+logi "Dashboard directories prepared: /config/dashboards"
+
+# ============================================================
 # flows.json update
 # ============================================================
 ADDON_FLOWS_VERSION="$(cat /addon/flows_version.txt 2>/dev/null || echo '0.0.0')"
@@ -240,15 +270,12 @@ if [ "$INV1_TRANSPORT" = "serial" ]; then TCP1_HOST="127.0.0.1"; TCP1_PORT="1"; 
 if [ "$INV2_TRANSPORT" = "serial" ]; then TCP2_HOST="127.0.0.1"; TCP2_PORT="1"; fi
 if [ "$INV3_TRANSPORT" = "serial" ]; then TCP3_HOST="127.0.0.1"; TCP3_PORT="1"; fi
 
-# ond1
 update_tcp_host_port_by_name "tcp out inv 1" "$TCP1_HOST" "$TCP1_PORT" "OUT1"
 update_tcp_host_port_by_name "tcp in inv 1"  "$TCP1_HOST" "$TCP1_PORT" "IN1"
 
-# ond2
 update_tcp_host_port_by_name "tcp out inv 2" "$TCP2_HOST" "$TCP2_PORT" "OUT2"
 update_tcp_host_port_by_name "tcp in inv 2"  "$TCP2_HOST" "$TCP2_PORT" "IN2"
 
-# ond3
 update_tcp_host_port_by_name "tcp out inv 3" "$TCP3_HOST" "$TCP3_PORT" "OUT3"
 update_tcp_host_port_by_name "tcp in inv 3"  "$TCP3_HOST" "$TCP3_PORT" "IN3"
 
@@ -303,6 +330,36 @@ jq -n \
   > /data/flows_cred.json
 
 logi "flows_cred.json créé avec succès"
+
+# ============================================================
+# Frontend resources install
+# ============================================================
+logi "Installing Smart Voltronic frontend resources..."
+
+mkdir -p /homeassistant/www/smart-voltronic
+
+if [ -f /addon/frontend/card-mod.js ]; then
+  cp /addon/frontend/card-mod.js /homeassistant/www/smart-voltronic/
+  logi "Installed: card-mod.js"
+else
+  logw "Missing frontend file: /addon/frontend/card-mod.js"
+fi
+
+if [ -f /addon/frontend/apexcharts-card.js ]; then
+  cp /addon/frontend/apexcharts-card.js /homeassistant/www/smart-voltronic/
+  logi "Installed: apexcharts-card.js"
+else
+  logw "Missing frontend file: /addon/frontend/apexcharts-card.js"
+fi
+
+if [ -f /addon/frontend/mini-graph-card.js ]; then
+  cp /addon/frontend/mini-graph-card.js /homeassistant/www/smart-voltronic/
+  logi "Installed: mini-graph-card.js"
+else
+  logw "Missing frontend file: /addon/frontend/mini-graph-card.js"
+fi
+
+logi "Smart Voltronic frontend installed"
 
 logi "Starting Node-RED sur le port 1892..."
 exec node-red --userDir /data --settings /addon/settings.js
