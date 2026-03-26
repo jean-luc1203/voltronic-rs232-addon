@@ -1,26 +1,19 @@
 # 🔋 Smart Voltronic – Home Assistant Add-on
 
-Control and monitor your **Voltronic / Axpert inverters** directly from Home Assistant with an advanced command learning system, compatibility modes, and optional Premium analytics.
+Control and monitor your **Voltronic / Axpert inverters** directly from Home Assistant with an advanced command learning system, configurable compatibility modes and optional Premium features.
 
-➡️ French documentation:
-[https://github.com/jean-luc1203/voltronic-rs232-addon/blob/main/smart-voltronic/README_FR.md](https://github.com/jean-luc1203/voltronic-rs232-addon/blob/main/smart-voltronic/README_FR.md)
-
----
+➡️ French documentation:  
+https://github.com/jean-luc1203/voltronic-rs232-addon/blob/main/smart-voltronic/README_FR.md
 
 ## ☕ Support development
 
-Smart Voltronic is an open-source project developed during free time.
+Smart Voltronic is an open-source project developed in free time.
 
 If you find it useful you can support development and unlock Premium features:
-
-➡️ **Get Premium access here:**
-[https://ko-fi.com/tapion69](https://ko-fi.com/tapion69)
 
 <a href="https://ko-fi.com/tapion69">
 <img src="https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/kofi-button.png" width="300">
 </a>
-
----
 
 ![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Addon-blue)
 ![Voltronic](https://img.shields.io/badge/Inverter-Voltronic-compatible-orange)
@@ -29,109 +22,41 @@ If you find it useful you can support development and unlock Premium features:
 
 ---
 
-# ⭐ Premium Features
+# 🚀 What's new
 
-Smart Voltronic Premium unlocks advanced monitoring, energy analytics and intelligent calculated sensors.
+## ⭐ Premium features
 
-Premium is **optional** and the add-on remains fully functional without it.
+Smart Voltronic Premium unlocks advanced monitoring and calculated values when some data is not provided by the inverter.
 
-Premium adds:
+The add-on remains fully functional without Premium.
 
-## 📊 Advanced energy analytics
+Premium enables:
 
-Automatic calculation when inverter does not provide:
-
-### Monthly energy:
-
-* PV energy month
-* Load energy month
-* Grid energy month
-* Battery charge month
-* Battery discharge month
-
-### Yearly energy:
-
-* PV energy year
-* Load energy year
-* Grid energy year
-* Battery charge year
-* Battery discharge year
-
-If the inverter already provides these values, Smart Voltronic always uses native values.
+* Monthly and yearly PV fallback sensors (only if inverter does not provide them)
+* Monthly and yearly Load fallback sensors (only if inverter does not provide them)
+* Monthly and yearly Battery energy sensors
+* Battery health indicator
+* Inverter health indicator
+* Daily solar / battery / grid percentage distribution
+* Advanced Premium dashboard
 
 ---
 
-## ❤️ Battery health indicator
-
-Provides an estimated battery health score based on:
-
-* Daily usage patterns
-* Charge cycles
-* Operating conditions
-
-⚠️ Informational indicator only.
-Not a replacement for real battery diagnostics.
-
----
-
-## 🩺 Inverter health indicator
-
-Provides an estimated inverter condition score based on:
-
-* Operating behaviour
-* Fault frequency
-* System stability indicators
-
-⚠️ Informational indicator only.
-
----
-
-## 📊 Daily energy distribution
-
-Shows how your energy was supplied during the day:
-
-* Solar contribution %
-* Battery contribution %
-* Grid contribution %
-
-Allows understanding system behavior instantly.
-
----
-
-## 🎨 Premium dashboard
-
-Premium enables an advanced dashboard including:
-
-* Energy distribution charts
-* Monthly and yearly energy views
-* Power history
-* Battery health indicators
-* Inverter health indicators
-* Advanced diagnostics
-
----
-
-# 🔑 How Premium licensing works
+# 🔑 How to activate Premium
 
 Premium is linked to your **Home Assistant Install ID**.
 
-This prevents license sharing and ensures fair usage.
-
 ## Step 1 — Find your Install ID
 
-Your Install ID is automatically published via MQTT.
+Go to:
 
-Example topic:
+**Settings → Devices & Services → MQTT**
 
-```
-voltronic/1/install_id
-```
+Open:
 
-You can find it:
+**Smart Voltronic System**
 
-* In MQTT Explorer
-* In Home Assistant MQTT integration
-* In Smart Voltronic diagnostics sensors
+You will find the **Install ID sensor**.
 
 ---
 
@@ -139,95 +64,214 @@ You can find it:
 
 Purchase Premium via Ko-fi:
 
-[https://ko-fi.com/tapion69](https://ko-fi.com/tapion69)
+https://ko-fi.com/tapion69
 
-Send your **Install ID** when purchasing.
-
----
-
-## Step 3 — Receive your Premium key
-
-You will receive a Premium key linked to your Install ID.
+Send your Install ID when purchasing.
 
 ---
 
-## Step 4 — Activate Premium
+## Step 3 — Activate Premium
 
-Paste the key in add-on configuration:
+Add your key in addon configuration:
 
-```yaml
 premium_key: YOUR_KEY_HERE
-```
 
-Restart the add-on.
+Restart the addon.
 
-Premium features will activate automatically.
+Premium activates automatically.
 
 ---
 
-# 🚀 What's new
+# 📊 Free vs Premium logic
+
+Smart Voltronic always prioritizes **native inverter values**.
+
+Premium only provides fallback calculations when data is missing.
+
+---
+
+## PV energy
+
+Daily PV:
+✔ Free
+
+Monthly PV:
+✔ Free if inverter provides value  
+⭐ Premium fallback if missing
+
+Yearly PV:
+✔ Free if inverter provides value  
+⭐ Premium fallback if missing
+
+---
+
+## Load energy
+
+Daily Load:
+✔ Free
+
+Monthly Load:
+✔ Free if inverter provides value  
+⭐ Premium fallback if missing
+
+Yearly Load:
+✔ Free if inverter provides value  
+⭐ Premium fallback if missing
+
+---
+
+## Battery energy
+
+Daily battery charge / discharge:
+✔ Free
+
+Monthly battery energy:
+⭐ Premium only
+
+Yearly battery energy:
+⭐ Premium only
+
+---
+
+## Grid energy
+
+Grid values only exist if inverter provides grid data.
+
+Daily grid:
+✔ Free if supported
+
+Monthly grid:
+✔ Free if supported  
+⭐ Premium fallback if missing
+
+Yearly grid:
+✔ Free if supported  
+⭐ Premium fallback if missing
+
+If inverter does not provide grid data Smart Voltronic cannot estimate it reliably.
+
+---
+
+## ❤️ Health indicators
+
+Premium adds:
+
+* Battery Health score
+* Inverter Health score
+
+⚠️ These values are informational only.
+
+---
+
+## 📊 Daily energy distribution
+
+Premium adds daily percentage sensors showing:
+
+* Solar %
+* Battery %
+* Grid %
+
+Shows how your load was powered.
+
+---
+
+## 🎨 Premium dashboard
+
+Premium enables an advanced visual dashboard including:
+
+* Energy distribution charts
+* Monthly and yearly energy views
+* Power history
+* Health indicators
+* Diagnostics overview
+
+Dashboard is created automatically when Premium is active.
+
+---
 
 ## 🧠 Automatic inverter command learning
 
-Smart Voltronic includes an intelligent learning engine that automatically identifies which commands are supported.
+Smart Voltronic includes an intelligent learning engine that automatically identifies which commands are actually supported by your inverter.
 
 This allows:
 
-* Better compatibility across firmware variants
+* Better compatibility across Voltronic firmware variants
 * Prevention of unsupported commands
-* Automatic adaptation of settings
-* Creation of inverter compatibility profile
+* Automatic adaptation of available settings
+* Creation of an inverter compatibility profile
 * Safer parameter changes
 
 No user action required.
 
 ---
 
-# 🧩 Configurable compatibility modes
+## 🧩 Configurable compatibility modes
 
-Different Voltronic models behave differently.
+Different Voltronic models and firmware versions may behave differently.
 
-Smart Voltronic provides compatibility modes.
+Smart Voltronic provides compatibility modes to adapt the internal behavior depending on your inverter.
 
-Configured in add-on settings.
+These modes are configurable in the add-on settings.
 
 ---
 
-## Modern mode
+### Modern mode
 
-Recommended for newer firmware.
+Recommended for recent models and newer firmware.
 
 Features:
 
-* Uses command learning
-* Modern firmware compatibility
+* Uses the automatic command learning system
+* Behavior adapted for modern inverter firmware
+* Improved compatibility with newer models
 * Protection against invalid commands
 
 ---
 
-## Legacy mode
+### Legacy mode
 
-Recommended for older models.
+Recommended for older firmware or legacy inverter models.
 
 Features:
 
-* Uses command learning
-* Legacy firmware compatibility
+* Also uses the automatic command learning system
+* Behavior adapted for older inverter logic
+* Improved compatibility with legacy devices
 * Protection against invalid commands
 
 ---
 
-## 2-choice source priority mode
+### 2-choice source priority mode
 
-Some inverters only support 2 priorities.
+Some inverters support only 2 power priority modes instead of 3.
 
-Allows:
+This mode allows:
 
-* UI adaptation
-* Prevent invalid commands
-* Consistent behavior
+* Adapting Home Assistant available options
+* Avoiding unsupported settings
+* Keeping UI consistent with inverter behavior
 
-Enable only if needed.
+Enable only if your inverter requires it.
+
+---
+
+# ⭐ Why Smart Voltronic is different
+
+Smart Voltronic does more than just sending commands.
+
+It adapts to your inverter.
+
+Advantages:
+
+* Better compatibility
+* Fewer configuration errors
+* Less manual setup
+* Support for many firmware variants
+* More reliable installation
+
+Goal:
+
+**Make the integration as plug and play as possible.**
 
 ---
 
@@ -259,67 +303,82 @@ Enable only if needed.
 
 # 🔌 Connection methods
 
+Two connection types supported.
+
 ## Serial connection
 
-Direct RS232 connection:
+Direct RS232 connection.
 
-```
-Inverter RJ45
-↓
-RJ45 → DB9 cable
-↓
-USB RS232 adapter
-↓
-Home Assistant
-```
+Inverter RJ45  
+↓  
+RJ45 → DB9 cable  
+↓  
+USB RS232 adapter  
+↓  
+Home Assistant  
 
 Recommended chipsets:
 
 * FTDI
-* PL2303
+* Prolific PL2303
 
 ---
 
-## Network gateway
+## Network gateway connection
 
-Allows remote communication.
+Allows remote communication over network.
 
-Supported:
+Supported modules:
 
 * Elfin EE10A
 * Elfin EW10A
 
 Connection:
 
-```
-Inverter
-↓
-RS232
-↓
-Gateway
-↓
-Network
-↓
-Home Assistant
-```
+Inverter  
+↓  
+RS232  
+↓  
+Gateway  
+↓  
+Network  
+↓  
+Home Assistant  
 
-Gateway settings:
+Gateway configuration:
 
 Serial:
 
-```
-2400 baud
-8 data bits
-1 stop bit
-No parity
-```
+2400 baud  
+8 data bits  
+1 stop bit  
+No parity  
 
 Network:
 
-```
-TCP Server
-Port 8899
-```
+TCP Server  
+Port 8899  
+
+---
+
+# ⚙️ Configuration
+
+Example:
+
+inv1_link: serial  
+inv1_serial_port: /dev/serial/by-id/...  
+
+inv2_link: gateway  
+inv2_gateway_host: 192.168.1.40  
+inv2_gateway_port: 8899  
+
+premium_key: YOUR_KEY_HERE  
+
+MQTT topics:
+
+voltronic/1/  
+voltronic/2/  
+voltronic/3/  
 
 ---
 
@@ -348,13 +407,14 @@ Refresh rate:
 
 ## Inverter control
 
-Parameters:
+Configurable parameters:
 
 * Output priority
 * Charging priority
 * Battery type
 * Charging voltages
 * Current limits
+* Grid parameters
 
 Every change is:
 
@@ -366,11 +426,11 @@ Every change is:
 
 # 🏠 Home Assistant integration
 
-Automatic via MQTT discovery:
+Automatic creation via MQTT discovery:
 
 * Sensors
 * Numbers
-* Selects
+* Select entities
 * Switches
 * Binary sensors
 
@@ -380,7 +440,7 @@ No manual YAML required.
 
 # 🔧 Compatibility
 
-Compatible with:
+Compatible with most Voltronic protocol inverters:
 
 * Axpert
 * VM
@@ -388,9 +448,17 @@ Compatible with:
 * MAX
 * MAX II
 * MAX IV
-* Clones
+* Compatible clones
 
-Thanks to learning system.
+---
+
+# 🛠 Support
+
+Open a GitHub issue for:
+
+* Bugs
+* Compatibility reports
+* Feature requests
 
 ---
 
@@ -398,7 +466,7 @@ Thanks to learning system.
 
 Open source project.
 
-Help welcome:
+Contributions welcome:
 
 * Testing
 * Feedback
@@ -409,13 +477,14 @@ Help welcome:
 
 # 🚀 Roadmap
 
-Planned:
+Planned improvements:
 
-* More inverter models
-* Premium analytics expansion
+* Support for additional inverter brands
+* Compatibility improvements
 * Windows standalone version
 * Advanced diagnostics
 * Standalone GUI
+* Premium expansion
 
 ---
 
@@ -423,12 +492,10 @@ Planned:
 
 You can:
 
-* Star the repository ⭐
+* Star the repository
 * Share feedback
-* Support development ☕
+* Support development
 
 ---
 
 # 🔋 Smart inverter control fully integrated into Home Assistant
-
----
