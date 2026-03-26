@@ -1,65 +1,56 @@
-configuration:
-  inv1_link:
-    name: Inverter 1 connection type
-  inv1_serial_port:
-    name: Inverter 1 serial port
-  inv1_gateway_host:
-    name: Inverter 1 gateway IP
-  inv1_gateway_port:
-    name: Inverter 1 gateway port
-  inv1_display_mode:
-    name: Inverter 1 display mode
-  inv1_output_priority_2choices:
-    name: Inverter 1 limited 2-choice output priority
+{
+  "configuration": {
 
-  inv2_link:
-    name: Inverter 2 connection type
-  inv2_serial_port:
-    name: Inverter 2 serial port
-  inv2_gateway_host:
-    name: Inverter 2 gateway IP
-  inv2_gateway_port:
-    name: Inverter 2 gateway port
-  inv2_display_mode:
-    name: Inverter 2 display mode
-  inv2_output_priority_2choices:
-    name: Inverter 2 limited 2-choice output priority
+    "inv1_link": "Inverter 1 connection type",
+    "inv1_serial_port": "Inverter 1 serial port",
+    "inv1_gateway_host": "Inverter 1 gateway IP",
+    "inv1_gateway_port": "Inverter 1 gateway port",
+    "inv1_display_mode": "Inverter 1 display mode",
+    "inv1_output_priority_2choices": "Limit output priority to 2 choices",
 
-  inv3_link:
-    name: Inverter 3 connection type
-  inv3_serial_port:
-    name: Inverter 3 serial port
-  inv3_gateway_host:
-    name: Inverter 3 gateway IP
-  inv3_gateway_port:
-    name: Inverter 3 gateway port
-  inv3_display_mode:
-    name: Inverter 3 display mode
-  inv3_output_priority_2choices:
-    name: Inverter 3 limited 2-choice output priority
+    "inv2_link": "Inverter 2 connection type",
+    "inv2_serial_port": "Inverter 2 serial port",
+    "inv2_gateway_host": "Inverter 2 gateway IP",
+    "inv2_gateway_port": "Inverter 2 gateway port",
+    "inv2_display_mode": "Inverter 2 display mode",
+    "inv2_output_priority_2choices": "Limit output priority to 2 choices",
 
-  battery_section:
-    name: Battery settings
-  battery_system_voltage:
-    name: Battery system voltage
+    "inv3_link": "Inverter 3 connection type",
+    "inv3_serial_port": "Inverter 3 serial port",
+    "inv3_gateway_host": "Inverter 3 gateway IP",
+    "inv3_gateway_port": "Inverter 3 gateway port",
+    "inv3_display_mode": "Inverter 3 display mode",
+    "inv3_output_priority_2choices": "Limit output priority to 2 choices",
 
-  mqtt_section:
-    name: MQTT configuration
-  mqtt_host:
-    name: MQTT server
-  mqtt_port:
-    name: MQTT port
-  mqtt_user:
-    name: MQTT username
-  mqtt_pass:
-    name: MQTT password
+    "battery_section": "Battery configuration",
 
-  send_bip:
-    name: Enable confirmation beep
+    "battery_system_voltage": "Battery system voltage",
 
-  timezone_section:
-    name: Timezone
-  timezone_mode:
-    name: Timezone
-  timezone_custom:
-    name: Custom timezone
+    "mqtt_section": "MQTT configuration",
+
+    "mqtt_host": "MQTT broker host",
+    "mqtt_port": "MQTT broker port",
+    "mqtt_user": "MQTT username",
+    "mqtt_pass": "MQTT password",
+
+    "premium_section": "Premium configuration",
+
+    "premium_key": "Premium license key",
+
+    "inv1_battery_capacity_ah": "Battery capacity inverter 1 (Ah)",
+    "inv1_battery_total_capacity_kwh": "Battery total capacity inverter 1 (kWh)",
+
+    "inv2_battery_capacity_ah": "Battery capacity inverter 2 (Ah)",
+    "inv2_battery_total_capacity_kwh": "Battery total capacity inverter 2 (kWh)",
+
+    "inv3_battery_capacity_ah": "Battery capacity inverter 3 (Ah)",
+    "inv3_battery_total_capacity_kwh": "Battery total capacity inverter 3 (kWh)",
+
+    "send_bip": "Enable inverter beep",
+
+    "timezone_section": "Timezone configuration",
+
+    "timezone_mode": "Timezone",
+    "timezone_custom": "Custom timezone"
+  }
+}
