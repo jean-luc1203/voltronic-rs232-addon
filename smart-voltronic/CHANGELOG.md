@@ -1,6 +1,65 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 1.6.0 – Automatic dashboard system and card management
+
+### New automatic dashboard system
+
+Smart Voltronic can now automatically create a Home Assistant dashboard when the addon starts.
+
+The dashboard automatically adapts depending on the installed Home Assistant cards.
+
+No manual dashboard creation is required anymore.
+
+---
+
+### Custom cards support
+
+If the following cards are installed:
+
+* mini-graph-card
+* apexcharts-card
+* card-mod
+
+Smart Voltronic automatically generates an advanced visual dashboard using these cards.
+
+This provides:
+
+* More advanced graphs
+* Better power history visualization
+* Improved readability
+* More modern interface
+
+---
+
+### Automatic fallback mode
+
+If custom cards are not installed:
+
+Smart Voltronic automatically generates a dashboard using only native Home Assistant cards.
+
+This ensures:
+
+* No broken dashboards
+* No missing Lovelace resources
+* No frontend errors
+* Immediate functionality after installation
+* No user intervention required
+
+The dashboard remains fully functional with a simpler visual design.
+
+---
+
+### New configuration option
+
+New addon option added:
+
+dashboard_custom_cards_installed
+
+Allows the addon to know if custom cards are installed and generate the appropriate dashboard.
+
+---
+
 ## Version 1.5.9
 
 ## ⭐ Premium features introduction
