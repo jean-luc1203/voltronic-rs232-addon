@@ -175,7 +175,7 @@ Shows how your load was powered.
 
 ---
 
-## 🎨 Premium dashboard
+# 🎨 Premium dashboard
 
 Premium enables an advanced visual dashboard including:
 
@@ -189,7 +189,71 @@ Dashboard is created automatically when Premium is active.
 
 ---
 
-## 🧠 Automatic inverter command learning
+# 🧩 Dashboard cards system
+
+Smart Voltronic dashboard can work in **two modes** depending on installed cards.
+
+## Full Premium visual mode
+
+If the following HACS cards are installed:
+
+* mini-graph-card
+* apexcharts-card
+* card-mod
+
+Smart Voltronic will automatically use the advanced visual dashboard.
+
+Required installation:
+
+HACS → Frontend:
+
+mini-graph-card  
+apexcharts-card  
+card-mod  
+
+Then enable in addon config:
+
+dashboard_custom_cards_installed: true
+
+Restart addon.
+
+---
+
+## Native fallback mode
+
+If cards are not installed:
+
+Smart Voltronic automatically switches to a **native Home Assistant dashboard**.
+
+This ensures:
+
+* Dashboard always works
+* No broken UI
+* No missing resources
+* No manual fixes required
+
+Visual rendering is simpler but fully functional.
+
+Leave:
+
+dashboard_custom_cards_installed: false
+
+---
+
+## Why cards are not auto-installed
+
+Automatic HACS installs proved unreliable because:
+
+* HA blocks external installs
+* Resources sometimes fail
+* Frontend cache issues occur
+* Users must approve installs
+
+Manual HACS install is the safest method.
+
+---
+
+# 🧠 Automatic inverter command learning
 
 Smart Voltronic includes an intelligent learning engine that automatically identifies which commands are actually supported by your inverter.
 
@@ -205,7 +269,7 @@ No user action required.
 
 ---
 
-## 🧩 Configurable compatibility modes
+# 🧩 Configurable compatibility modes
 
 Different Voltronic models and firmware versions may behave differently.
 
