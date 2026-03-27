@@ -365,61 +365,190 @@ Objectif :
 
 # 🔌 Méthodes de connexion
 
-Deux modes supportés.
+Deux modes sont supportés :
 
-## Connexion série
+* **Connexion série directe en USB / RS232**
+* **Connexion via gateway réseau TCP**
 
-Connexion RS232 directe.
+La connexion USB / RS232 reste la méthode recommandée pour la majorité des utilisateurs car elle est plus simple à mettre en place et généralement plus stable.
 
-Onduleur RJ45  
-↓  
-RJ45 → DB9  
-↓  
-Adaptateur USB RS232  
-↓  
-Home Assistant  
+---
+
+# 🔧 Tutoriel installation matériel
+
+Cette section explique comment raccorder physiquement votre onduleur à Home Assistant avec les accessoires compatibles.
+
+---
+
+## 1) Câble de communication RJ45 côté onduleur
+
+L’onduleur Voltronic utilise un câble de communication RJ45 spécifique pour la liaison série.
+
+Ce câble se branche sur le port de communication de l’onduleur.
+
+![Cable RJ45 inside](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-inside.jpg)
+
+---
+
+## 2) Adaptateur RJ45 vers DB9
+
+Le câble RJ45 est généralement converti en DB9 grâce à un adaptateur RJ45 → DB9.
+
+Cet adaptateur permet ensuite de relier l’onduleur à un convertisseur USB RS232 ou à une gateway série réseau.
+
+![Cable RJ45 DB9](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-db9.jpg)
+
+---
+
+## 3) Schéma de brochage RJ45 / DB9
+
+Si vous souhaitez vérifier votre câblage ou fabriquer votre propre câble, voici le pinout RJ45 / DB9.
+
+⚠️ Vérifiez toujours le brochage avant branchement.  
+Un mauvais câblage peut empêcher toute communication.
+
+![Cable RJ45 DB9 Pinout](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/cable-rj45-db9-pinout.jpg)
+
+---
+
+## 4) Adaptateur USB vers RS232
+
+Pour une connexion directe à Home Assistant, utilisez un adaptateur **USB → RS232**.
+
+C’est la méthode la plus simple pour connecter l’onduleur en local.
 
 Chipsets recommandés :
 
 * FTDI
 * Prolific PL2303
 
+![USB RS232 Adapter](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/usb-rs232-adapter.png)
+
 ---
 
-## Connexion gateway réseau
+## 5) Gateway série réseau
 
-Permet communication réseau.
+Si votre onduleur est éloigné de votre serveur Home Assistant, vous pouvez utiliser une **gateway série → TCP**.
 
-Modules supportés :
+Modules couramment utilisés :
 
 * Elfin EE10A
 * Elfin EW10A
 
-Connexion :
+![Gateway](https://raw.githubusercontent.com/tapion69/smart-voltronic/main/smart-voltronic/docs/images/gateway.jpg)
+
+---
+
+# 🔌 Connexion série directe
+
+La connexion directe RS232 est recommandée si votre onduleur est proche du système Home Assistant.
+
+## Schéma de connexion
 
 Onduleur  
 ↓  
-RS232  
+Port de communication RJ45  
 ↓  
-Gateway  
+Câble RJ45 Voltronic  
 ↓  
-Réseau  
+Adaptateur RJ45 → DB9  
 ↓  
-Home Assistant  
+Adaptateur USB → RS232  
+↓  
+Home Assistant
 
-Configuration gateway :
+## Avantages
 
-Serial :
+* Installation simple
+* Très bonne stabilité
+* Pas de configuration réseau
+* Détection facile du port série
+
+## Vérifier le port série dans Home Assistant
+
+Dans Home Assistant, le port série peut être retrouvé dans :
+
+**Paramètres → Système → Matériel → Ports série**
+
+Le port ressemble généralement à :
+
+/dev/serial/by-id/usb-FTDI...  
+ou  
+/dev/ttyUSB0
+
+---
+
+# 🌐 Connexion gateway réseau
+
+Cette méthode permet de faire passer la communication série de l’onduleur par le réseau local.
+
+## Schéma de connexion
+
+Onduleur  
+↓  
+Port RJ45 / RS232  
+↓  
+Câble de communication Voltronic  
+↓  
+Adaptateur RJ45 → DB9  
+↓  
+Gateway série réseau  
+↓  
+Réseau local  
+↓  
+Home Assistant
+
+## Quand utiliser cette méthode
+
+* Onduleur éloigné de Home Assistant
+* Pas de possibilité de liaison USB directe
+* Besoin d’une intégration via TCP
+
+---
+
+## Configuration recommandée de la gateway
+
+### Paramètres série
 
 2400 baud  
 8 data bits  
 1 stop bit  
 No parity  
 
-Network :
+### Paramètres réseau
 
 TCP Server  
 Port 8899  
+
+---
+
+## Exemple de configuration côté addon
+
+Pour une connexion série :
+
+inv1_link: serial  
+inv1_serial_port: /dev/serial/by-id/usb-FTDI...
+
+Pour une connexion gateway :
+
+inv1_link: gateway  
+inv1_gateway_host: 192.168.1.40  
+inv1_gateway_port: 8899
+
+---
+
+# ⚠️ Conseils importants avant branchement
+
+* Utiliser de préférence un câble Voltronic d’origine ou un câble compatible vérifié
+* Vérifier le bon pinout RJ45 / DB9
+* Ne pas inverser un câble réseau standard avec un câble de communication série
+* En cas de doute, tester d’abord en connexion USB directe
+* Si la communication ne fonctionne pas, vérifier en priorité :
+  * le port série
+  * le câblage
+  * le baudrate
+  * l’adresse IP de la gateway
+  * le port TCP configuré
 
 ---
 
