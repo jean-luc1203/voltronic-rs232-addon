@@ -92,6 +92,12 @@ options:
   inv3_battery_total_capacity_kwh: 0
 
   # ============================================================
+  # 🎨 DASHBOARD
+  # ============================================================
+  dashboard_section: "────────── DASHBOARD ──────────"
+  dashboard_custom_cards_installed: false
+
+  # ============================================================
   # 🔔 OPTIONS
   # ============================================================
   send_bip: true
@@ -160,6 +166,12 @@ schema:
   # Premium battery info inverter 3
   inv3_battery_capacity_ah: float?
   inv3_battery_total_capacity_kwh: float?
+
+  # Séparateur Dashboard
+  dashboard_section: str?
+
+  # Dashboard
+  dashboard_custom_cards_installed: bool
 
   # Options
   send_bip: bool
