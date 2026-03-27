@@ -1,40 +1,36 @@
 configuration:
-
   inv1_link: "Type de connexion onduleur 1"
   inv1_serial_port: "Port série onduleur 1"
   inv1_gateway_host: "IP gateway onduleur 1"
   inv1_gateway_port: "Port gateway onduleur 1"
   inv1_display_mode: "Mode d'affichage onduleur 1"
-  inv1_output_priority_2choices: "Limiter la priorité sortie à 2 choix"
+  inv1_output_priority_2choices: "Priorité sortie limitée à 2 choix onduleur 1"
 
   inv2_link: "Type de connexion onduleur 2"
   inv2_serial_port: "Port série onduleur 2"
   inv2_gateway_host: "IP gateway onduleur 2"
   inv2_gateway_port: "Port gateway onduleur 2"
   inv2_display_mode: "Mode d'affichage onduleur 2"
-  inv2_output_priority_2choices: "Limiter la priorité sortie à 2 choix"
+  inv2_output_priority_2choices: "Priorité sortie limitée à 2 choix onduleur 2"
 
   inv3_link: "Type de connexion onduleur 3"
   inv3_serial_port: "Port série onduleur 3"
   inv3_gateway_host: "IP gateway onduleur 3"
   inv3_gateway_port: "Port gateway onduleur 3"
   inv3_display_mode: "Mode d'affichage onduleur 3"
-  inv3_output_priority_2choices: "Limiter la priorité sortie à 2 choix"
+  inv3_output_priority_2choices: "Priorité sortie limitée à 2 choix onduleur 3"
 
-  battery_section: "Configuration batterie"
-
+  battery_section: "────────── BATTERIE ──────────"
   battery_system_voltage: "Tension système batterie"
 
-  mqtt_section: "Configuration MQTT"
-
-  mqtt_host: "Adresse broker MQTT"
-  mqtt_port: "Port broker MQTT"
+  mqtt_section: "────────── CONFIGURATION MQTT ──────────"
+  mqtt_host: "Hôte MQTT"
+  mqtt_port: "Port MQTT"
   mqtt_user: "Utilisateur MQTT"
   mqtt_pass: "Mot de passe MQTT"
 
-  premium_section: "Configuration Premium"
-
-  premium_key: "Clé licence Premium"
+  premium_section: "────────── PREMIUM ──────────"
+  premium_key: "Clé premium"
 
   inv1_battery_capacity_ah: "Capacité batterie onduleur 1 (Ah)"
   inv1_battery_total_capacity_kwh: "Capacité totale batterie onduleur 1 (kWh)"
@@ -45,9 +41,11 @@ configuration:
   inv3_battery_capacity_ah: "Capacité batterie onduleur 3 (Ah)"
   inv3_battery_total_capacity_kwh: "Capacité totale batterie onduleur 3 (kWh)"
 
+  dashboard_section: "────────── DASHBOARD ──────────"
+  dashboard_custom_cards_installed: "Cartes custom du dashboard installées"
+
   send_bip: "Activer le bip onduleur"
 
-  timezone_section: "Configuration fuseau horaire"
-
-  timezone_mode: "Fuseau horaire"
+  timezone_section: "────────── FUSEAU HORAIRE ──────────"
+  timezone_mode: "Fuseau horaire prédéfini"
   timezone_custom: "Fuseau horaire personnalisé"
