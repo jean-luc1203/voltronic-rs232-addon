@@ -1,38 +1,40 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
-## 1.6.0 – Automatic dashboard system and card management
+1.6.0 – Automatic dashboard system and card management
+⚠️ Breaking change – entity stabilization
 
-### New automatic dashboard system
+Warning: some entities may have changed names in this version.
 
-Smart Voltronic can now automatically create a Home Assistant dashboard when the addon starts.
+Entity IDs have been standardized and fixed to ensure stability between installations and to allow reliable automatic dashboard generation.
 
-The dashboard automatically adapts depending on the installed Home Assistant cards.
+This change prevents entity renaming issues and ensures the Smart Voltronic dashboard can always be generated correctly.
 
-No manual dashboard creation is required anymore.
+After updating, Home Assistant may create some new entities. Old entities can be safely removed if no longer used.
 
----
+Automatic dashboard system
 
-### Custom cards support
+Smart Voltronic can now automatically generate a complete Home Assistant dashboard when the addon starts.
+
+The dashboard structure is now fully automated and requires no manual setup.
+
+Custom card integration
 
 If the following cards are installed:
 
-* mini-graph-card
-* apexcharts-card
-* card-mod
+mini-graph-card
+apexcharts-card
+card-mod
 
-Smart Voltronic automatically generates an advanced visual dashboard using these cards.
+Smart Voltronic automatically builds an advanced visual dashboard using these cards.
 
-This provides:
+This allows:
 
-* More advanced graphs
-* Better power history visualization
-* Improved readability
-* More modern interface
-
----
-
-### Automatic fallback mode
+Advanced graphs
+Better power monitoring visualization
+Improved UI clarity
+More modern interface
+Automatic fallback mode
 
 If custom cards are not installed:
 
@@ -40,23 +42,25 @@ Smart Voltronic automatically generates a dashboard using only native Home Assis
 
 This ensures:
 
-* No broken dashboards
-* No missing Lovelace resources
-* No frontend errors
-* Immediate functionality after installation
-* No user intervention required
+No broken dashboards
+No missing Lovelace resources
+No frontend errors
+Immediate usability after installation
+No manual user actions required
 
 The dashboard remains fully functional with a simpler visual design.
 
----
+New configuration option
 
-### New configuration option
-
-New addon option added:
+New option added:
 
 dashboard_custom_cards_installed
 
 Allows the addon to know if custom cards are installed and generate the appropriate dashboard.
+
+Goal of this update
+
+Improve dashboard reliability and make Smart Voltronic closer to a true plug & play experience.
 
 ---
 
