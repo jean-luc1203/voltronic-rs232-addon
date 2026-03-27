@@ -1,40 +1,36 @@
 configuration:
-
   inv1_link: "Inverter 1 connection type"
   inv1_serial_port: "Inverter 1 serial port"
   inv1_gateway_host: "Inverter 1 gateway IP"
   inv1_gateway_port: "Inverter 1 gateway port"
   inv1_display_mode: "Inverter 1 display mode"
-  inv1_output_priority_2choices: "Limit output priority to 2 choices"
+  inv1_output_priority_2choices: "Inverter 1 output priority limited to 2 choices"
 
   inv2_link: "Inverter 2 connection type"
   inv2_serial_port: "Inverter 2 serial port"
   inv2_gateway_host: "Inverter 2 gateway IP"
   inv2_gateway_port: "Inverter 2 gateway port"
   inv2_display_mode: "Inverter 2 display mode"
-  inv2_output_priority_2choices: "Limit output priority to 2 choices"
+  inv2_output_priority_2choices: "Inverter 2 output priority limited to 2 choices"
 
   inv3_link: "Inverter 3 connection type"
   inv3_serial_port: "Inverter 3 serial port"
   inv3_gateway_host: "Inverter 3 gateway IP"
   inv3_gateway_port: "Inverter 3 gateway port"
   inv3_display_mode: "Inverter 3 display mode"
-  inv3_output_priority_2choices: "Limit output priority to 2 choices"
+  inv3_output_priority_2choices: "Inverter 3 output priority limited to 2 choices"
 
-  battery_section: "Battery configuration"
-
+  battery_section: "────────── BATTERY ──────────"
   battery_system_voltage: "Battery system voltage"
 
-  mqtt_section: "MQTT configuration"
-
-  mqtt_host: "MQTT broker host"
-  mqtt_port: "MQTT broker port"
+  mqtt_section: "────────── MQTT CONFIGURATION ──────────"
+  mqtt_host: "MQTT host"
+  mqtt_port: "MQTT port"
   mqtt_user: "MQTT username"
   mqtt_pass: "MQTT password"
 
-  premium_section: "Premium configuration"
-
-  premium_key: "Premium license key"
+  premium_section: "────────── PREMIUM ──────────"
+  premium_key: "Premium key"
 
   inv1_battery_capacity_ah: "Battery capacity inverter 1 (Ah)"
   inv1_battery_total_capacity_kwh: "Battery total capacity inverter 1 (kWh)"
@@ -45,9 +41,11 @@ configuration:
   inv3_battery_capacity_ah: "Battery capacity inverter 3 (Ah)"
   inv3_battery_total_capacity_kwh: "Battery total capacity inverter 3 (kWh)"
 
+  dashboard_section: "────────── DASHBOARD ──────────"
+  dashboard_custom_cards_installed: "Custom dashboard cards installed"
+
   send_bip: "Enable inverter beep"
 
-  timezone_section: "Timezone configuration"
-
-  timezone_mode: "Timezone"
+  timezone_section: "────────── TIMEZONE ──────────"
+  timezone_mode: "Timezone preset"
   timezone_custom: "Custom timezone"
