@@ -1,6 +1,14 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 1.6.2
+
+- Premium dashboard is now available in English
+- New configuration option added to choose the dashboard language
+- Users can now switch the Premium dashboard between French and English directly from the add-on configuration
+  
+---
+
 ## Version 1.6.1
 Improved compatibility for grid charging current handling.
 General reliability improvements for parameter setting on supported inverters.
