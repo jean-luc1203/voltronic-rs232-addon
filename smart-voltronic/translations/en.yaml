@@ -78,6 +78,8 @@ configuration:
     name: ────────── DASHBOARD ──────────
   dashboard_custom_cards_installed:
     name: Custom dashboard cards installed
+  dashboard_language:
+    name: Dashboard language
 
   send_bip:
     name: Enable inverter beep
