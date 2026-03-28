@@ -1,92 +1,90 @@
 configuration:
-  inv1_link: "Type de connexion onduleur 1"
-  inv1_serial_port: "Port série onduleur 1"
-  inv1_gateway_host: "IP gateway onduleur 1"
-  inv1_gateway_port: "Port gateway onduleur 1"
-  inv1_display_mode: "Mode d'affichage onduleur 1"
-  inv1_output_priority_2choices: "Priorité sortie limitée à 2 choix onduleur 1"
-
-  inv2_link: "Type de connexion onduleur 2"
-  inv2_serial_port: "Port série onduleur 2"
-  inv2_gateway_host: "IP gateway onduleur 2"
-  inv2_gateway_port: "Port gateway onduleur 2"
-  inv2_display_mode: "Mode d'affichage onduleur 2"
-  inv2_output_priority_2choices: "Priorité sortie limitée à 2 choix onduleur 2"
-
-  inv3_link: "Type de connexion onduleur 3"
-  inv3_serial_port: "Port série onduleur 3"
-  inv3_gateway_host: "IP gateway onduleur 3"
-  inv3_gateway_port: "Port gateway onduleur 3"
-  inv3_display_mode: "Mode d'affichage onduleur 3"
-  inv3_output_priority_2choices: "Priorité sortie limitée à 2 choix onduleur 3"
-
-  battery_section: "────────── BATTERIE ──────────"
-  battery_system_voltage: "Tension système batterie"
-
-  mqtt_section: "────────── CONFIGURATION MQTT ──────────"
-  mqtt_host: "Hôte MQTT"
-  mqtt_port: "Port MQTT"
-  mqtt_user: "Nom d'utilisateur MQTT"
-  mqtt_pass: "Mot de passe MQTT"
-
-  premium_section: "────────── PREMIUM ──────────"
-  premium_key: "Clé Premium"
-
-  inv1_battery_capacity_ah: "Capacité batterie onduleur 1 (Ah)"
-  inv1_battery_total_capacity_kwh: "Capacité totale batterie onduleur 1 (kWh)"
-
-  inv2_battery_capacity_ah: "Capacité batterie onduleur 2 (Ah)"
-  inv2_battery_total_capacity_kwh: "Capacité totale batterie onduleur 2 (kWh)"
-
-  inv3_battery_capacity_ah: "Capacité batterie onduleur 3 (Ah)"
-  inv3_battery_total_capacity_kwh: "Capacité totale batterie onduleur 3 (kWh)"
-
-  dashboard_section: "────────── DASHBOARD ──────────"
-  dashboard_custom_cards_installed: "Cartes personnalisées du dashboard installées"
-
-  send_bip: "Activer le bip de l'onduleur"
-
-  timezone_section: "────────── FUSEAU HORAIRE ──────────"
-  timezone_mode: "Préréglage fuseau horaire"
-  timezone_custom: "Fuseau horaire personnalisé"
-
-options:
   inv1_link:
-    serial: "Série"
-    gateway: "Gateway"
+    name: Type de connexion onduleur 1
+  inv1_serial_port:
+    name: Port série onduleur 1
+  inv1_gateway_host:
+    name: IP gateway onduleur 1
+  inv1_gateway_port:
+    name: Port gateway onduleur 1
+  inv1_display_mode:
+    name: Mode d'affichage onduleur 1
+  inv1_output_priority_2choices:
+    name: Priorité sortie limitée à 2 choix onduleur 1
 
   inv2_link:
-    serial: "Série"
-    gateway: "Gateway"
+    name: Type de connexion onduleur 2
+  inv2_serial_port:
+    name: Port série onduleur 2
+  inv2_gateway_host:
+    name: IP gateway onduleur 2
+  inv2_gateway_port:
+    name: Port gateway onduleur 2
+  inv2_display_mode:
+    name: Mode d'affichage onduleur 2
+  inv2_output_priority_2choices:
+    name: Priorité sortie limitée à 2 choix onduleur 2
 
   inv3_link:
-    serial: "Série"
-    gateway: "Gateway"
-
-  inv1_display_mode:
-    modern: "Moderne"
-    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
-
-  inv2_display_mode:
-    modern: "Moderne"
-    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
-
+    name: Type de connexion onduleur 3
+  inv3_serial_port:
+    name: Port série onduleur 3
+  inv3_gateway_host:
+    name: IP gateway onduleur 3
+  inv3_gateway_port:
+    name: Port gateway onduleur 3
   inv3_display_mode:
-    modern: "Moderne"
-    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+    name: Mode d'affichage onduleur 3
+  inv3_output_priority_2choices:
+    name: Priorité sortie limitée à 2 choix onduleur 3
 
+  battery_section:
+    name: ────────── BATTERIE ──────────
   battery_system_voltage:
-    "24V": "24V"
-    "48V": "48V"
+    name: Tension système batterie
 
-  timezone_mode:
-    UTC: "UTC"
-    CUSTOM: "Personnalisé"
+  mqtt_section:
+    name: ────────── CONFIGURATION MQTT ──────────
+  mqtt_host:
+    name: Hôte MQTT
+  mqtt_port:
+    name: Port MQTT
+  mqtt_user:
+    name: Nom d'utilisateur MQTT
+  mqtt_pass:
+    name: Mot de passe MQTT
 
+  premium_section:
+    name: ────────── PREMIUM ──────────
+  premium_key:
+    name: Clé Premium
+
+  inv1_battery_capacity_ah:
+    name: Capacité batterie onduleur 1 (Ah)
+  inv1_battery_total_capacity_kwh:
+    name: Capacité totale batterie onduleur 1 (kWh)
+
+  inv2_battery_capacity_ah:
+    name: Capacité batterie onduleur 2 (Ah)
+  inv2_battery_total_capacity_kwh:
+    name: Capacité totale batterie onduleur 2 (kWh)
+
+  inv3_battery_capacity_ah:
+    name: Capacité batterie onduleur 3 (Ah)
+  inv3_battery_total_capacity_kwh:
+    name: Capacité totale batterie onduleur 3 (kWh)
+
+  dashboard_section:
+    name: ────────── DASHBOARD ──────────
   dashboard_custom_cards_installed:
-    true: "Oui"
-    false: "Non"
+    name: Cartes personnalisées du dashboard installées
 
   send_bip:
-    true: "Activé"
-    false: "Désactivé"
+    name: Activer le bip de l'onduleur
+
+  timezone_section:
+    name: ────────── FUSEAU HORAIRE ──────────
+  timezone_mode:
+    name: Préréglage fuseau horaire
+  timezone_custom:
+    name: Fuseau horaire personnalisé
