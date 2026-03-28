@@ -1,6 +1,11 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 v1.6.3
+* Bug fixe
+
+---
+
 ## 1.6.2
 
 - Premium dashboard is now available in English
