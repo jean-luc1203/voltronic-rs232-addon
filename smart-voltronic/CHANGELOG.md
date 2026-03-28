@@ -1,6 +1,12 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## Version 1.6.1
+Improved compatibility for grid charging current handling.
+General reliability improvements for parameter setting on supported inverters.
+
+---
+
 1.6.0 – Automatic dashboard system and card management
 ⚠️ Breaking change – entity stabilization
 
