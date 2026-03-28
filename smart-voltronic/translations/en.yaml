@@ -1,92 +1,90 @@
 configuration:
-  inv1_link: "Inverter 1 connection type"
-  inv1_serial_port: "Inverter 1 serial port"
-  inv1_gateway_host: "Inverter 1 gateway IP"
-  inv1_gateway_port: "Inverter 1 gateway port"
-  inv1_display_mode: "Inverter 1 display mode"
-  inv1_output_priority_2choices: "Inverter 1 output priority limited to 2 choices"
-
-  inv2_link: "Inverter 2 connection type"
-  inv2_serial_port: "Inverter 2 serial port"
-  inv2_gateway_host: "Inverter 2 gateway IP"
-  inv2_gateway_port: "Inverter 2 gateway port"
-  inv2_display_mode: "Inverter 2 display mode"
-  inv2_output_priority_2choices: "Inverter 2 output priority limited to 2 choices"
-
-  inv3_link: "Inverter 3 connection type"
-  inv3_serial_port: "Inverter 3 serial port"
-  inv3_gateway_host: "Inverter 3 gateway IP"
-  inv3_gateway_port: "Inverter 3 gateway port"
-  inv3_display_mode: "Inverter 3 display mode"
-  inv3_output_priority_2choices: "Inverter 3 output priority limited to 2 choices"
-
-  battery_section: "────────── BATTERY ──────────"
-  battery_system_voltage: "Battery system voltage"
-
-  mqtt_section: "────────── MQTT CONFIGURATION ──────────"
-  mqtt_host: "MQTT host"
-  mqtt_port: "MQTT port"
-  mqtt_user: "MQTT username"
-  mqtt_pass: "MQTT password"
-
-  premium_section: "────────── PREMIUM ──────────"
-  premium_key: "Premium key"
-
-  inv1_battery_capacity_ah: "Battery capacity inverter 1 (Ah)"
-  inv1_battery_total_capacity_kwh: "Battery total capacity inverter 1 (kWh)"
-
-  inv2_battery_capacity_ah: "Battery capacity inverter 2 (Ah)"
-  inv2_battery_total_capacity_kwh: "Battery total capacity inverter 2 (kWh)"
-
-  inv3_battery_capacity_ah: "Battery capacity inverter 3 (Ah)"
-  inv3_battery_total_capacity_kwh: "Battery total capacity inverter 3 (kWh)"
-
-  dashboard_section: "────────── DASHBOARD ──────────"
-  dashboard_custom_cards_installed: "Custom dashboard cards installed"
-
-  send_bip: "Enable inverter beep"
-
-  timezone_section: "────────── TIMEZONE ──────────"
-  timezone_mode: "Timezone preset"
-  timezone_custom: "Custom timezone"
-
-options:
   inv1_link:
-    serial: "Serial"
-    gateway: "Gateway"
+    name: Inverter 1 connection type
+  inv1_serial_port:
+    name: Inverter 1 serial port
+  inv1_gateway_host:
+    name: Inverter 1 gateway IP
+  inv1_gateway_port:
+    name: Inverter 1 gateway port
+  inv1_display_mode:
+    name: Inverter 1 display mode
+  inv1_output_priority_2choices:
+    name: Inverter 1 output priority limited to 2 choices
 
   inv2_link:
-    serial: "Serial"
-    gateway: "Gateway"
+    name: Inverter 2 connection type
+  inv2_serial_port:
+    name: Inverter 2 serial port
+  inv2_gateway_host:
+    name: Inverter 2 gateway IP
+  inv2_gateway_port:
+    name: Inverter 2 gateway port
+  inv2_display_mode:
+    name: Inverter 2 display mode
+  inv2_output_priority_2choices:
+    name: Inverter 2 output priority limited to 2 choices
 
   inv3_link:
-    serial: "Serial"
-    gateway: "Gateway"
-
-  inv1_display_mode:
-    modern: "Modern"
-    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
-
-  inv2_display_mode:
-    modern: "Modern"
-    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
-
+    name: Inverter 3 connection type
+  inv3_serial_port:
+    name: Inverter 3 serial port
+  inv3_gateway_host:
+    name: Inverter 3 gateway IP
+  inv3_gateway_port:
+    name: Inverter 3 gateway port
   inv3_display_mode:
-    modern: "Modern"
-    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+    name: Inverter 3 display mode
+  inv3_output_priority_2choices:
+    name: Inverter 3 output priority limited to 2 choices
 
+  battery_section:
+    name: ────────── BATTERY ──────────
   battery_system_voltage:
-    "24V": "24V"
-    "48V": "48V"
+    name: Battery system voltage
 
-  timezone_mode:
-    UTC: "UTC"
-    CUSTOM: "Custom"
+  mqtt_section:
+    name: ────────── MQTT CONFIGURATION ──────────
+  mqtt_host:
+    name: MQTT host
+  mqtt_port:
+    name: MQTT port
+  mqtt_user:
+    name: MQTT username
+  mqtt_pass:
+    name: MQTT password
 
+  premium_section:
+    name: ────────── PREMIUM ──────────
+  premium_key:
+    name: Premium key
+
+  inv1_battery_capacity_ah:
+    name: Battery capacity inverter 1 (Ah)
+  inv1_battery_total_capacity_kwh:
+    name: Battery total capacity inverter 1 (kWh)
+
+  inv2_battery_capacity_ah:
+    name: Battery capacity inverter 2 (Ah)
+  inv2_battery_total_capacity_kwh:
+    name: Battery total capacity inverter 2 (kWh)
+
+  inv3_battery_capacity_ah:
+    name: Battery capacity inverter 3 (Ah)
+  inv3_battery_total_capacity_kwh:
+    name: Battery total capacity inverter 3 (kWh)
+
+  dashboard_section:
+    name: ────────── DASHBOARD ──────────
   dashboard_custom_cards_installed:
-    true: "Yes"
-    false: "No"
+    name: Custom dashboard cards installed
 
   send_bip:
-    true: "Enabled"
-    false: "Disabled"
+    name: Enable inverter beep
+
+  timezone_section:
+    name: ────────── TIMEZONE ──────────
+  timezone_mode:
+    name: Timezone preset
+  timezone_custom:
+    name: Custom timezone
