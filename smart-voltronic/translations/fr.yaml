@@ -26,11 +26,11 @@ configuration:
   mqtt_section: "────────── CONFIGURATION MQTT ──────────"
   mqtt_host: "Hôte MQTT"
   mqtt_port: "Port MQTT"
-  mqtt_user: "Utilisateur MQTT"
+  mqtt_user: "Nom d'utilisateur MQTT"
   mqtt_pass: "Mot de passe MQTT"
 
   premium_section: "────────── PREMIUM ──────────"
-  premium_key: "Clé premium"
+  premium_key: "Clé Premium"
 
   inv1_battery_capacity_ah: "Capacité batterie onduleur 1 (Ah)"
   inv1_battery_total_capacity_kwh: "Capacité totale batterie onduleur 1 (kWh)"
@@ -42,10 +42,51 @@ configuration:
   inv3_battery_total_capacity_kwh: "Capacité totale batterie onduleur 3 (kWh)"
 
   dashboard_section: "────────── DASHBOARD ──────────"
-  dashboard_custom_cards_installed: "Cartes custom du dashboard installées"
+  dashboard_custom_cards_installed: "Cartes personnalisées du dashboard installées"
 
-  send_bip: "Activer le bip onduleur"
+  send_bip: "Activer le bip de l'onduleur"
 
   timezone_section: "────────── FUSEAU HORAIRE ──────────"
-  timezone_mode: "Fuseau horaire prédéfini"
+  timezone_mode: "Préréglage fuseau horaire"
   timezone_custom: "Fuseau horaire personnalisé"
+
+options:
+  inv1_link:
+    serial: "Série"
+    gateway: "Gateway"
+
+  inv2_link:
+    serial: "Série"
+    gateway: "Gateway"
+
+  inv3_link:
+    serial: "Série"
+    gateway: "Gateway"
+
+  inv1_display_mode:
+    modern: "Moderne"
+    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+
+  inv2_display_mode:
+    modern: "Moderne"
+    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+
+  inv3_display_mode:
+    modern: "Moderne"
+    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+
+  battery_system_voltage:
+    "24V": "24V"
+    "48V": "48V"
+
+  timezone_mode:
+    UTC: "UTC"
+    CUSTOM: "Personnalisé"
+
+  dashboard_custom_cards_installed:
+    true: "Oui"
+    false: "Non"
+
+  send_bip:
+    true: "Activé"
+    false: "Désactivé"
