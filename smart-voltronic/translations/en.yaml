@@ -49,3 +49,44 @@ configuration:
   timezone_section: "────────── TIMEZONE ──────────"
   timezone_mode: "Timezone preset"
   timezone_custom: "Custom timezone"
+
+options:
+  inv1_link:
+    serial: "Serial"
+    gateway: "Gateway"
+
+  inv2_link:
+    serial: "Serial"
+    gateway: "Gateway"
+
+  inv3_link:
+    serial: "Serial"
+    gateway: "Gateway"
+
+  inv1_display_mode:
+    modern: "Modern"
+    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+
+  inv2_display_mode:
+    modern: "Modern"
+    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+
+  inv3_display_mode:
+    modern: "Modern"
+    legacy_usb_sub_sbu: "Legacy (USB / SUB / SBU)"
+
+  battery_system_voltage:
+    "24V": "24V"
+    "48V": "48V"
+
+  timezone_mode:
+    UTC: "UTC"
+    CUSTOM: "Custom"
+
+  dashboard_custom_cards_installed:
+    true: "Yes"
+    false: "No"
+
+  send_bip:
+    true: "Enabled"
+    false: "Disabled"
