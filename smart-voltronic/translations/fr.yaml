@@ -8,9 +8,9 @@ configuration:
   inv1_gateway_port:
     name: Port gateway onduleur 1
   inv1_display_mode:
-    name: Mode d'affichage onduleur 1
+    name: Mode d’affichage onduleur 1
   inv1_output_priority_2choices:
-    name: Priorité sortie limitée à 2 choix onduleur 1
+    name: Priorité de sortie onduleur 1 limitée à 2 choix
 
   inv2_link:
     name: Type de connexion onduleur 2
@@ -21,9 +21,9 @@ configuration:
   inv2_gateway_port:
     name: Port gateway onduleur 2
   inv2_display_mode:
-    name: Mode d'affichage onduleur 2
+    name: Mode d’affichage onduleur 2
   inv2_output_priority_2choices:
-    name: Priorité sortie limitée à 2 choix onduleur 2
+    name: Priorité de sortie onduleur 2 limitée à 2 choix
 
   inv3_link:
     name: Type de connexion onduleur 3
@@ -34,9 +34,9 @@ configuration:
   inv3_gateway_port:
     name: Port gateway onduleur 3
   inv3_display_mode:
-    name: Mode d'affichage onduleur 3
+    name: Mode d’affichage onduleur 3
   inv3_output_priority_2choices:
-    name: Priorité sortie limitée à 2 choix onduleur 3
+    name: Priorité de sortie onduleur 3 limitée à 2 choix
 
   battery_section:
     name: ────────── BATTERIE ──────────
@@ -50,7 +50,7 @@ configuration:
   mqtt_port:
     name: Port MQTT
   mqtt_user:
-    name: Nom d'utilisateur MQTT
+    name: Nom d’utilisateur MQTT
   mqtt_pass:
     name: Mot de passe MQTT
 
@@ -78,13 +78,15 @@ configuration:
     name: ────────── DASHBOARD ──────────
   dashboard_custom_cards_installed:
     name: Cartes personnalisées du dashboard installées
+  dashboard_language:
+    name: Langue du dashboard
 
   send_bip:
-    name: Activer le bip de l'onduleur
+    name: Activer le bip de l’onduleur
 
   timezone_section:
     name: ────────── FUSEAU HORAIRE ──────────
   timezone_mode:
-    name: Préréglage fuseau horaire
+    name: Fuseau horaire prédéfini
   timezone_custom:
     name: Fuseau horaire personnalisé
