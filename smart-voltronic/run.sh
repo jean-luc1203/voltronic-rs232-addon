@@ -72,87 +72,7 @@ is_inv_enabled() {
 }
 
 # ============================================================
-# GROUP / NODE ENABLE-DISABLE HELPERS
-# ============================================================
-get_group_ids_by_name() {
-  local group_name="$1"
-  jq -r --arg name "$group_name" '
-    .[] | select(.type=="group" and .name==$name) | .id
-  ' "$FLOWS" 2>/dev/null || true
-}
-
-set_disabled_by_group_name() {
-  local group_name="$1"
-  local disabled="$2"
-
-  local group_ids
-  group_ids="$(get_group_ids_by_name "$group_name")"
-
-  if [ -z "$group_ids" ]; then
-    logw "Groupe introuvable: ${group_name}"
-    return 0
-  fi
-
-  while IFS= read -r gid; do
-    [ -z "$gid" ] && continue
-
-    jq --arg gid "$gid" --argjson disabled "$disabled" '
-      map(
-        if (.g? == $gid)
-        then . + {disabled: $disabled}
-        else .
-        end
-      )
-    ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
-  done <<< "$group_ids"
-
-  if [ "$disabled" = true ]; then
-    logi "Groupe '${group_name}' désactivé"
-  else
-    logi "Groupe '${group_name}' activé"
-  fi
-}
-
-set_node_disabled_by_exact_name() {
-  local node_name="$1"
-  local disabled="$2"
-
-  jq --arg name "$node_name" --argjson disabled "$disabled" '
-    map(
-      if (.name? == $name)
-      then . + {disabled: $disabled}
-      else .
-      end
-    )
-  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
-}
-
-set_inverter_runtime_state() {
-  local inv="$1"
-  local enabled="$2"
-
-  local disabled=true
-  if [ "$enabled" = true ]; then
-    disabled=false
-  fi
-
-  set_disabled_by_group_name "onduleur ${inv}" "$disabled"
-  set_disabled_by_group_name "apprentissage onduleur ${inv}" "$disabled"
-
-  set_node_disabled_by_exact_name "Serial In ${inv}" "$disabled"
-  set_node_disabled_by_exact_name "Serial Out ${inv}" "$disabled"
-  set_node_disabled_by_exact_name "tcp in inv ${inv}" "$disabled"
-  set_node_disabled_by_exact_name "tcp out inv ${inv}" "$disabled"
-
-  if [ "$disabled" = true ]; then
-    logi "INV${inv}: runtime désactivé"
-  else
-    logi "INV${inv}: runtime activé"
-  fi
-}
-
-# ============================================================
-# FLOW PATCH HELPERS
+# PATCH HELPERS
 # ============================================================
 update_serial_config_by_name() {
   local node_name="$1"
@@ -206,6 +126,103 @@ update_tcp_host_port_by_name() {
   ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
 
   logi "${label}: tcp=${host}:${port}"
+}
+
+set_node_disabled_by_exact_name() {
+  local node_name="$1"
+  local disabled="$2"
+
+  jq --arg name "$node_name" --argjson disabled "$disabled" '
+    map(
+      if (.name? == $name)
+      then . + {disabled: $disabled}
+      else .
+      end
+    )
+  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
+}
+
+set_nodes_disabled_by_names() {
+  local disabled="$1"
+  shift
+
+  local names_json
+  names_json="$(printf '%s\n' "$@" | jq -R . | jq -s .)"
+
+  jq --argjson names "$names_json" --argjson disabled "$disabled" '
+    map(
+      if (.name? != null and ($names | index(.name)))
+      then . + {disabled: $disabled}
+      else .
+      end
+    )
+  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
+}
+
+set_inverter_runtime_state() {
+  local inv="$1"
+  local enabled="$2"
+
+  local disabled=true
+  if [ "$enabled" = true ]; then
+    disabled=false
+  fi
+
+  # On ne touche PAS aux noeuds MQTT ici
+  # On ne désactive que les noeuds runtime transport / queue / parse / learning
+
+  local names=(
+    "Serial In ${inv}"
+    "Serial Out ${inv}"
+    "Serial inv ${inv}"
+    "tcp in inv ${inv}"
+    "tcp out inv ${inv}"
+    "tcp request inv ${inv}"
+    "TCP RX tag"
+    "TCP TX gate"
+    "parser ${inv}"
+    "parser"
+    "tag"
+    "normalize state"
+    "requetes"
+    "Queue Enqueue"
+    "Queue Pump"
+    "construire commande"
+    "Transport Select"
+    "Daily Energy Calc / Fallback"
+    "Premium Calc"
+    "Learning - Preprocess"
+    "Learning - Decision"
+    "Learning - RX Feedback"
+    "Learning - Build Candidate"
+    "Learning - State Feedback"
+    "Learning - Complete"
+    "Learning - Persist Profile"
+    "Learning - Restore / Validate Profile"
+  )
+
+  # On applique seulement aux noeuds du workspace/groupe concerné par le nom exact.
+  # Comme certains noms sont communs entre plusieurs onduleurs,
+  # on laisse uniquement les noeuds clairement suffixés inv/numéro s'ils existent,
+  # et on ne force pas les noms génériques si ton flow contient plusieurs noms identiques.
+
+  set_node_disabled_by_exact_name "Serial In ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "Serial Out ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "Serial inv ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "tcp in inv ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "tcp out inv ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "tcp request inv ${inv}" "$disabled"
+
+  # Noms spécifiques éventuels
+  set_node_disabled_by_exact_name "parser ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "REQ inv ${inv}" "$disabled"
+  set_node_disabled_by_exact_name "ond${inv}" false
+
+  if [ "$disabled" = true ]; then
+    logi "INV${inv}: transport runtime désactivé"
+  else
+    logi "INV${inv}: transport runtime activé"
+  fi
 }
 
 # ============================================================
@@ -380,7 +397,6 @@ update_serial_config_by_name "Serial inv 3" "$SERIAL_3" "INV3"
 
 # ============================================================
 # PATCH TCP NODES
-# Si non utilisé, valeur neutre
 # ============================================================
 TCP1_HOST="$INV1_HOST"; TCP1_PORT="$INV1_PORT"
 TCP2_HOST="$INV2_HOST"; TCP2_PORT="$INV2_PORT"
@@ -400,7 +416,7 @@ update_tcp_host_port_by_name "tcp out inv 3" "$TCP3_HOST" "$TCP3_PORT" "INV3 OUT
 update_tcp_host_port_by_name "tcp in inv 3"  "$TCP3_HOST" "$TCP3_PORT" "INV3 IN"
 
 # ============================================================
-# ENABLE / DISABLE RUNTIME NODES
+# ENABLE / DISABLE TRANSPORT RUNTIME ONLY
 # ============================================================
 set_inverter_runtime_state "1" "$INV1_ENABLED"
 set_inverter_runtime_state "2" "$INV2_ENABLED"
