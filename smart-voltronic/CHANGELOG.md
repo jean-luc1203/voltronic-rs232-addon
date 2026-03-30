@@ -1,6 +1,11 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 v1.6.9
+* Bug fixe
+
+---
+
 ## 🔄 v1.6.4
 * Bug fixe
 
