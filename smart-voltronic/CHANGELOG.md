@@ -1,6 +1,16 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 v1.7.0
+
+Premium update + fixes
+
+Added new Premium energy indicators for self-sufficiency and grid dependency
+Added several new Premium-only sensors to improve monitoring and dashboard experience
+Improved Premium energy and diagnostic calculations
+Refined Premium dashboard integration and overall presentation
+Fixed various bugs and stability issues
+
 ## 🔄 v1.6.9
 * Bug fixe
 
