@@ -47,6 +47,93 @@ sanitize_transport() {
 }
 
 # ============================================================
+# TIMEZONE HELPERS
+# ============================================================
+trim() {
+  local s="${1:-}"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s' "$s"
+}
+
+timezone_exists() {
+  local tz="$1"
+  [ -n "$tz" ] && [ -f "/usr/share/zoneinfo/$tz" ]
+}
+
+normalize_timezone() {
+  local raw tz upper offset sign hours
+
+  raw="$(trim "${1:-}")"
+  [ -z "$raw" ] && { echo "UTC"; return; }
+
+  tz="$raw"
+  upper="$(printf '%s' "$tz" | tr '[:lower:]' '[:upper:]')"
+
+  case "$upper" in
+    UTC|ETC/UTC|GMT) echo "UTC"; return ;;
+    EUROPE/FRANCE|FRANCE) echo "Europe/Paris"; return ;;
+    BELGIUM) echo "Europe/Brussels"; return ;;
+    GERMANY) echo "Europe/Berlin"; return ;;
+    SPAIN) echo "Europe/Madrid"; return ;;
+    ITALY) echo "Europe/Rome"; return ;;
+    UK|ENGLAND|BRITAIN|GREAT\ BRITAIN) echo "Europe/London"; return ;;
+    SOUTH\ AFRICA|AFRICA/SOUTH\ AFRICA|JOHANNESBURG) echo "Africa/Johannesburg"; return ;;
+    MOROCCO) echo "Africa/Casablanca"; return ;;
+    NEW\ YORK|US/EASTERN|EST) echo "America/New_York"; return ;;
+    CHICAGO|US/CENTRAL|CST) echo "America/Chicago"; return ;;
+    LOS\ ANGELES|US/PACIFIC|PST) echo "America/Los_Angeles"; return ;;
+    MONTREAL) echo "America/Montreal"; return ;;
+    DUBAI|UAE) echo "Asia/Dubai"; return ;;
+    TOKYO|JAPAN) echo "Asia/Tokyo"; return ;;
+    SYDNEY) echo "Australia/Sydney"; return ;;
+  esac
+
+  # UTC+2 / UTC-3 / GMT+2 / GMT-4 / UTC+02 / UTC+02:00
+  if printf '%s' "$upper" | grep -Eq '^(UTC|GMT)[[:space:]]*[+-][0-9]{1,2}(:00)?$'; then
+    offset="$(printf '%s' "$upper" | sed -E 's/^(UTC|GMT)[[:space:]]*([+-][0-9]{1,2})(:00)?$/\2/')"
+    sign="${offset:0:1}"
+    hours="${offset:1}"
+    hours="$(printf '%d' "$hours" 2>/dev/null || echo "")"
+    if [ -n "$hours" ] && [ "$hours" -ge 0 ] && [ "$hours" -le 14 ]; then
+      if [ "$sign" = "+" ]; then
+        echo "Etc/GMT-$hours"
+      else
+        echo "Etc/GMT+$hours"
+      fi
+      return
+    fi
+  fi
+
+  # +2 / -3 / +02 / -04
+  if printf '%s' "$upper" | grep -Eq '^[+-][0-9]{1,2}$'; then
+    sign="${upper:0:1}"
+    hours="${upper:1}"
+    hours="$(printf '%d' "$hours" 2>/dev/null || echo "")"
+    if [ -n "$hours" ] && [ "$hours" -ge 0 ] && [ "$hours" -le 14 ]; then
+      if [ "$sign" = "+" ]; then
+        echo "Etc/GMT-$hours"
+      else
+        echo "Etc/GMT+$hours"
+      fi
+      return
+    fi
+  fi
+
+  # IANA directe
+  echo "$tz"
+}
+
+validate_timezone_or_fallback() {
+  local tz="$1"
+  if timezone_exists "$tz"; then
+    echo "$tz"
+  else
+    echo "UTC"
+  fi
+}
+
+# ============================================================
 # PREMIUM
 # ============================================================
 INSTANCE_FILE="/data/smart_voltronic_instance_id"
@@ -97,23 +184,44 @@ if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASS}" ]; then
 fi
 
 # ============================================================
-# Timezone
+# TIMEZONE
 # ============================================================
-TZ_MODE="$(jq -r '.timezone_mode // "UTC"' "$OPTS")"
-TZ_CUSTOM="$(jq -r '.timezone_custom // "UTC"' "$OPTS")"
+TZ_MODE_RAW="$(jq -r '.timezone_mode // "UTC"' "$OPTS")"
+TZ_CUSTOM_RAW="$(jq -r '.timezone_custom // ""' "$OPTS")"
 
-if [ "$TZ_MODE" = "CUSTOM" ]; then
-  ADDON_TIMEZONE="$TZ_CUSTOM"
+if [ "$TZ_MODE_RAW" = "CUSTOM" ]; then
+  TZ_REQUESTED="$TZ_CUSTOM_RAW"
 else
-  ADDON_TIMEZONE="$TZ_MODE"
+  TZ_REQUESTED="$TZ_MODE_RAW"
+fi
+
+TZ_REQUESTED="$(trim "$TZ_REQUESTED")"
+TZ_NORMALIZED="$(normalize_timezone "$TZ_REQUESTED")"
+ADDON_TIMEZONE="$(validate_timezone_or_fallback "$TZ_NORMALIZED")"
+
+TIMEZONE_VALID="true"
+if [ "$ADDON_TIMEZONE" != "$TZ_NORMALIZED" ]; then
+  TIMEZONE_VALID="false"
 fi
 
 if [ -z "${ADDON_TIMEZONE:-}" ] || [ "$ADDON_TIMEZONE" = "null" ]; then
   ADDON_TIMEZONE="UTC"
+  TIMEZONE_VALID="false"
 fi
 
 export ADDON_TIMEZONE
-logi "Timezone (options.json): $ADDON_TIMEZONE"
+export ADDON_TIMEZONE_REQUESTED="${TZ_REQUESTED:-UTC}"
+export ADDON_TIMEZONE_NORMALIZED="$TZ_NORMALIZED"
+export ADDON_TIMEZONE_VALID="$TIMEZONE_VALID"
+
+logi "Timezone requested: ${ADDON_TIMEZONE_REQUESTED}"
+logi "Timezone normalized: ${ADDON_TIMEZONE_NORMALIZED}"
+if [ "$ADDON_TIMEZONE_VALID" = "true" ]; then
+  logi "Timezone active: ${ADDON_TIMEZONE}"
+else
+  logw "Timezone invalide ou inconnue -> fallback UTC (requested=${ADDON_TIMEZONE_REQUESTED}, normalized=${ADDON_TIMEZONE_NORMALIZED})"
+  logi "Timezone active: ${ADDON_TIMEZONE}"
+fi
 
 # ============================================================
 # Battery system voltage
