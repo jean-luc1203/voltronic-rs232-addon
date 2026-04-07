@@ -182,23 +182,5 @@ schema:
   timezone_section: str?
 
   # Timezone
-  timezone_mode: list(
-    UTC|
-    Europe/Paris|
-    Europe/Berlin|
-    Europe/Brussels|
-    Europe/Madrid|
-    Europe/Rome|
-    Europe/London|
-    Africa/Johannesburg|
-    Africa/Casablanca|
-    America/New_York|
-    America/Chicago|
-    America/Los_Angeles|
-    America/Montreal|
-    Asia/Dubai|
-    Asia/Tokyo|
-    Australia/Sydney|
-    CUSTOM
-  )
+  timezone_mode: list(UTC|Europe/Paris|Europe/Berlin|Europe/Brussels|Europe/Madrid|Europe/Rome|Europe/London|Africa/Johannesburg|Africa/Casablanca|America/New_York|America/Chicago|America/Los_Angeles|America/Montreal|Asia/Dubai|Asia/Tokyo|Australia/Sydney|CUSTOM)
   timezone_custom: str?
