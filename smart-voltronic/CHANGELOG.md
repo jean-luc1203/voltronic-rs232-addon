@@ -1,6 +1,22 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 1.7.1
+
+### Improvements
+- Improved timezone management for energy counters and daily resets.
+- Better handling of local time detection between add-on configuration and runtime.
+- Enhanced reliability of premium energy flow calculations.
+
+### Fixes
+- Fixed an issue where some daily counters could reset at the wrong time depending on timezone.
+- Fixed timezone fallback behavior that could cause resets to happen on UTC instead of the configured timezone.
+- Fixed a bug where grid contribution could be displayed as 0% even when grid energy was actually used.
+- Fixed inconsistencies between grid counters and energy repartition percentages.
+
+### Premium
+- Improved persistence and accuracy of premium energy flow indicators.
+
 ## 🔄 v1.7.0
 
 Premium update + fixes
