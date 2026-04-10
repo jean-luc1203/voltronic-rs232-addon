@@ -1,6 +1,31 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 1.7.2
+
+### Improvements
+- Improved timezone handling for daily, monthly, and yearly energy counters.
+- Added more robust timezone normalization to better support different user configurations.
+- Improved timezone propagation between add-on startup and Node-RED runtime.
+- Enhanced diagnostics for the timezone effectively used by the system.
+
+### Fixes
+- Fixed an issue where some daily counters could reset at the wrong local time depending on timezone.
+- Fixed a timezone fallback issue that could cause resets to happen in UTC instead of the configured timezone.
+- Fixed a bug where grid contribution could appear as 0% even when grid energy was actually used.
+- Fixed inconsistencies between grid energy counters and energy mix percentages.
+- Fixed premium statistics persistence that could lose grid presence information after restart.
+- Fixed an issue where residual solar production could appear as positive or negative just after midnight.
+- Fixed premium energy mix behavior to prevent false solar contribution during nighttime or immediately after the daily reset.
+
+### Premium
+- Improved accuracy of energy flow calculations.
+- Improved reliability of self-sufficiency and grid dependency indicators.
+- Improved premium calculation behavior when switching to a new day.
+
+### Notes
+- Recommended update for better daily reset accuracy and more reliable energy calculations.
+
 ## 🔄 1.7.1
 
 ### Improvements
