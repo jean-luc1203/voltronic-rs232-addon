@@ -3,35 +3,17 @@ FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Node.js LTS (22) + outils utiles + timezones
+# Dépendances système
 RUN apk add --no-cache \
     bash \
     jq \
     tzdata \
-    nodejs-lts \
-    npm \
-  || apk add --no-cache \
-    bash \
-    jq \
-    tzdata \
-    "nodejs~22" \
-    "npm~10"
+    nodejs \
+    npm
 
-# Node-RED 4.x (OK avec Node 22)
-RUN npm install -g node-red@4.1.4 \
-  && npm cache clean --force
-
-# Installer les nodes Node-RED embarqués dans l'image
-WORKDIR /opt
-RUN apk add --no-cache --virtual .build-deps \
-      build-base \
-      linux-headers \
-      python3 \
-      make \
-      g++ \
-  && npm i --omit=dev --no-audit --no-fund node-red-node-serialport \
-  && apk del .build-deps \
-  && npm cache clean --force
+# Installation de Node-RED
+RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@4.1.4 \
+    && npm cache clean --force
 
 # Add-on
 COPY . /addon
