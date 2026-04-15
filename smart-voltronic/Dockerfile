@@ -3,22 +3,31 @@ FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-# Dépendances système
-# On garde les outils de compilation dans l'image pour permettre
-# l'installation runtime des nodes natifs dans /data si besoin.
+# Node.js + outils système
 RUN apk add --no-cache \
     bash \
     jq \
     tzdata \
-    nodejs \
+    nodejs-lts \
     npm \
+    python3 \
+    make \
+    g++ \
+    linux-headers \
+    build-base \
+  || apk add --no-cache \
+    bash \
+    jq \
+    tzdata \
+    "nodejs~22" \
+    "npm~10" \
     python3 \
     make \
     g++ \
     linux-headers \
     build-base
 
-# Node-RED 4.x
+# Node-RED
 RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@4.1.4 \
     && npm cache clean --force
 
