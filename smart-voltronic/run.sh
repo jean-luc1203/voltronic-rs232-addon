@@ -18,12 +18,15 @@ fi
 logi "Smart Voltronic: init..."
 
 OPTS="/data/options.json"
+TMP="/data/flows.tmp.json"
+INSTANCE_FILE="/data/smart_voltronic_instance_id"
+DASHBOARDS_DIR="/config/dashboards"
+ADDON_DATA_DIR="/data/smart-voltronic"
+
 if [ ! -f "$OPTS" ]; then
   loge "options.json introuvable dans /data. Stop."
   exit 1
 fi
-
-tmp="/data/flows.tmp.json"
 
 jq_str_or() {
   local jq_expr="$1"
@@ -35,6 +38,11 @@ jq_int_or() {
   local jq_expr="$1"
   local fallback="$2"
   jq -r "($jq_expr // $fallback) | tonumber" "$OPTS" 2>/dev/null || echo "$fallback"
+}
+
+bool_or_false() {
+  local jq_expr="$1"
+  jq -r "($jq_expr // false) | if . == true then \"true\" else \"false\" end" "$OPTS"
 }
 
 sanitize_transport() {
@@ -89,7 +97,6 @@ normalize_timezone() {
     SYDNEY) echo "Australia/Sydney"; return ;;
   esac
 
-  # UTC+2 / UTC-3 / GMT+2 / GMT-4 / UTC+02 / UTC+02:00
   if printf '%s' "$upper" | grep -Eq '^(UTC|GMT)[[:space:]]*[+-][0-9]{1,2}(:00)?$'; then
     offset="$(printf '%s' "$upper" | sed -E 's/^(UTC|GMT)[[:space:]]*([+-][0-9]{1,2})(:00)?$/\2/')"
     sign="${offset:0:1}"
@@ -105,7 +112,6 @@ normalize_timezone() {
     fi
   fi
 
-  # +2 / -3 / +02 / -04
   if printf '%s' "$upper" | grep -Eq '^[+-][0-9]{1,2}$'; then
     sign="${upper:0:1}"
     hours="${upper:1}"
@@ -120,7 +126,6 @@ normalize_timezone() {
     fi
   fi
 
-  # IANA directe
   echo "$tz"
 }
 
@@ -136,8 +141,6 @@ validate_timezone_or_fallback() {
 # ============================================================
 # PREMIUM
 # ============================================================
-INSTANCE_FILE="/data/smart_voltronic_instance_id"
-
 if [ ! -f "$INSTANCE_FILE" ]; then
   cat /proc/sys/kernel/random/uuid > "$INSTANCE_FILE"
   logi "Premium: nouvel instance_id généré"
@@ -157,11 +160,23 @@ else
 fi
 
 # ============================================================
-# DASHBOARD CUSTOM CARDS FLAG
+# DASHBOARD
 # ============================================================
-DASHBOARD_CUSTOM_CARDS_INSTALLED="$(jq -r '.dashboard_custom_cards_installed // false' "$OPTS")"
+DASHBOARD_CUSTOM_CARDS_INSTALLED="$(bool_or_false '.dashboard_custom_cards_installed')"
+DASHBOARD_LANGUAGE="$(jq -r '.dashboard_language // "en"' "$OPTS")"
+
 export DASHBOARD_CUSTOM_CARDS_INSTALLED
+export DASHBOARD_LANGUAGE
+
 logi "Dashboard custom cards installed: $DASHBOARD_CUSTOM_CARDS_INSTALLED"
+logi "Dashboard language: $DASHBOARD_LANGUAGE"
+
+# ============================================================
+# OPTIONS
+# ============================================================
+SEND_BIP="$(jq -r '(.send_bip // true) | if . == true then "true" else "false" end' "$OPTS")"
+export SEND_BIP
+logi "Send bip enabled: $SEND_BIP"
 
 # ============================================================
 # MQTT
@@ -173,12 +188,12 @@ MQTT_PASS="$(jq -r '.mqtt_pass // ""' "$OPTS")"
 
 logi "MQTT (options.json): ${MQTT_HOST:-<empty>}:${MQTT_PORT} (user: ${MQTT_USER:-<none>})"
 
-if [ -z "${MQTT_HOST}" ]; then
+if [ -z "$MQTT_HOST" ]; then
   loge "mqtt_host vide. Renseigne-le dans la config add-on."
   exit 1
 fi
 
-if [ -z "${MQTT_USER}" ] || [ -z "${MQTT_PASS}" ]; then
+if [ -z "$MQTT_USER" ] || [ -z "$MQTT_PASS" ]; then
   loge "mqtt_user ou mqtt_pass vide. Renseigne-les dans la config add-on."
   exit 1
 fi
@@ -209,6 +224,7 @@ if [ -z "${ADDON_TIMEZONE:-}" ] || [ "$ADDON_TIMEZONE" = "null" ]; then
   TIMEZONE_VALID="false"
 fi
 
+export TZ="$ADDON_TIMEZONE"
 export ADDON_TIMEZONE
 export ADDON_TIMEZONE_REQUESTED="${TZ_REQUESTED:-UTC}"
 export ADDON_TIMEZONE_NORMALIZED="$TZ_NORMALIZED"
@@ -224,7 +240,7 @@ else
 fi
 
 # ============================================================
-# Battery system voltage
+# BATTERY SYSTEM VOLTAGE
 # ============================================================
 BATTERY_SYSTEM_VOLTAGE_RAW="$(jq -r '.battery_system_voltage // "48V"' "$OPTS" | tr '[:lower:]' '[:upper:]' | tr -d ' ')"
 
@@ -238,7 +254,7 @@ export BATTERY_SYSTEM_VOLTAGE
 logi "Battery system voltage (options.json): ${BATTERY_SYSTEM_VOLTAGE}V"
 
 # ============================================================
-# Inverter config
+# INVERTER CONFIG
 # ============================================================
 INV1_LINK="$(jq -r '.inv1_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
 INV2_LINK="$(jq -r '.inv2_link // "serial"' "$OPTS" | tr '[:upper:]' '[:lower:]')"
@@ -268,15 +284,15 @@ logi "Inv1 -> link: $INV1_LINK | transport: $INV1_TRANSPORT | host: ${INV1_HOST:
 logi "Inv2 -> link: $INV2_LINK | transport: $INV2_TRANSPORT | host: ${INV2_HOST:-<empty>} | port: ${INV2_PORT}"
 logi "Inv3 -> link: $INV3_LINK | transport: $INV3_TRANSPORT | host: ${INV3_HOST:-<empty>} | port: ${INV3_PORT}"
 
-if [ "$INV1_TRANSPORT" = "tcp" ] && [ -z "${INV1_HOST}" ]; then
+if [ "$INV1_TRANSPORT" = "tcp" ] && [ -z "$INV1_HOST" ]; then
   loge "Inv1: inv1_link=gateway mais inv1_gateway_host est vide dans la config."
   exit 1
 fi
-if [ "$INV2_TRANSPORT" = "tcp" ] && [ -z "${INV2_HOST}" ]; then
+if [ "$INV2_TRANSPORT" = "tcp" ] && [ -z "$INV2_HOST" ]; then
   loge "Inv2: inv2_link=gateway mais inv2_gateway_host est vide dans la config."
   exit 1
 fi
-if [ "$INV3_TRANSPORT" = "tcp" ] && [ -z "${INV3_HOST}" ]; then
+if [ "$INV3_TRANSPORT" = "tcp" ] && [ -z "$INV3_HOST" ]; then
   loge "Inv3: inv3_link=gateway mais inv3_gateway_host est vide dans la config."
   exit 1
 fi
@@ -287,14 +303,14 @@ export INV1_PORT INV2_PORT INV3_PORT
 export SERIAL_1 SERIAL_2 SERIAL_3
 
 # ============================================================
-# Dashboard storage dirs
+# DASHBOARD STORAGE DIRS
 # ============================================================
-mkdir -p /config/dashboards
-mkdir -p /data/smart-voltronic
-logi "Dashboard directories prepared: /config/dashboards"
+mkdir -p "$DASHBOARDS_DIR"
+mkdir -p "$ADDON_DATA_DIR"
+logi "Dashboard directories prepared: $DASHBOARDS_DIR"
 
 # ============================================================
-# flows.json update
+# FLOWS UPDATE
 # ============================================================
 ADDON_FLOWS_VERSION="$(cat /addon/flows_version.txt 2>/dev/null || echo '0.0.0')"
 INSTALLED_VERSION="$(cat /data/flows_version.txt 2>/dev/null || echo '')"
@@ -309,7 +325,7 @@ else
 fi
 
 # ============================================================
-# Helpers patch by name
+# HELPERS PATCH BY NAME
 # ============================================================
 update_serial_config_by_name() {
   local node_name="$1"
@@ -336,7 +352,7 @@ update_serial_config_by_name() {
       else .
       end
     )
-  ' /data/flows.json > "$tmp" && mv "$tmp" /data/flows.json
+  ' /data/flows.json > "$TMP" && mv "$TMP" /data/flows.json
 
   logi "Port serial mis à jour : ${label} -> name=${node_name} port=${serial_value}"
 }
@@ -362,20 +378,20 @@ update_tcp_host_port_by_name() {
       else .
       end
     )
-  ' /data/flows.json > "$tmp" && mv "$tmp" /data/flows.json
+  ' /data/flows.json > "$TMP" && mv "$TMP" /data/flows.json
 
   logi "TCP ${label} -> name=${node_name} host=${host} port=${port}"
 }
 
 # ============================================================
-# Patch serial nodes PAR NAME
+# PATCH SERIAL NODES
 # ============================================================
 update_serial_config_by_name "Serial inv 1" "$SERIAL_1" "SERIAL_1"
 update_serial_config_by_name "Serial inv 2" "$SERIAL_2" "SERIAL_2"
 update_serial_config_by_name "Serial inv 3" "$SERIAL_3" "SERIAL_3"
 
 # ============================================================
-# Patch TCP nodes PAR NAME
+# PATCH TCP NODES
 # ============================================================
 TCP1_HOST="$INV1_HOST"; TCP1_PORT="$INV1_PORT"
 TCP2_HOST="$INV2_HOST"; TCP2_PORT="$INV2_PORT"
@@ -395,7 +411,7 @@ update_tcp_host_port_by_name "tcp out inv 3" "$TCP3_HOST" "$TCP3_PORT" "OUT3"
 update_tcp_host_port_by_name "tcp in inv 3"  "$TCP3_HOST" "$TCP3_PORT" "IN3"
 
 # ============================================================
-# MQTT broker patch
+# MQTT BROKER PATCH
 # ============================================================
 if ! jq -e '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker")' /data/flows.json >/dev/null 2>&1; then
   loge 'Aucun mqtt-broker nommé "HA MQTT Broker" trouvé dans flows.json'
@@ -418,10 +434,10 @@ jq \
     else .
     end
   )
-  ' /data/flows.json > "$tmp" && mv "$tmp" /data/flows.json
+  ' /data/flows.json > "$TMP" && mv "$TMP" /data/flows.json
 
 # ============================================================
-# flows_cred.json
+# FLOWS_CRED.JSON
 # ============================================================
 if [ -f /data/flows_cred.json ]; then
   rm -f /data/flows_cred.json
@@ -447,7 +463,7 @@ jq -n \
 logi "flows_cred.json créé avec succès"
 
 # ============================================================
-# Information dashboard premium
+# DASHBOARD INFO
 # ============================================================
 if [ "$DASHBOARD_CUSTOM_CARDS_INSTALLED" = "true" ]; then
   logi "Dashboard premium: mode custom cards activé"
@@ -456,7 +472,7 @@ else
 fi
 
 # ============================================================
-# Start Node-RED
+# START NODE-RED
 # ============================================================
 logi "Starting Node-RED sur le port 1892..."
 exec node-red --userDir /data --settings /addon/settings.js
