@@ -154,6 +154,22 @@ validate_timezone_or_fallback() {
   fi
 }
 
+install_build_tools_if_needed() {
+  if command -v gcc >/dev/null 2>&1 && command -v g++ >/dev/null 2>&1 && command -v make >/dev/null 2>&1; then
+    logi "Build tools déjà présents"
+    return 0
+  fi
+
+  logw "Build tools absents, tentative d'installation runtime..."
+  if apk add --no-cache python3 make g++; then
+    logi "Build tools installés avec succès"
+    return 0
+  fi
+
+  logw "Impossible d'installer les build tools runtime, on continue sans fallback compilation"
+  return 1
+}
+
 install_node_red_nodes() {
   export HOME="/data"
   export npm_config_cache="/data/.npm"
@@ -175,16 +191,25 @@ install_node_red_nodes() {
 
   local node
   for node in "${required_nodes[@]}"; do
-    if [ ! -d "/data/node_modules/$node" ]; then
-      logi "Installation du node Node-RED: $node"
-      if npm install --unsafe-perm --no-audit --no-fund "$node"; then
-        logi "Node installé avec succès: $node"
-      else
-        loge "Échec installation node: $node"
-        exit 1
-      fi
-    else
+    if [ -d "/data/node_modules/$node" ]; then
       logi "Node déjà installé: $node"
+      continue
+    fi
+
+    logi "Installation du node Node-RED: $node"
+    if npm install --unsafe-perm --no-audit --no-fund "$node"; then
+      logi "Node installé avec succès: $node"
+      continue
+    fi
+
+    logw "Échec installation simple pour $node, tentative avec build tools"
+    install_build_tools_if_needed || true
+
+    if npm install --unsafe-perm --no-audit --no-fund "$node"; then
+      logi "Node installé avec succès après fallback: $node"
+    else
+      loge "Échec installation node: $node"
+      exit 1
     fi
   done
 }
@@ -430,11 +455,6 @@ else
 fi
 
 # ============================================================
-# DASHBOARD STORAGE DIRS
-# ============================================================
-logi "Dashboard directories prepared: $DASHBOARDS_DIR"
-
-# ============================================================
 # PATCH SERIAL NODES
 # ============================================================
 update_serial_config_by_name "Serial inv 1" "$SERIAL_1" "SERIAL_1"
@@ -485,7 +505,7 @@ jq \
     else .
     end
   )
-  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
+' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
 
 # ============================================================
 # FLOWS_CRED.JSON
@@ -521,6 +541,8 @@ if [ "$DASHBOARD_CUSTOM_CARDS_INSTALLED" = "true" ]; then
 else
   logw "Dashboard premium: mode dégradé natif HA actif tant que dashboard_custom_cards_installed=false"
 fi
+
+logi "Dashboard directories prepared: $DASHBOARDS_DIR"
 
 # ============================================================
 # START NODE-RED
