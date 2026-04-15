@@ -18,16 +18,34 @@ fi
 logi "Smart Voltronic: init..."
 
 OPTS="/data/options.json"
+FLOWS="/data/flows.json"
+FLOWS_CRED="/data/flows_cred.json"
 TMP="/data/flows.tmp.json"
 INSTANCE_FILE="/data/smart_voltronic_instance_id"
 DASHBOARDS_DIR="/config/dashboards"
 ADDON_DATA_DIR="/data/smart-voltronic"
+ADDON_FLOWS="/addon/flows.json"
+ADDON_FLOWS_VERSION_FILE="/addon/flows_version.txt"
+DATA_FLOWS_VERSION_FILE="/data/flows_version.txt"
+
+mkdir -p /data
+mkdir -p /config
+mkdir -p "$DASHBOARDS_DIR"
+mkdir -p "$ADDON_DATA_DIR"
 
 if [ ! -f "$OPTS" ]; then
   loge "options.json introuvable dans /data. Stop."
   exit 1
 fi
 
+if [ ! -f "$ADDON_FLOWS" ]; then
+  loge "flows.json introuvable dans /addon. Stop."
+  exit 1
+fi
+
+# ============================================================
+# HELPERS
+# ============================================================
 jq_str_or() {
   local jq_expr="$1"
   local fallback="$2"
@@ -45,23 +63,21 @@ bool_or_false() {
   jq -r "($jq_expr // false) | if . == true then \"true\" else \"false\" end" "$OPTS"
 }
 
-sanitize_transport() {
-  local v="$1"
-  case "$v" in
-    serial) echo "serial" ;;
-    gateway|tcp) echo "tcp" ;;
-    *) echo "serial" ;;
-  esac
-}
-
-# ============================================================
-# TIMEZONE HELPERS
-# ============================================================
 trim() {
   local s="${1:-}"
   s="${s#"${s%%[![:space:]]*}"}"
   s="${s%"${s##*[![:space:]]}"}"
   printf '%s' "$s"
+}
+
+sanitize_transport() {
+  local v
+  v="$(printf '%s' "${1:-}" | tr '[:upper:]' '[:lower:]')"
+  case "$v" in
+    serial) echo "serial" ;;
+    gateway|tcp) echo "tcp" ;;
+    *) echo "serial" ;;
+  esac
 }
 
 timezone_exists() {
@@ -136,6 +152,97 @@ validate_timezone_or_fallback() {
   else
     echo "UTC"
   fi
+}
+
+install_node_red_nodes() {
+  export HOME="/data"
+  export npm_config_cache="/data/.npm"
+  export npm_config_update_notifier="false"
+  export npm_config_fund="false"
+  export npm_config_audit="false"
+
+  mkdir -p /data
+  cd /data
+
+  if [ ! -f package.json ]; then
+    logi "Initialisation package.json dans /data"
+    npm init -y >/dev/null 2>&1
+  fi
+
+  local required_nodes=(
+    "node-red-node-serialport"
+  )
+
+  local node
+  for node in "${required_nodes[@]}"; do
+    if [ ! -d "/data/node_modules/$node" ]; then
+      logi "Installation du node Node-RED: $node"
+      if npm install --unsafe-perm --no-audit --no-fund "$node"; then
+        logi "Node installé avec succès: $node"
+      else
+        loge "Échec installation node: $node"
+        exit 1
+      fi
+    else
+      logi "Node déjà installé: $node"
+    fi
+  done
+}
+
+update_serial_config_by_name() {
+  local node_name="$1"
+  local serial_value="$2"
+  local label="$3"
+
+  if [ -z "$serial_value" ]; then
+    logi "Serial ${label} non configuré, noeud conservé tel quel"
+    return 0
+  fi
+
+  local exists
+  exists="$(jq -r --arg name "$node_name" '.[] | select(.type=="serial-port" and .name==$name) | .name' "$FLOWS" 2>/dev/null || echo "")"
+
+  if [ -z "$exists" ]; then
+    logw "Noeud serial-port name '$node_name' introuvable dans flows.json (${label})"
+    return 0
+  fi
+
+  jq --arg name "$node_name" --arg port "$serial_value" '
+    map(
+      if .type=="serial-port" and .name == $name
+      then .serialport = $port
+      else .
+      end
+    )
+  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
+
+  logi "Port serial mis à jour : ${label} -> name=${node_name} port=${serial_value}"
+}
+
+update_tcp_host_port_by_name() {
+  local node_name="$1"
+  local host="$2"
+  local port="$3"
+  local label="$4"
+
+  local exists
+  exists="$(jq -r --arg name "$node_name" '.[] | select((.type=="tcp in" or .type=="tcp out" or .type=="tcp request") and .name==$name) | .name' "$FLOWS" 2>/dev/null || echo "")"
+
+  if [ -z "$exists" ]; then
+    logw "Noeud TCP name '$node_name' introuvable dans flows.json (${label})"
+    return 0
+  fi
+
+  jq --arg name "$node_name" --arg host "$host" --arg port "$port" '
+    map(
+      if (.type=="tcp in" or .type=="tcp out" or .type=="tcp request") and .name == $name
+      then .host = $host | .port = $port
+      else .
+      end
+    )
+  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
+
+  logi "TCP ${label} -> name=${node_name} host=${host} port=${port}"
 }
 
 # ============================================================
@@ -303,85 +410,29 @@ export INV1_PORT INV2_PORT INV3_PORT
 export SERIAL_1 SERIAL_2 SERIAL_3
 
 # ============================================================
-# DASHBOARD STORAGE DIRS
+# NODE-RED MODULES INSTALL
 # ============================================================
-mkdir -p "$DASHBOARDS_DIR"
-mkdir -p "$ADDON_DATA_DIR"
-logi "Dashboard directories prepared: $DASHBOARDS_DIR"
+install_node_red_nodes
 
 # ============================================================
 # FLOWS UPDATE
 # ============================================================
-ADDON_FLOWS_VERSION="$(cat /addon/flows_version.txt 2>/dev/null || echo '0.0.0')"
-INSTALLED_VERSION="$(cat /data/flows_version.txt 2>/dev/null || echo '')"
+ADDON_FLOWS_VERSION="$(cat "$ADDON_FLOWS_VERSION_FILE" 2>/dev/null || echo '0.0.0')"
+INSTALLED_VERSION="$(cat "$DATA_FLOWS_VERSION_FILE" 2>/dev/null || echo '')"
 
-if [ ! -f /data/flows.json ] || [ "$INSTALLED_VERSION" != "$ADDON_FLOWS_VERSION" ]; then
+if [ ! -f "$FLOWS" ] || [ "$INSTALLED_VERSION" != "$ADDON_FLOWS_VERSION" ]; then
   logi "Mise à jour flows : (installé: ${INSTALLED_VERSION:-aucun}) -> (addon: $ADDON_FLOWS_VERSION)"
-  cp /addon/flows.json /data/flows.json
-  echo "$ADDON_FLOWS_VERSION" > /data/flows_version.txt
+  cp "$ADDON_FLOWS" "$FLOWS"
+  echo "$ADDON_FLOWS_VERSION" > "$DATA_FLOWS_VERSION_FILE"
   logi "flows.json mis à jour vers v$ADDON_FLOWS_VERSION"
 else
   logi "flows.json à jour (v$ADDON_FLOWS_VERSION), conservation des flows utilisateur"
 fi
 
 # ============================================================
-# HELPERS PATCH BY NAME
+# DASHBOARD STORAGE DIRS
 # ============================================================
-update_serial_config_by_name() {
-  local node_name="$1"
-  local serial_value="$2"
-  local label="$3"
-
-  if [ -z "$serial_value" ]; then
-    logi "Serial ${label} non configuré, noeud conservé tel quel"
-    return 0
-  fi
-
-  local exists
-  exists="$(jq -r --arg name "$node_name" '.[] | select(.type=="serial-port" and .name==$name) | .name' /data/flows.json 2>/dev/null || echo "")"
-
-  if [ -z "$exists" ]; then
-    logw "Noeud serial-port name '$node_name' introuvable dans flows.json (${label})"
-    return 0
-  fi
-
-  jq --arg name "$node_name" --arg port "$serial_value" '
-    map(
-      if .type=="serial-port" and .name == $name
-      then .serialport = $port
-      else .
-      end
-    )
-  ' /data/flows.json > "$TMP" && mv "$TMP" /data/flows.json
-
-  logi "Port serial mis à jour : ${label} -> name=${node_name} port=${serial_value}"
-}
-
-update_tcp_host_port_by_name() {
-  local node_name="$1"
-  local host="$2"
-  local port="$3"
-  local label="$4"
-
-  local exists
-  exists="$(jq -r --arg name "$node_name" '.[] | select((.type=="tcp in" or .type=="tcp out" or .type=="tcp request") and .name==$name) | .name' /data/flows.json 2>/dev/null || echo "")"
-
-  if [ -z "$exists" ]; then
-    logw "Noeud TCP name '$node_name' introuvable dans flows.json (${label})"
-    return 0
-  fi
-
-  jq --arg name "$node_name" --arg host "$host" --arg port "$port" '
-    map(
-      if (.type=="tcp in" or .type=="tcp out" or .type=="tcp request") and .name == $name
-      then .host = $host | .port = $port
-      else .
-      end
-    )
-  ' /data/flows.json > "$TMP" && mv "$TMP" /data/flows.json
-
-  logi "TCP ${label} -> name=${node_name} host=${host} port=${port}"
-}
+logi "Dashboard directories prepared: $DASHBOARDS_DIR"
 
 # ============================================================
 # PATCH SERIAL NODES
@@ -413,7 +464,7 @@ update_tcp_host_port_by_name "tcp in inv 3"  "$TCP3_HOST" "$TCP3_PORT" "IN3"
 # ============================================================
 # MQTT BROKER PATCH
 # ============================================================
-if ! jq -e '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker")' /data/flows.json >/dev/null 2>&1; then
+if ! jq -e '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker")' "$FLOWS" >/dev/null 2>&1; then
   loge 'Aucun mqtt-broker nommé "HA MQTT Broker" trouvé dans flows.json'
   exit 1
 fi
@@ -434,19 +485,19 @@ jq \
     else .
     end
   )
-  ' /data/flows.json > "$TMP" && mv "$TMP" /data/flows.json
+  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
 
 # ============================================================
 # FLOWS_CRED.JSON
 # ============================================================
-if [ -f /data/flows_cred.json ]; then
-  rm -f /data/flows_cred.json
+if [ -f "$FLOWS_CRED" ]; then
+  rm -f "$FLOWS_CRED"
   logw "Ancien flows_cred.json supprimé"
 fi
 
-BROKER_ID="$(jq -r '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker") | .id' /data/flows.json)"
+BROKER_ID="$(jq -r '.[] | select(.type=="mqtt-broker" and .name=="HA MQTT Broker") | .id' "$FLOWS")"
 
-if [ -z "$BROKER_ID" ]; then
+if [ -z "$BROKER_ID" ] || [ "$BROKER_ID" = "null" ]; then
   loge "Impossible de récupérer l'ID du node mqtt-broker dans flows.json"
   exit 1
 fi
@@ -458,7 +509,7 @@ jq -n \
   --arg user "$MQTT_USER" \
   --arg pass "$MQTT_PASS" \
   '{($id): {"user": $user, "password": $pass}}' \
-  > /data/flows_cred.json
+  > "$FLOWS_CRED"
 
 logi "flows_cred.json créé avec succès"
 
@@ -474,5 +525,9 @@ fi
 # ============================================================
 # START NODE-RED
 # ============================================================
+export HOME="/data"
+export NODE_PATH="/data/node_modules"
+export TZ="$ADDON_TIMEZONE"
+
 logi "Starting Node-RED sur le port 1892..."
 exec node-red --userDir /data --settings /addon/settings.js
