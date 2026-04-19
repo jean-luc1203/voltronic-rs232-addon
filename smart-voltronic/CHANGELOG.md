@@ -1,6 +1,9 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 1.7.5
+- improved stability
+
 ## 🔄 1.7.2
 
 ### Improvements
