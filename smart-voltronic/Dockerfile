@@ -12,7 +12,10 @@ RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@4.1.4 \
     && npm cache clean --force
 
 COPY . /addon
-RUN chmod a+x /addon/run.sh
-
 WORKDIR /addon
+
+RUN npm init -y >/dev/null 2>&1 || true \
+    && npm install --no-audit --no-fund --unsafe-perm ws \
+    && chmod a+x /addon/run.sh
+
 ENTRYPOINT ["/addon/run.sh"]
