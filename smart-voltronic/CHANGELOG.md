@@ -1,6 +1,9 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 1.7.7
+- auto dashboard ( premium ) bug fix
+
 ## 🔄 1.7.5
 - improved stability
 
