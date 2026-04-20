@@ -1,6 +1,6 @@
 {
   "name": "Voltronic / Axpert rs232 wired management",
-  "version": "1.7.6",
+  "version": "1.7.7",
   "slug": "smart_voltronic",
   "description": "Node-RED Voltronic inverter bridge to MQTT",
   "startup": "services",
