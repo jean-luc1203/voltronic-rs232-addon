@@ -1,7 +1,7 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
-## 🔄 1.7.9
+## 🔄 1.8.0
 
 * Improved energy counter persistence.
 * Secured daily, monthly, yearly, and total counters across updates and restarts.
@@ -9,6 +9,7 @@
 * Enhanced recovery of values in case of context loss.
 * Reduced risk of unexpected counter resets.
 * Internal reliability improvements for energy calculations.
+* 👉 "First update may reset values for users coming from older versions without persistent storage."
 
 
 ## 🔄 1.7.8
