@@ -1,6 +1,16 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 1.8.1
+
+* Amélioration majeure du système de persistance des compteurs énergie.
+* Ajout d’une migration automatique des anciens compteurs utilisateurs.
+* Renforcement de la protection contre les remises à zéro après mise à jour ou redémarrage.
+* Amélioration de la récupération et de la sauvegarde des valeurs journalières, mensuelles, annuelles et totales.
+* Amélioration de la stabilité des compteurs charge/décharge batterie.
+* Optimisations internes pour une meilleure fiabilité des données énergie sur le long terme.
+
+
 ## 🔄 1.8.0
 
 * Improved energy counter persistence.
