@@ -1,6 +1,9 @@
 # Changelog – Smart Voltronic Add-on
 ---
 
+## 🔄 1.8.4
+- bug fix
+
 ## 🔄 1.8.1
 
 * Major improvement to energy counter persistence system.
