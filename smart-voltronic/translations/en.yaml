@@ -1,92 +1,159 @@
 configuration:
   inv1_link:
     name: Inverter 1 connection type
+    description: Select "serial" for a direct USB RS232 connection or "gateway" for a TCP/IP network gateway connection (Elfin, USR, etc.).
+
   inv1_serial_port:
     name: Inverter 1 serial port
+    description: Home Assistant serial device path for inverter 1. Example: /dev/serial/by-id/usb-FTDI...
+
   inv1_gateway_host:
     name: Inverter 1 gateway IP
+    description: IP address of the TCP/IP gateway connected to inverter 1. Leave empty when using a serial connection.
+
   inv1_gateway_port:
     name: Inverter 1 gateway port
+    description: TCP port used by the gateway. Usually 8899.
+
   inv1_display_mode:
     name: Inverter 1 display mode
+    description: Use "modern" for recent firmware. Select legacy mode only for older models requiring specific compatibility.
+
   inv1_output_priority_2choices:
-    name: Inverter 1 output priority limited to 2 choices
+    name: 2-choice output priority mode
+    description: Enable only if your inverter supports only 2 output priority options.
 
   inv2_link:
     name: Inverter 2 connection type
+    description: Select "serial" for a direct USB RS232 connection or "gateway" for a TCP/IP network gateway connection.
+
   inv2_serial_port:
     name: Inverter 2 serial port
+    description: Home Assistant serial device path for inverter 2.
+
   inv2_gateway_host:
     name: Inverter 2 gateway IP
+    description: IP address of the TCP/IP gateway connected to inverter 2.
+
   inv2_gateway_port:
     name: Inverter 2 gateway port
+    description: TCP port used by the gateway. Usually 8899.
+
   inv2_display_mode:
     name: Inverter 2 display mode
+    description: Recommended operating mode for inverter 2. Use "modern" unless specific compatibility requires otherwise.
+
   inv2_output_priority_2choices:
-    name: Inverter 2 output priority limited to 2 choices
+    name: 2-choice output priority mode
+    description: Enable only for inverter models limited to two output priority options.
 
   inv3_link:
     name: Inverter 3 connection type
+    description: Select "serial" for a direct USB RS232 connection or "gateway" for a TCP/IP network gateway connection.
+
   inv3_serial_port:
     name: Inverter 3 serial port
+    description: Home Assistant serial device path for inverter 3.
+
   inv3_gateway_host:
     name: Inverter 3 gateway IP
+    description: IP address of the TCP/IP gateway connected to inverter 3.
+
   inv3_gateway_port:
     name: Inverter 3 gateway port
+    description: TCP port used by the gateway. Usually 8899.
+
   inv3_display_mode:
     name: Inverter 3 display mode
+    description: Recommended operating mode for inverter 3. Use "modern" unless specific compatibility requires otherwise.
+
   inv3_output_priority_2choices:
-    name: Inverter 3 output priority limited to 2 choices
+    name: 2-choice output priority mode
+    description: Enable only for inverter models limited to two output priority options.
 
   battery_section:
     name: ────────── BATTERY ──────────
+
   battery_system_voltage:
     name: Battery system voltage
+    description: Select the nominal battery bank voltage. Usually 24V or 48V.
 
   mqtt_section:
     name: ────────── MQTT CONFIGURATION ──────────
+
   mqtt_host:
     name: MQTT host
+    description: MQTT broker address. Usually "core-mosquitto" when using the Home Assistant Mosquitto add-on.
+
   mqtt_port:
     name: MQTT port
+    description: MQTT broker port. Usually 1883.
+
   mqtt_user:
     name: MQTT username
+    description: MQTT username if broker authentication is enabled.
+
   mqtt_pass:
     name: MQTT password
+    description: Password associated with the MQTT username.
 
   premium_section:
     name: ────────── PREMIUM ──────────
+
   premium_key:
     name: Premium key
+    description: Enter your Premium key to unlock advanced features and Premium HTML dashboards.
 
   inv1_battery_capacity_ah:
-    name: Battery capacity inverter 1 (Ah)
+    name: Inverter 1 battery capacity (Ah)
+    description: Total battery bank capacity connected to inverter 1 in amp-hours.
+
   inv1_battery_total_capacity_kwh:
-    name: Battery total capacity inverter 1 (kWh)
+    name: Inverter 1 total battery capacity (kWh)
+    description: Total usable battery energy capacity connected to inverter 1.
 
   inv2_battery_capacity_ah:
-    name: Battery capacity inverter 2 (Ah)
+    name: Inverter 2 battery capacity (Ah)
+    description: Total battery bank capacity connected to inverter 2 in amp-hours.
+
   inv2_battery_total_capacity_kwh:
-    name: Battery total capacity inverter 2 (kWh)
+    name: Inverter 2 total battery capacity (kWh)
+    description: Total usable battery energy capacity connected to inverter 2.
 
   inv3_battery_capacity_ah:
-    name: Battery capacity inverter 3 (Ah)
+    name: Inverter 3 battery capacity (Ah)
+    description: Total battery bank capacity connected to inverter 3 in amp-hours.
+
   inv3_battery_total_capacity_kwh:
-    name: Battery total capacity inverter 3 (kWh)
+    name: Inverter 3 total battery capacity (kWh)
+    description: Total usable battery energy capacity connected to inverter 3.
 
   dashboard_section:
     name: ────────── DASHBOARD ──────────
+
+  dashboard_output:
+    name: Dashboard generation mode
+    description: Choose Lovelace, Premium HTML, both dashboards, or disable automatic dashboard generation.
+
   dashboard_custom_cards_installed:
     name: Custom dashboard cards installed
+    description: Enable only if mini-graph-card, apexcharts-card and card-mod are already installed through HACS.
+
   dashboard_language:
     name: Dashboard language
+    description: Language used when automatically generating dashboards and dashboard cards.
 
   send_bip:
-    name: Enable inverter beep
+    name: Enable inverter buzzer
+    description: Sends commands with audible confirmation directly on the inverter.
 
   timezone_section:
     name: ────────── TIMEZONE ──────────
+
   timezone_mode:
-    name: Timezone preset
+    name: Timezone
+    description: Select your timezone to ensure accurate daily, monthly and yearly statistics.
+
   timezone_custom:
     name: Custom timezone
+    description: Use this field only when CUSTOM is selected in the timezone option.
