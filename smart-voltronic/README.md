@@ -32,7 +32,8 @@ Smart Voltronic Premium now includes fully responsive HTML dashboards automatica
 
 A complete overview of your installation including solar production, batteries, grid and home consumption.
 
-![Smart Energy House Dashboard](smart-voltronic/docs/images/dashboard%20house.png)
+![Smart Energy House Dashboard](https://raw.githubusercontent.com/jean-luc1203/voltronic-rs232-addon/main/smart-voltronic/docs/images/dashboard%20house.png)
+
 
 ---
 
@@ -40,7 +41,7 @@ A complete overview of your installation including solar production, batteries, 
 
 A modern dashboard providing real-time visualization of energy flows, power distribution and historical data.
 
-![Global Flow Dashboard](smart-voltronic/docs/images/dashboard%20flux.png)
+![Global Flow Dashboard](https://raw.githubusercontent.com/jean-luc1203/voltronic-rs232-addon/main/smart-voltronic/docs/images/dashboard%20flux.png)
 
 ---
 
