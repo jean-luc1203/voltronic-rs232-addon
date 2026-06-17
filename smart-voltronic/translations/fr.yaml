@@ -1,92 +1,159 @@
 configuration:
   inv1_link:
     name: Type de connexion onduleur 1
+    description: Choisissez "serial" pour une connexion USB RS232 directe ou "gateway" pour une connexion via une passerelle TCP/IP (Elfin, USR, etc.).
+
   inv1_serial_port:
     name: Port série onduleur 1
+    description: Chemin du port série Home Assistant de l'onduleur 1. Exemple : /dev/serial/by-id/usb-FTDI...
+
   inv1_gateway_host:
     name: IP gateway onduleur 1
+    description: Adresse IP de la passerelle TCP/IP reliée à l'onduleur 1. Laisser vide si vous utilisez une connexion série.
+
   inv1_gateway_port:
     name: Port gateway onduleur 1
+    description: Port TCP utilisé par la passerelle. Généralement 8899.
+
   inv1_display_mode:
     name: Mode d’affichage onduleur 1
+    description: Utilisez "modern" pour les firmwares récents. Sélectionnez le mode legacy uniquement pour les anciens modèles nécessitant une compatibilité spécifique.
+
   inv1_output_priority_2choices:
-    name: Priorité de sortie onduleur 1 limitée à 2 choix
+    name: Priorité de sortie limitée à 2 choix
+    description: Activez cette option uniquement si votre onduleur ne prend en charge que 2 modes de priorité de sortie.
 
   inv2_link:
     name: Type de connexion onduleur 2
+    description: Choisissez "serial" pour une connexion USB RS232 directe ou "gateway" pour une connexion via une passerelle TCP/IP.
+
   inv2_serial_port:
     name: Port série onduleur 2
+    description: Chemin du port série Home Assistant de l'onduleur 2.
+
   inv2_gateway_host:
     name: IP gateway onduleur 2
+    description: Adresse IP de la passerelle TCP/IP reliée à l'onduleur 2.
+
   inv2_gateway_port:
     name: Port gateway onduleur 2
+    description: Port TCP utilisé par la passerelle. Généralement 8899.
+
   inv2_display_mode:
     name: Mode d’affichage onduleur 2
+    description: Mode recommandé pour l'onduleur 2. Utilisez "modern" sauf nécessité particulière.
+
   inv2_output_priority_2choices:
-    name: Priorité de sortie onduleur 2 limitée à 2 choix
+    name: Priorité de sortie limitée à 2 choix
+    description: Activez uniquement pour les modèles compatibles avec 2 choix de priorité.
 
   inv3_link:
     name: Type de connexion onduleur 3
+    description: Choisissez "serial" pour une connexion USB RS232 directe ou "gateway" pour une connexion via une passerelle TCP/IP.
+
   inv3_serial_port:
     name: Port série onduleur 3
+    description: Chemin du port série Home Assistant de l'onduleur 3.
+
   inv3_gateway_host:
     name: IP gateway onduleur 3
+    description: Adresse IP de la passerelle TCP/IP reliée à l'onduleur 3.
+
   inv3_gateway_port:
     name: Port gateway onduleur 3
+    description: Port TCP utilisé par la passerelle. Généralement 8899.
+
   inv3_display_mode:
     name: Mode d’affichage onduleur 3
+    description: Mode recommandé pour l'onduleur 3. Utilisez "modern" sauf nécessité particulière.
+
   inv3_output_priority_2choices:
-    name: Priorité de sortie onduleur 3 limitée à 2 choix
+    name: Priorité de sortie limitée à 2 choix
+    description: Activez uniquement pour les modèles compatibles avec 2 choix de priorité.
 
   battery_section:
     name: ────────── BATTERIE ──────────
+
   battery_system_voltage:
     name: Tension système batterie
+    description: Sélectionnez la tension nominale de votre parc batterie. Généralement 24V ou 48V.
 
   mqtt_section:
     name: ────────── CONFIGURATION MQTT ──────────
+
   mqtt_host:
     name: Hôte MQTT
+    description: Adresse du broker MQTT. Utilisez généralement core-mosquitto pour le broker Home Assistant.
+
   mqtt_port:
     name: Port MQTT
+    description: Port de connexion du broker MQTT. Généralement 1883.
+
   mqtt_user:
     name: Nom d’utilisateur MQTT
+    description: Nom d'utilisateur MQTT si l'authentification est activée.
+
   mqtt_pass:
     name: Mot de passe MQTT
+    description: Mot de passe associé à l'utilisateur MQTT.
 
   premium_section:
     name: ────────── PREMIUM ──────────
+
   premium_key:
     name: Clé Premium
+    description: Entrez votre clé Premium pour activer les fonctionnalités avancées et les dashboards HTML.
 
   inv1_battery_capacity_ah:
     name: Capacité batterie onduleur 1 (Ah)
+    description: Capacité totale du parc batterie connecté à l'onduleur 1 en ampères-heures.
+
   inv1_battery_total_capacity_kwh:
     name: Capacité totale batterie onduleur 1 (kWh)
+    description: Capacité énergétique totale du parc batterie connecté à l'onduleur 1.
 
   inv2_battery_capacity_ah:
     name: Capacité batterie onduleur 2 (Ah)
+    description: Capacité totale du parc batterie connecté à l'onduleur 2 en ampères-heures.
+
   inv2_battery_total_capacity_kwh:
     name: Capacité totale batterie onduleur 2 (kWh)
+    description: Capacité énergétique totale du parc batterie connecté à l'onduleur 2.
 
   inv3_battery_capacity_ah:
     name: Capacité batterie onduleur 3 (Ah)
+    description: Capacité totale du parc batterie connecté à l'onduleur 3 en ampères-heures.
+
   inv3_battery_total_capacity_kwh:
     name: Capacité totale batterie onduleur 3 (kWh)
+    description: Capacité énergétique totale du parc batterie connecté à l'onduleur 3.
 
   dashboard_section:
     name: ────────── DASHBOARD ──────────
+
+  dashboard_output:
+    name: Type de dashboard généré
+    description: Choisissez Lovelace, HTML Premium, les deux simultanément ou désactivez complètement la génération automatique.
+
   dashboard_custom_cards_installed:
-    name: Cartes personnalisées du dashboard installées
+    name: Cartes personnalisées installées
+    description: Activez uniquement si mini-graph-card, apexcharts-card et card-mod sont déjà installés via HACS.
+
   dashboard_language:
     name: Langue du dashboard
+    description: Langue utilisée pour générer automatiquement les dashboards et les cartes.
 
   send_bip:
     name: Activer le bip de l’onduleur
+    description: Permet d'envoyer les commandes avec confirmation sonore directement sur l'onduleur.
 
   timezone_section:
     name: ────────── FUSEAU HORAIRE ──────────
+
   timezone_mode:
-    name: Fuseau horaire prédéfini
+    name: Fuseau horaire
+    description: Sélectionnez votre fuseau horaire afin de garantir des statistiques journalières, mensuelles et annuelles correctes.
+
   timezone_custom:
     name: Fuseau horaire personnalisé
+    description: Utilisez ce champ uniquement si vous avez sélectionné CUSTOM dans le fuseau horaire prédéfini.
