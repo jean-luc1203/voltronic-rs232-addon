@@ -3,21 +3,7 @@
 
 const fs = require("fs");
 
-let WebSocketImpl = globalThis.WebSocket;
-if (!WebSocketImpl) {
-  try {
-    WebSocketImpl = require("ws");
-  } catch (err) {
-    console.error(JSON.stringify({
-      ok: false,
-      error: "WebSocket unavailable: neither global WebSocket nor 'ws' package found",
-      details: String(err && err.message ? err.message : err)
-    }));
-    process.exit(1);
-  }
-}
-
-const action = process.argv[2] || "upsert";
+const action = String(process.argv[2] || "upsert").toLowerCase();
 const filePath = process.argv[3] || "/config/dashboards/smart_voltronic.json";
 
 const token = process.env.SUPERVISOR_TOKEN;
@@ -28,24 +14,45 @@ if (!token) {
   process.exit(1);
 }
 
-let input = null;
+let WebSocketImpl;
 
-if (action !== "delete") {
-  if (!fs.existsSync(filePath)) {
-    console.error(JSON.stringify({ ok: false, error: `Dashboard file not found: ${filePath}` }));
-    process.exit(1);
-  }
-
+if (typeof WebSocket !== "undefined") {
+  WebSocketImpl = WebSocket;
+} else {
   try {
-    input = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    WebSocketImpl = require("ws");
   } catch (e) {
-    console.error(JSON.stringify({ ok: false, error: `Invalid dashboard JSON in file: ${filePath}` }));
+    console.error(JSON.stringify({
+      ok: false,
+      error: "WebSocket not available and ws module missing"
+    }));
     process.exit(1);
   }
 }
 
+let input = null;
+
+if (fs.existsSync(filePath)) {
+  try {
+    input = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch (e) {
+    console.error(JSON.stringify({
+      ok: false,
+      error: `Invalid dashboard JSON in file: ${filePath}`
+    }));
+    process.exit(1);
+  }
+} else if (action !== "delete") {
+  console.error(JSON.stringify({
+    ok: false,
+    error: `Dashboard file not found: ${filePath}`
+  }));
+  process.exit(1);
+}
+
 const dashboardMeta = input?.dashboard_meta || {};
-const dashboardConfig = input?.config || {};
+const dashboardConfig = input?.config || input || {};
+
 const urlPath = dashboardMeta.url_path || "smart-voltronic";
 const title = dashboardMeta.title || "Smart Voltronic";
 const icon = dashboardMeta.icon || "mdi:solar-power";
@@ -60,12 +67,16 @@ let finished = false;
 function finishOk(extra = {}) {
   if (finished) return;
   finished = true;
+
   console.log(JSON.stringify({
     ok: true,
     action,
     dashboard: urlPath,
+    title,
+    file: filePath,
     ...extra
   }));
+
   try { ws.close(); } catch (_) {}
   process.exit(0);
 }
@@ -73,35 +84,25 @@ function finishOk(extra = {}) {
 function finishErr(error) {
   if (finished) return;
   finished = true;
+
   console.error(JSON.stringify({
     ok: false,
     action,
     dashboard: urlPath,
+    title,
+    file: filePath,
     error: String(error || "Unknown error")
   }));
+
   try { ws.close(); } catch (_) {}
   process.exit(1);
-}
-
-function sendJson(payload) {
-  try {
-    ws.send(JSON.stringify(payload));
-  } catch (err) {
-    throw new Error(String(err?.message || err || "WebSocket send failed"));
-  }
 }
 
 function call(type, payload = {}) {
   return new Promise((resolve, reject) => {
     const id = nextId++;
     pending.set(id, { resolve, reject });
-
-    try {
-      sendJson({ id, type, ...payload });
-    } catch (err) {
-      pending.delete(id);
-      reject(err);
-    }
+    ws.send(JSON.stringify({ id, type, ...payload }));
   });
 }
 
@@ -114,7 +115,7 @@ function isAlreadyExistsError(err) {
   );
 }
 
-function isDashboardMissingError(err) {
+function isMissingError(err) {
   const msg = String(err?.message || err || "").toLowerCase();
   return (
     msg.includes("not found") ||
@@ -125,9 +126,7 @@ function isDashboardMissingError(err) {
   );
 }
 
-async function createOrUpdateDashboard() {
-  let createdDashboard = false;
-
+async function createDashboardIfNeeded() {
   try {
     await call("lovelace/dashboards/create", {
       url_path: urlPath,
@@ -137,24 +136,52 @@ async function createOrUpdateDashboard() {
       require_admin: requireAdmin,
       mode: "storage"
     });
-    createdDashboard = true;
-  } catch (err) {
-    if (!isAlreadyExistsError(err)) {
-      throw err;
-    }
-  }
 
+    return true;
+  } catch (err) {
+    if (isAlreadyExistsError(err)) {
+      return false;
+    }
+
+    throw err;
+  }
+}
+
+async function updateDashboardInfoIfPossible() {
+  try {
+    await call("lovelace/dashboards/update", {
+      url_path: urlPath,
+      title,
+      icon,
+      show_in_sidebar: showInSidebar,
+      require_admin: requireAdmin,
+      mode: "storage"
+    });
+
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+async function saveDashboardConfig() {
   await call("lovelace/config/save", {
     url_path: urlPath,
     config: dashboardConfig
   });
 
+  return true;
+}
+
+async function createOrUpdateDashboard() {
+  const createdDashboard = await createDashboardIfNeeded();
+  const updatedDashboard = await updateDashboardInfoIfPossible();
+  const saved = await saveDashboardConfig();
+
   return {
     created_dashboard: createdDashboard,
-    saved: true,
-    file: filePath,
-    title,
-    icon
+    updated_dashboard: updatedDashboard,
+    saved
   };
 }
 
@@ -166,14 +193,13 @@ async function deleteDashboard() {
 
     return {
       deleted: true,
-      file: filePath
+      already_missing: false
     };
   } catch (err) {
-    if (isDashboardMissingError(err)) {
+    if (isMissingError(err)) {
       return {
         deleted: false,
-        already_missing: true,
-        file: filePath
+        already_missing: true
       };
     }
 
@@ -181,34 +207,25 @@ async function deleteDashboard() {
   }
 }
 
-function getEventData(event) {
-  if (typeof event === "string") return event;
-  if (Buffer.isBuffer(event)) return event.toString();
-  if (event && typeof event.data !== "undefined") {
-    if (Buffer.isBuffer(event.data)) return event.data.toString();
-    return String(event.data);
-  }
-  return String(event || "");
-}
+ws.onerror = (event) => {
+  finishErr(event?.message || "WebSocket error");
+};
 
-function handleMessage(raw) {
+ws.onmessage = async (event) => {
   let msg;
+
   try {
-    msg = JSON.parse(getEventData(raw));
+    msg = JSON.parse(event.data.toString());
   } catch (e) {
     finishErr("Invalid websocket message");
     return;
   }
 
   if (msg.type === "auth_required") {
-    try {
-      sendJson({
-        type: "auth",
-        access_token: token
-      });
-    } catch (err) {
-      finishErr(err?.message || err);
-    }
+    ws.send(JSON.stringify({
+      type: "auth",
+      access_token: token
+    }));
     return;
   }
 
@@ -218,21 +235,20 @@ function handleMessage(raw) {
   }
 
   if (msg.type === "auth_ok") {
-    (async () => {
-      try {
-        let result;
+    try {
+      let result;
 
-        if (action === "delete") {
-          result = await deleteDashboard();
-        } else {
-          result = await createOrUpdateDashboard();
-        }
-
-        finishOk(result);
-      } catch (err) {
-        finishErr(err?.message || err);
+      if (action === "delete") {
+        result = await deleteDashboard();
+      } else {
+        result = await createOrUpdateDashboard();
       }
-    })();
+
+      finishOk(result);
+    } catch (err) {
+      finishErr(err?.message || err);
+    }
+
     return;
   }
 
@@ -248,34 +264,4 @@ function handleMessage(raw) {
       waiter.resolve(msg.result);
     }
   }
-}
-
-if (typeof ws.on === "function") {
-  ws.on("error", (err) => {
-    finishErr(err?.message || "WebSocket error");
-  });
-
-  ws.on("message", (data) => {
-    handleMessage(data);
-  });
-
-  ws.on("close", () => {
-    if (!finished) {
-      finishErr("WebSocket closed unexpectedly");
-    }
-  });
-} else {
-  ws.onerror = (event) => {
-    finishErr(event?.message || "WebSocket error");
-  };
-
-  ws.onmessage = (event) => {
-    handleMessage(event);
-  };
-
-  ws.onclose = () => {
-    if (!finished) {
-      finishErr("WebSocket closed unexpectedly");
-    }
-  };
-}
+};
