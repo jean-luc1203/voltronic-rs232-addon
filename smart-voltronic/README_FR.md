@@ -24,6 +24,36 @@ Si vous le trouvez utile vous pouvez soutenir le développement et débloquer le
 
 # 🚀 Nouveautés
 
+# 🆕 Nouveaux Dashboards HTML Premium
+
+Smart Voltronic Premium intègre désormais une nouvelle génération de dashboards HTML modernes, responsives et générés automatiquement par l'add-on.
+
+## 🏠 Dashboard Smart Energy House
+
+Une vue complète de votre installation regroupant la production solaire, les batteries, le réseau et la consommation de la maison dans une seule interface.
+
+![Dashboard Smart Energy House](https://raw.githubusercontent.com/jean-luc1203/voltronic-rs232-addon/main/smart-voltronic/docs/images/dashboard%20house.png)
+
+---
+
+## ⚡ Dashboard Global Flow
+
+Un dashboard moderne permettant de visualiser en temps réel les flux d'énergie, la répartition des puissances et les historiques de votre installation.
+
+![Dashboard Global Flow](https://raw.githubusercontent.com/jean-luc1203/voltronic-rs232-addon/main/smart-voltronic/docs/images/dashboard%20flux.png)
+
+---
+
+### 🚀 Fonctionnalités Premium
+
+* Génération automatique des dashboards
+* Interface responsive PC, tablette et smartphone
+* Support multilingue Français / Anglais
+* Choix entre les modes Legacy, HTML ou les deux simultanément
+* Intégration automatique avec les modules Smart Energy compatibles
+* Mise à jour automatique des dashboards lors des évolutions du module
+
+
 ## ⭐ Fonctionnalités Premium
 
 Smart Voltronic Premium débloque des calculs avancés et des valeurs lorsque certaines données ne sont pas fournies par l’onduleur.
