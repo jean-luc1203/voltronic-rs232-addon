@@ -22,6 +22,17 @@ If you find it useful you can support development and unlock Premium features:
 
 ---
 
+## Community & Support
+
+Need help, want to report a bug, request a feature, or share your setup?
+
+Join the official Simply Home Energy Discord community:
+
+🔗 [DISCORD_INVITE_LINK](https://discord.gg/nwVmvxYJa5)
+
+Connect with other users, get support, discuss new features, and stay informed about the latest updates.
+
+
 # 🚀 What's new
 
 # 🆕 New Premium HTML Dashboards
