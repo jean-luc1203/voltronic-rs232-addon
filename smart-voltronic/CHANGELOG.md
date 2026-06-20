@@ -1,3 +1,15 @@
+## v1.8.6 — Dashboard Home Shortcuts Improvements
+
+### Improved Home Dashboard Shortcuts
+
+* Improved the Home dashboard shortcut system for a smoother and more reliable experience.
+* Better handling of shortcut display and status updates.
+* Enhanced visual support for configured entities, including dynamic visual values where available.
+* Improved shortcut behavior across desktop and mobile layouts.
+* Optimized mobile shortcut access: additional shortcuts remain easily accessible without overcrowding the interface.
+* General stability and usability improvements for Home dashboard navigation.
+
+
 # Changelog v1.8.5
 
 ## ✨ New Premium HTML Dashboards
