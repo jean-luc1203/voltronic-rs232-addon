@@ -3,6 +3,35 @@ Smart Voltronic License v1.0
 https://github.com/jean-luc1203/voltronic-rs232-addon
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ENGLISH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+PERSONAL USE PERMITTED
+You may use, copy and modify this software
+for personal, non-commercial purposes only.
+
+PROHIBITED
+- Publishing forks or modified versions publicly
+- Removing, bypassing or altering Premium key checks
+- Redistributing this software in any form
+- Any commercial use without prior written permission from the author
+
+CONTRIBUTIONS
+Pull Requests to the official repository are welcome
+and remain subject to this license.
+The author retains all rights over integrated contributions.
+
+DONATIONS
+Premium is unlocked by a voluntary donation on Ko-fi:
+https://ko-fi.com/tapion69
+No payment is required for basic usage.
+
+LIABILITY
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
+THE AUTHOR SHALL NOT BE LIABLE FOR ANY DIRECT OR INDIRECT DAMAGES
+ARISING FROM THE USE OF THIS SOFTWARE.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 FRANÇAIS
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -32,31 +61,3 @@ CE LOGICIEL EST FOURNI "EN L'ÉTAT", SANS GARANTIE D'AUCUNE SORTE.
 L'AUTEUR NE PEUT ÊTRE TENU RESPONSABLE DE TOUT DOMMAGE DIRECT
 OU INDIRECT LIÉ À L'UTILISATION DE CE LOGICIEL.
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-ENGLISH
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-PERSONAL USE PERMITTED
-You may use, copy and modify this software
-for personal, non-commercial purposes only.
-
-PROHIBITED
-- Publishing forks or modified versions publicly
-- Removing, bypassing or altering Premium key checks
-- Redistributing this software in any form
-- Any commercial use without prior written permission from the author
-
-CONTRIBUTIONS
-Pull Requests to the official repository are welcome
-and remain subject to this license.
-The author retains all rights over integrated contributions.
-
-DONATIONS
-Premium is unlocked by a voluntary donation on Ko-fi:
-https://ko-fi.com/tapion69
-No payment is required for basic usage.
-
-LIABILITY
-THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
-THE AUTHOR SHALL NOT BE LIABLE FOR ANY DIRECT OR INDIRECT DAMAGES
-ARISING FROM THE USE OF THIS SOFTWARE.
