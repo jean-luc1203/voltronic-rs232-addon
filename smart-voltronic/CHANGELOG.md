@@ -1,3 +1,57 @@
+# 🎉 Version 2.0.0 – Major Update
+
+Version 2.0.0 marks a significant milestone for Smart Voltronic, bringing major compatibility improvements for Voltronic-compatible hybrid inverters while introducing new monitoring capabilities to the Premium House Dashboard.
+
+---
+
+## 🚀 A Major Step Forward for Voltronic-Compatible Inverters
+
+Version 2.0.0 introduces a brand-new technology that automatically enables support for the second MPPT on many Voltronic-compatible hybrid inverters.
+
+Until now, these inverters could only provide information for a single MPPT. Smart Voltronic can now automatically retrieve the missing data, delivering an experience much closer to that of genuine Voltronic devices.
+
+### ✨ Full MPPT2 Support
+
+- Automatic detection of compatible inverters
+- No additional configuration required
+- MPPT2 voltage monitoring
+- MPPT2 current monitoring
+- MPPT2 power monitoring
+- Fully integrated into Home Assistant
+- Seamless operation with the existing Smart Voltronic ecosystem
+
+This major enhancement significantly expands compatibility with a wide range of Voltronic-compatible hybrid inverters available on the market.
+
+---
+
+## 🚰 Water Consumption Monitoring in the House Dashboard
+
+The Premium House Dashboard now includes native water consumption monitoring.
+
+Users can configure their own water meters directly from the **Settings** page and automatically integrate them into the dashboard.
+
+### Features
+
+- Support for up to **3 configurable water meters**
+- Custom name for each meter
+- Daily consumption
+- Monthly consumption
+- Yearly consumption
+- Total consumption
+- Automatic integration into the Premium House Dashboard
+- Dedicated **Water** section with configurable entities
+
+---
+
+## 🔧 Improvements
+
+- Expanded compatibility with Voltronic-compatible hybrid inverters.
+- Automatic detection of supported hardware.
+- Improved House Dashboard integration.
+- Enhanced data consistency and overall system reliability.
+
+Thank you to everyone for your feedback and continued support. Your contributions help make Smart Voltronic better with every release!
+
 ## v1.8.6 — Dashboard Home Shortcuts Improvements
 
 ### Improved Home Dashboard Shortcuts
