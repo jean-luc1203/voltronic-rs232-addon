@@ -1,3 +1,25 @@
+## ⚡ Smart Voltronic v2.0.1
+
+### 🆕 LOAD2 Support
+
+This version adds support for the **LOAD2 output** on compatible inverters.
+
+### New Features
+
+- 🔌 **LOAD2** ON / OFF control
+- 🔋 **Cut-off voltage** setting
+- 🔋 **Reactivation voltage** setting
+- 📊 **Cut-off SOC** setting
+- 📊 **Reactivation SOC** setting
+- 🏠 New LOAD2 entities in **Home Assistant**
+- 🖥️ LOAD2 controls added to the **Premium Dashboard**
+- 🔄 Automatic LOAD2 status update
+
+### 🔧 Improvements
+
+- Improved LOAD2 control reliability
+- Automatic value refresh after changes
+
 # 🎉 Version 2.0.0 – Major Update
 
 Version 2.0.0 marks a significant milestone for Smart Voltronic, bringing major compatibility improvements for Voltronic-compatible hybrid inverters while introducing new monitoring capabilities to the Premium House Dashboard.
