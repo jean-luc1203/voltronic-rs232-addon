@@ -1,3 +1,6 @@
+## 🔄 2.0.2
+- bug fix
+
 ## ⚡ Smart Voltronic v2.0.1
 
 ### 🆕 LOAD2 Support
