@@ -1,3 +1,6 @@
+## 🔄 2.0.4
+- translations bug fix
+
 ## 🔄 2.0.3
 - bug fix
 
