@@ -139,6 +139,10 @@ configuration:
     name: "Cartes personnalisées installées"
     description: "Activez uniquement si mini-graph-card, apexcharts-card et card-mod sont déjà installés via HACS."
 
+     dashboard_diag_communication:
+    name: "Dashboard de diagnostic communication"
+    description: "Active la génération automatique du dashboard Premium Voltronic Doctor pour le diagnostic de communication des onduleurs. Le dashboard affiche l'état de la communication, l'arrêt nocturne, le gel du diagnostic, les timeouts, l'activité des transports, l'état de la file d'attente ainsi que les statistiques détaillées des commandes et réponses." 
+
   dashboard_language:
     name: "Langue du dashboard"
     description: "Langue utilisée pour générer automatiquement les dashboards et les cartes."
