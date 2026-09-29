@@ -1,3 +1,64 @@
+## 2.0.5
+
+### 🚀 Major diagnostics and dashboard update
+
+This release brings a major improvement to inverter communication monitoring and introduces a brand-new Premium dashboard dedicated to diagnostics.
+
+### 🩺 New Premium dashboard: Voltronic Doctor
+
+- Added the new **Voltronic Doctor** dashboard.
+- Dedicated communication diagnostics view for each configured inverter.
+- Displays communication status, commands, responses, timeouts, queue activity and transport information.
+- Supports both **serial** and **TCP/IP Gateway** connections.
+- Automatically displays only active inverters.
+- Automatic dashboard generation and synchronization with Home Assistant.
+- Automatic dashboard removal when disabled or when Premium is not active.
+- New add-on option to enable or disable Voltronic Doctor.
+- Automatic **English and French** support based on the selected dashboard language.
+
+### 🌙 Improved night shutdown handling
+
+- Added improved handling of inverter night shutdown periods.
+- Better distinction between real communication faults and intentional inverter shutdown at night.
+- Diagnostic statistics are frozen during night shutdown to avoid false timeout and error accumulation.
+- Automatic diagnostic resume when solar production returns.
+- Improved communication health reporting during periods without PV production.
+
+### 📡 Communication diagnostics improvements
+
+- Improved tracking of sent commands and received responses.
+- Better timeout and communication error monitoring.
+- Added detailed command origin statistics:
+  - polling
+  - Home Assistant commands
+  - learning
+  - internal commands
+- Improved serial and TCP transport monitoring.
+- Better tracking of network disconnections and reconnections.
+- Improved queue and inflight command monitoring.
+- Improved latency and communication quality statistics.
+
+### ☀️ House dashboard
+
+- Added the ability to configure the **next-day solar forecast** entity.
+- The forecast entity can now be selected directly from the add-on configuration.
+- Improved solar forecast integration in the House dashboard.
+
+### ⚙️ Configuration
+
+- Added a new option to enable the **Voltronic Doctor** dashboard.
+- Added a new option to define the next-day solar forecast entity.
+- Improved dashboard option handling.
+- Integrated Voltronic Doctor into the same automatic generation system as the other Premium dashboards.
+
+### 🔧 General improvements
+
+- Improved inverter communication monitoring stability.
+- Reduced false diagnostic errors during night shutdown periods.
+- Improved consistency between dashboards and Home Assistant states.
+- Improved visibility of communication issues.
+- Various reliability and presentation improvements.
+
 ## 🔄 2.0.4
 - translations bug fix
 
