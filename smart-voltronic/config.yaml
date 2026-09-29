@@ -71,6 +71,7 @@ options:
   dashboard_section: "────────── DASHBOARD ──────────"
   dashboard_output: "lovelace"
   dashboard_custom_cards_installed: false
+  dashboard_diag_communication: false
   dashboard_language: "en"
 
   send_bip: true
@@ -123,6 +124,7 @@ schema:
   dashboard_section: str?
   dashboard_output: list(lovelace|html|both|disabled)
   dashboard_custom_cards_installed: bool
+  dashboard_diag_communication: bool
   dashboard_language: list(en|fr)
 
   send_bip: bool
