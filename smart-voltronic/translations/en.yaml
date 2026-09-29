@@ -139,6 +139,10 @@ configuration:
     name: "Custom dashboard cards installed"
     description: "Enable only if mini-graph-card, apexcharts-card and card-mod are already installed through HACS."
 
+  dashboard_diag_communication:
+    name: "Communication diagnostics dashboard"
+    description: "Enable the automatic generation of the Premium Voltronic Doctor dashboard for inverter communication diagnostics. The dashboard displays communication health, night sleep status, night freeze state, timeouts, transport activity, queue status and detailed command/response statistics."
+
   dashboard_language:
     name: "Dashboard language"
     description: "Language used when automatically generating dashboards and dashboard cards."
