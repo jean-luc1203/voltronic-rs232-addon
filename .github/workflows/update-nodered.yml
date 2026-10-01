@@ -2,10 +2,15 @@ name: "🔄 Vérification mises à jour Node-RED"
 
 on:
   schedule:
-    # Vérifie chaque lundi à 8h00
+    # Chaque lundi à 08:00 UTC
     - cron: "0 8 * * 1"
   workflow_dispatch:
-    # Permet aussi de lancer manuellement depuis GitHub
+
+# Le workflow ne modifie aucun fichier du dépôt.
+# Il crée uniquement une Issue lorsqu'une mise à jour est disponible.
+permissions:
+  contents: read
+  issues: write
 
 jobs:
   check-update:
@@ -14,93 +19,207 @@ jobs:
 
     steps:
       - name: "📥 Checkout du repo"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
-      - name: "🔍 Récupérer les versions actuelles"
+      - name: "🟢 Préparer Node.js"
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: "🔍 Lire les versions actuelles"
         id: current
+        shell: bash
         run: |
-          # Version Node-RED dans le Dockerfile (dans le sous-dossier smart-voltronic/)
-          CURRENT_NR=$(grep -oP 'node-red@\K[0-9]+\.[0-9]+\.[0-9]+' smart-voltronic/Dockerfile)
-          echo "nodered=$CURRENT_NR" >> $GITHUB_OUTPUT
+          set -euo pipefail
+
+          DOCKERFILE="smart-voltronic/Dockerfile"
+
+          if [ ! -f "$DOCKERFILE" ]; then
+            echo "❌ Dockerfile introuvable : $DOCKERFILE"
+            exit 1
+          fi
+
+          CURRENT_NR="$(
+            grep -oP 'node-red@\K[0-9]+\.[0-9]+\.[0-9]+' "$DOCKERFILE" \
+            | head -n 1 || true
+          )"
+
+          if [ -z "$CURRENT_NR" ]; then
+            echo "❌ Impossible de trouver une version node-red@x.y.z dans $DOCKERFILE"
+            exit 1
+          fi
+
+          CURRENT_SP="$(
+            grep -oP 'node-red-node-serialport@\K[0-9]+\.[0-9]+\.[0-9]+' "$DOCKERFILE" \
+            | head -n 1 || true
+          )"
+
+          echo "nodered=$CURRENT_NR" >> "$GITHUB_OUTPUT"
+          echo "serialport=$CURRENT_SP" >> "$GITHUB_OUTPUT"
+
           echo "✅ Node-RED actuel : $CURRENT_NR"
 
-          # Version node-red-node-serialport dans le Dockerfile
-          CURRENT_SP=$(grep -oP 'node-red-node-serialport@\K[0-9]+\.[0-9]+\.[0-9]+' smart-voltronic/Dockerfile || echo "")
-          echo "serialport=$CURRENT_SP" >> $GITHUB_OUTPUT
-          echo "✅ Serialport actuel : ${CURRENT_SP:-non versionné}"
+          if [ -n "$CURRENT_SP" ]; then
+            echo "✅ Serialport actuel : $CURRENT_SP"
+          else
+            echo "ℹ️ node-red-node-serialport n'est pas versionné dans le Dockerfile."
+            echo "ℹ️ Il ne sera donc pas signalé comme mise à jour à appliquer."
+          fi
 
-      - name: "🌐 Récupérer les dernières versions sur npm"
+      - name: "🌐 Vérifier les dernières versions npm"
         id: latest
+        shell: bash
         run: |
-          # Dernière version stable de Node-RED
-          LATEST_NR=$(npm show node-red version)
-          echo "nodered=$LATEST_NR" >> $GITHUB_OUTPUT
-          echo "🆕 Node-RED latest : $LATEST_NR"
+          set -euo pipefail
 
-          # Dernière version de node-red-node-serialport
-          LATEST_SP=$(npm show node-red-node-serialport version)
-          echo "serialport=$LATEST_SP" >> $GITHUB_OUTPUT
+          LATEST_NR="$(npm view node-red version)"
+          LATEST_SP="$(npm view node-red-node-serialport version)"
+
+          echo "nodered=$LATEST_NR" >> "$GITHUB_OUTPUT"
+          echo "serialport=$LATEST_SP" >> "$GITHUB_OUTPUT"
+
+          echo "🆕 Node-RED latest : $LATEST_NR"
           echo "🆕 Serialport latest : $LATEST_SP"
 
-      - name: "📝 Mettre à jour le Dockerfile si nécessaire"
-        id: update
+      - name: "📊 Comparer les versions"
+        id: compare
+        shell: bash
+        env:
+          CURRENT_NR: ${{ steps.current.outputs.nodered }}
+          CURRENT_SP: ${{ steps.current.outputs.serialport }}
+          LATEST_NR: ${{ steps.latest.outputs.nodered }}
+          LATEST_SP: ${{ steps.latest.outputs.serialport }}
         run: |
-          CHANGED=false
+          set -euo pipefail
 
-          # Mettre à jour Node-RED si nouvelle version
-          if [ "${{ steps.current.outputs.nodered }}" != "${{ steps.latest.outputs.nodered }}" ]; then
-            echo "🔄 Mise à jour Node-RED : ${{ steps.current.outputs.nodered }} -> ${{ steps.latest.outputs.nodered }}"
-            sed -i "s/node-red@${{ steps.current.outputs.nodered }}/node-red@${{ steps.latest.outputs.nodered }}/g" smart-voltronic/Dockerfile
-            CHANGED=true
-          else
-            echo "✅ Node-RED déjà à jour (${{ steps.current.outputs.nodered }})"
+          NR_UPDATE=false
+          SP_UPDATE=false
+
+          if [ "$CURRENT_NR" != "$LATEST_NR" ]; then
+            NR_UPDATE=true
           fi
 
-          # Mettre à jour serialport si il est versionné et qu'une nouvelle version existe
-          if [ -n "${{ steps.current.outputs.serialport }}" ] && \
-             [ "${{ steps.current.outputs.serialport }}" != "${{ steps.latest.outputs.serialport }}" ]; then
-            echo "🔄 Mise à jour serialport : ${{ steps.current.outputs.serialport }} -> ${{ steps.latest.outputs.serialport }}"
-            sed -i "s/node-red-node-serialport@${{ steps.current.outputs.serialport }}/node-red-node-serialport@${{ steps.latest.outputs.serialport }}/g" smart-voltronic/Dockerfile
-            CHANGED=true
-          else
-            echo "✅ Serialport déjà à jour"
+          # On ne propose serialport que s'il est réellement versionné
+          # dans le Dockerfile.
+          if [ -n "$CURRENT_SP" ] && [ "$CURRENT_SP" != "$LATEST_SP" ]; then
+            SP_UPDATE=true
           fi
 
-          echo "changed=$CHANGED" >> $GITHUB_OUTPUT
+          if [ "$NR_UPDATE" = "true" ] || [ "$SP_UPDATE" = "true" ]; then
+            UPDATE_AVAILABLE=true
+          else
+            UPDATE_AVAILABLE=false
+          fi
 
-      - name: "🚀 Créer la Pull Request"
-        if: steps.update.outputs.changed == 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          commit-message: |
-            🔄 Mise à jour automatique des dépendances
+          echo "nodered_update=$NR_UPDATE" >> "$GITHUB_OUTPUT"
+          echo "serialport_update=$SP_UPDATE" >> "$GITHUB_OUTPUT"
+          echo "update_available=$UPDATE_AVAILABLE" >> "$GITHUB_OUTPUT"
 
-            - Node-RED : ${{ steps.current.outputs.nodered }} -> ${{ steps.latest.outputs.nodered }}
-            - node-red-node-serialport : ${{ steps.current.outputs.serialport }} -> ${{ steps.latest.outputs.serialport }}
-          title: "🔄 Mise à jour Node-RED ${{ steps.latest.outputs.nodered }}"
-          body: |
-            ## Mises à jour disponibles 🆕
+          echo ""
+          echo "Node-RED : $CURRENT_NR -> $LATEST_NR | update=$NR_UPDATE"
 
-            | Package | Version actuelle | Nouvelle version |
-            |---------|-----------------|-----------------|
-            | node-red | `${{ steps.current.outputs.nodered }}` | `${{ steps.latest.outputs.nodered }}` |
-            | node-red-node-serialport | `${{ steps.current.outputs.serialport }}` | `${{ steps.latest.outputs.serialport }}` |
+          if [ -n "$CURRENT_SP" ]; then
+            echo "Serialport : $CURRENT_SP -> $LATEST_SP | update=$SP_UPDATE"
+          else
+            echo "Serialport : non versionné | latest=$LATEST_SP | ignoré"
+          fi
 
-            ## ✅ Pour appliquer la mise à jour
-            1. Vérifiez les changements dans `smart-voltronic/Dockerfile`
-            2. Testez si possible sur votre installation
-            3. Cliquez **Merge Pull Request**
-            4. L'addon sera automatiquement republié avec les nouvelles versions
+      - name: "📝 Préparer la proposition"
+        if: steps.compare.outputs.update_available == 'true'
+        id: proposal
+        shell: bash
+        env:
+          CURRENT_NR: ${{ steps.current.outputs.nodered }}
+          CURRENT_SP: ${{ steps.current.outputs.serialport }}
+          LATEST_NR: ${{ steps.latest.outputs.nodered }}
+          LATEST_SP: ${{ steps.latest.outputs.serialport }}
+          NR_UPDATE: ${{ steps.compare.outputs.nodered_update }}
+          SP_UPDATE: ${{ steps.compare.outputs.serialport_update }}
+        run: |
+          set -euo pipefail
 
-            ## 📋 Liens utiles
-            - [Changelog Node-RED](https://github.com/node-red/node-red/blob/master/CHANGELOG.md)
-            - [Releases node-red-node-serialport](https://github.com/node-red/node-red-nodes/releases)
+          TITLE="🔄 Mise à jour disponible - Node-RED ${LATEST_NR}"
 
-          branch: "auto-update/nodered-${{ steps.latest.outputs.nodered }}"
-          delete-branch: true
-          labels: "🔄 mise à jour automatique"
+          {
+            echo "title=$TITLE"
+            echo "body<<EOF"
+            echo "## 🆕 Mise à jour disponible"
+            echo ""
+            echo "> Ce workflow est uniquement informatif : **aucun fichier du dépôt n'a été modifié.**"
+            echo ""
+
+            echo "| Package | Version actuelle | Dernière version | Mise à jour |"
+            echo "|---|---:|---:|:---:|"
+
+            if [ "$NR_UPDATE" = "true" ]; then
+              echo "| Node-RED | \`${CURRENT_NR}\` | \`${LATEST_NR}\` | ✅ Disponible |"
+            else
+              echo "| Node-RED | \`${CURRENT_NR}\` | \`${LATEST_NR}\` | À jour |"
+            fi
+
+            if [ -n "$CURRENT_SP" ]; then
+              if [ "$SP_UPDATE" = "true" ]; then
+                echo "| node-red-node-serialport | \`${CURRENT_SP}\` | \`${LATEST_SP}\` | ✅ Disponible |"
+              else
+                echo "| node-red-node-serialport | \`${CURRENT_SP}\` | \`${LATEST_SP}\` | À jour |"
+              fi
+            else
+              echo "| node-red-node-serialport | non versionné | \`${LATEST_SP}\` | ℹ️ Information |"
+            fi
+
+            echo ""
+            echo "## ✅ Action manuelle"
+            echo ""
+            echo "Si tu souhaites appliquer la mise à jour :"
+            echo "1. Vérifie les changelogs."
+            echo "2. Modifie manuellement le Dockerfile si tu souhaites passer à la nouvelle version."
+            echo "3. Teste la nouvelle version avant publication."
+            echo ""
+            echo "## 📋 Liens"
+            echo ""
+            echo "- Node-RED : https://github.com/node-red/node-red/releases"
+            echo "- node-red-node-serialport : https://github.com/node-red/node-red-nodes/releases"
+            echo ""
+            echo "_Détection automatique effectuée par GitHub Actions._"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: "🔔 Créer une Issue de proposition"
+        if: steps.compare.outputs.update_available == 'true'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_TITLE: ${{ steps.proposal.outputs.title }}
+          ISSUE_BODY: ${{ steps.proposal.outputs.body }}
+        run: |
+          set -euo pipefail
+
+          # Évite de recréer exactement la même proposition chaque semaine.
+          EXISTING="$(
+            gh issue list \
+              --state open \
+              --search "\"${ISSUE_TITLE}\" in:title" \
+              --json title \
+              --jq '.[] | select(.title == env.ISSUE_TITLE) | .title' \
+              | head -n 1
+          )"
+
+          if [ -n "$EXISTING" ]; then
+            echo "ℹ️ Une Issue identique est déjà ouverte."
+            echo "ℹ️ Aucune nouvelle Issue créée."
+            exit 0
+          fi
+
+          gh issue create \
+            --title "$ISSUE_TITLE" \
+            --body "$ISSUE_BODY"
+
+          echo "✅ Proposition créée sous forme d'Issue."
+          echo "✅ Aucun fichier du dépôt n'a été modifié."
 
       - name: "✅ Aucune mise à jour disponible"
-        if: steps.update.outputs.changed == 'false'
-        run: echo "Tout est à jour, aucune PR créée."
+        if: steps.compare.outputs.update_available == 'false'
+        run: |
+          echo "✅ Node-RED est à jour."
+          echo "✅ Aucune modification effectuée et aucune Issue créée."
