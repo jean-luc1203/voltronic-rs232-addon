@@ -258,35 +258,6 @@ update_serial_config_by_name() {
   logi "Port serial mis à jour : ${label} -> name=${node_name} port=${serial_value}"
 }
 
-update_tcp_host_port_by_name() {
-  local node_name="$1"
-  local host="$2"
-  local port="$3"
-  local label="$4"
-
-  local exists
-
-  exists="$(jq -r --arg name "$node_name" \
-    '.[] | select((.type=="tcp in" or .type=="tcp out" or .type=="tcp request") and .name==$name) | .name' \
-    "$FLOWS" 2>/dev/null || echo "")"
-
-  if [ -z "$exists" ]; then
-    logw "Noeud TCP name '$node_name' introuvable dans flows.json (${label})"
-    return 0
-  fi
-
-  jq --arg name "$node_name" --arg host "$host" --arg port "$port" '
-    map(
-      if (.type=="tcp in" or .type=="tcp out" or .type=="tcp request") and .name == $name
-      then .host = $host | .port = $port
-      else .
-      end
-    )
-  ' "$FLOWS" > "$TMP" && mv "$TMP" "$FLOWS"
-
-  logi "TCP ${label} -> name=${node_name} host=${host} port=${port}"
-}
-
 # ============================================================
 # PREMIUM
 # ============================================================
@@ -503,40 +474,24 @@ update_serial_config_by_name "Serial inv 2" "$SERIAL_2" "SERIAL_2"
 update_serial_config_by_name "Serial inv 3" "$SERIAL_3" "SERIAL_3"
 
 # ============================================================
-# PATCH TCP NODES
+# TCP GATEWAY
 # ============================================================
-TCP1_HOST="$INV1_HOST"
-TCP1_PORT="$INV1_PORT"
+#
+# Depuis la v2.0.6, les noeuds TCP ne sont plus patchés dans
+# flows.json au démarrage.
+#
+# Chaque onduleur utilise un noeud "tcp request" avec host/port
+# laissés vides. Transport Select fournit dynamiquement :
+#   msg.host
+#   msg.port
+#
+# à partir de config.invCfg / options.json.
+#
+# Cela évite les anciennes connexions TCP IN / TCP OUT séparées
+# et les déconnexions/reconnexions inutiles.
+# ============================================================
 
-TCP2_HOST="$INV2_HOST"
-TCP2_PORT="$INV2_PORT"
-
-TCP3_HOST="$INV3_HOST"
-TCP3_PORT="$INV3_PORT"
-
-if [ "$INV1_TRANSPORT" = "serial" ]; then
-  TCP1_HOST="127.0.0.1"
-  TCP1_PORT="1"
-fi
-
-if [ "$INV2_TRANSPORT" = "serial" ]; then
-  TCP2_HOST="127.0.0.1"
-  TCP2_PORT="1"
-fi
-
-if [ "$INV3_TRANSPORT" = "serial" ]; then
-  TCP3_HOST="127.0.0.1"
-  TCP3_PORT="1"
-fi
-
-update_tcp_host_port_by_name "tcp out inv 1" "$TCP1_HOST" "$TCP1_PORT" "OUT1"
-update_tcp_host_port_by_name "tcp in inv 1"  "$TCP1_HOST" "$TCP1_PORT" "IN1"
-
-update_tcp_host_port_by_name "tcp out inv 2" "$TCP2_HOST" "$TCP2_PORT" "OUT2"
-update_tcp_host_port_by_name "tcp in inv 2"  "$TCP2_HOST" "$TCP2_PORT" "IN2"
-
-update_tcp_host_port_by_name "tcp out inv 3" "$TCP3_HOST" "$TCP3_PORT" "OUT3"
-update_tcp_host_port_by_name "tcp in inv 3"  "$TCP3_HOST" "$TCP3_PORT" "IN3"
+logi "TCP gateway: configuration dynamique via Transport Select / tcp request"
 
 # ============================================================
 # MQTT BROKER PATCH
