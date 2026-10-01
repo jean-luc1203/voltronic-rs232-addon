@@ -1,3 +1,23 @@
+# 🚀 Smart Voltronic 2.0.6
+## Important Stability Update
+
+This version brings major improvements to TCP gateway communication and more reliable diagnostics.
+
+### 🔌 Gateway Communication
+- Restructured TCP communication for improved stability.
+- Reduced unexpected disconnections and reconnects.
+- Improved per-inverter gateway handling.
+- Improved Serial / TCP transport management.
+
+### 🩺 Diagnostics
+- Improved Communication Health.
+- Clearer diagnostics for connections, errors and queues.
+- Improved Voltronic Doctor.
+- Better Night Freeze and diagnostic counter handling.
+
+### ✅ Recommended Update
+This update is especially recommended for users using TCP gateways.
+
 ## 2.0.5
 
 ### 🚀 Major diagnostics and dashboard update
