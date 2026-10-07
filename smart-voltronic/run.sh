@@ -28,6 +28,11 @@ ADDON_FLOWS="/addon/flows.json"
 ADDON_FLOWS_VERSION_FILE="/addon/flows_version.txt"
 DATA_FLOWS_VERSION_FILE="/data/flows_version.txt"
 
+# Node.js / Serialport runtime compatibility
+SERIALPORT_PACKAGE="node-red-node-serialport"
+SERIALPORT_VERSION="2.0.3"
+NODE_RUNTIME_MARKER="/data/.smart_voltronic_node_runtime"
+
 mkdir -p /data
 mkdir -p /config
 mkdir -p "$DASHBOARDS_DIR"
@@ -167,7 +172,7 @@ install_build_tools_if_needed() {
 
   logw "Build tools absents, tentative d'installation runtime..."
 
-  if apk add --no-cache python3 make g++; then
+  if apk add --no-cache python3 make g++ linux-headers; then
     logi "Build tools installés avec succès"
     return 0
   fi
@@ -191,38 +196,108 @@ install_node_red_nodes() {
     npm init -y >/dev/null 2>&1
   fi
 
-  local required_nodes=(
-    "node-red-node-serialport"
-  )
+  local node_version
+  local node_abi
+  local runtime_signature
+  local previous_runtime_signature
+  local installed_version
 
-  local node
+  node_version="$(node --version 2>/dev/null || echo unknown)"
+  node_abi="$(node -p 'process.versions.modules || "unknown"' 2>/dev/null || echo unknown)"
 
-  for node in "${required_nodes[@]}"; do
+  runtime_signature="${node_version}|abi=${node_abi}|${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
+  previous_runtime_signature="$(cat "$NODE_RUNTIME_MARKER" 2>/dev/null || echo "")"
 
-    if [ -d "/data/node_modules/$node" ]; then
-      logi "Node déjà installé: $node"
-      continue
+  installed_version="$(
+    node -p "
+      try {
+        require('/data/node_modules/${SERIALPORT_PACKAGE}/package.json').version
+      } catch (e) {
+        ''
+      }
+    " 2>/dev/null || echo ""
+  )"
+
+  # -------------------------------------------------
+  # Installation / mise à niveau de Serialport
+  # -------------------------------------------------
+  if [ "$installed_version" != "$SERIALPORT_VERSION" ]; then
+
+    if [ -n "$installed_version" ]; then
+      logi "Mise à jour ${SERIALPORT_PACKAGE}: ${installed_version} -> ${SERIALPORT_VERSION}"
+    else
+      logi "Installation ${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
     fi
 
-    logi "Installation du node Node-RED: $node"
+    if ! npm install \
+      --unsafe-perm \
+      --no-audit \
+      --no-fund \
+      "${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
+    then
+      logw "Échec installation simple, tentative avec build tools"
 
-    if npm install --unsafe-perm --no-audit --no-fund "$node"; then
-      logi "Node installé avec succès: $node"
-      continue
+      install_build_tools_if_needed || true
+
+      if ! npm install \
+        --unsafe-perm \
+        --no-audit \
+        --no-fund \
+        "${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
+      then
+        loge "Échec installation ${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
+        exit 1
+      fi
     fi
 
-    logw "Échec installation simple pour $node, tentative avec build tools"
+    installed_version="$SERIALPORT_VERSION"
+  else
+    logi "${SERIALPORT_PACKAGE}@${installed_version} déjà installé"
+  fi
+
+  # -------------------------------------------------
+  # Rebuild natif uniquement si le runtime change
+  #
+  # /data est persistant : après une mise à jour majeure
+  # de Node.js, un ancien binding natif peut rester présent.
+  # -------------------------------------------------
+  if [ "$previous_runtime_signature" != "$runtime_signature" ]; then
+
+    logi "Changement runtime Node.js détecté : vérification Serialport"
 
     install_build_tools_if_needed || true
 
-    if npm install --unsafe-perm --no-audit --no-fund "$node"; then
-      logi "Node installé avec succès après fallback: $node"
+    if npm rebuild --build-from-source @serialport/bindings-cpp; then
+      logi "Serialport recompilé pour ${node_version} (ABI ${node_abi})"
     else
-      loge "Échec installation node: $node"
-      exit 1
+      logw "Rebuild Serialport échoué, réinstallation complète"
+
+      rm -rf \
+        "/data/node_modules/${SERIALPORT_PACKAGE}" \
+        "/data/node_modules/@serialport"
+
+      if ! npm install \
+        --unsafe-perm \
+        --no-audit \
+        --no-fund \
+        "${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
+      then
+        loge "Impossible de réinstaller ${SERIALPORT_PACKAGE}@${SERIALPORT_VERSION}"
+        exit 1
+      fi
+
+      if ! npm rebuild --build-from-source @serialport/bindings-cpp; then
+        loge "Impossible de compiler @serialport/bindings-cpp pour ${node_version}"
+        exit 1
+      fi
+
+      logi "Serialport réinstallé et recompilé avec succès"
     fi
 
-  done
+    printf '%s\n' "$runtime_signature" > "$NODE_RUNTIME_MARKER"
+  else
+    logi "Runtime Node.js / Serialport inchangé"
+  fi
 }
 
 update_serial_config_by_name() {
