@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/base-nodejs:0.2.1
+ARG BUILD_FROM=ghcr.io/hassio-addons/base:21.0.7
 FROM ${BUILD_FROM}
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -6,9 +6,11 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN apk add --no-cache \
     bash \
     jq \
-    tzdata
+    tzdata \
+    nodejs=24.18.1-r0 \
+    npm=11.12.1-r0
 
-RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@4.1.4 \
+RUN npm install -g --no-audit --no-fund --unsafe-perm node-red@5.0.7 \
     && npm cache clean --force
 
 COPY . /addon
