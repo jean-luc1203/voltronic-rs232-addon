@@ -1,3 +1,27 @@
+# 🚀 Smart Voltronic 2.0.7
+
+## Update
+
+- Upgraded to **Node-RED 5.0.7**
+- Upgraded to **Node.js 24**
+- Updated the add-on runtime environment
+- Improved compatibility with recent Home Assistant versions
+
+## Startup improvements
+
+- New inverter startup request sequence
+- Commands are now sent progressively for better reliability
+- Improved initialization for both Serial and TCP connections
+- More reliable retrieval of important inverter information
+- Improved inverter profile detection and command learning
+
+## Stability
+
+- Improved overall communication stability
+- Reduced startup timeout risks
+- Removed obsolete TCP startup logic
+- Various stability improvements and fixes
+
 # 🚀 Smart Voltronic 2.0.6
 ## Important Stability Update
 
