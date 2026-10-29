@@ -1,3 +1,8 @@
+## 2.0.8
+
+- Fixed an issue that prevented the add-on from building during new installations.
+- Updated the Node.js and npm installation to avoid version conflicts with the Alpine repositories.
+
 # 🚀 Smart Voltronic 2.0.7
 
 ## Update
