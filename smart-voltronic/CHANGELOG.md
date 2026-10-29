@@ -1,3 +1,6 @@
+## 2.0.9
+- bug fix 
+
 ## 2.0.8
 
 - Fixed an issue that prevented the add-on from building during new installations.
